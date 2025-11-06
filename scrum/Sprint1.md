@@ -40,8 +40,6 @@ The Smart Budget App is a simple and user-friendly web application designed to h
 
 With this application, users can easily track where their money goes, set financial goals, and plan for future expenses. The intuitive design ensures accessibility for users with varying levels of technical experience. The ultimate aim of the Smart Budget App is to promote better money management, financial awareness, and savings habits among its users.
 
----
-
 ## Target users and stakeholders
 
 ### Target Users
@@ -59,8 +57,6 @@ With this application, users can easily track where their money goes, set financ
 • End users: Individuals who use the app to manage their personal or household finances.
 
 • Development team: Designers, developers, and testers responsible for building, maintaining, and improving the app.
-
----
 
 ## Main functionality of the application
 
@@ -90,8 +86,6 @@ With this application, users can easily track where their money goes, set financ
 7. **Summary Reports**
    • Generates summaries showing total income, total expenses and savings for selected time periods.  
    • Allows uses to analyse their financial trends and make informed decisions.
-
----
 
 ## User stories and product backlog
 
@@ -144,8 +138,6 @@ The main features planned and developed for the Smart Budget App are listed belo
 > Updates included progress on Figma designs, backlog creation in Trello, and draft documentation in GitHub.
 > We identified blockers (like confusion about Scrum , INVEST and DEEP) and resolved them through quick follow-up discussions.
 
----
-
 ## Sprint Planning
 
 **Purpose:**  
@@ -162,8 +154,6 @@ To define what features and deliverables we’ll complete during Sprint 1 and ho
 We reviewed user stories, estimated effort (story points), and prioritized them using the DEEP and INVEST principles.
 Tasks were distributed as per member expertise using Trello.
 
----
-
 ## Sprint Retrospective
 
 **Purpose:**  
@@ -174,8 +164,6 @@ What went well: Team communication and task division.
 What could improve: Better time scheduling.
 Action for next sprint: Assign deadlines per task and review mid-week.
 
----
-
 ## Team Contributions (Sprint 1)
 
 | Member                 | Role                  | Key Contributions                                                                                                                   |
@@ -184,8 +172,6 @@ Action for next sprint: Assign deadlines per task and review mid-week.
 | **Jiya Jameela**       | Scrum Master          | Built low-fidelity Figma prototype which included dashboard,transaction and goals ,Scrum Ceremonies documentation                   |
 | **Puntawat Subhamani** | UI Designer           | Built low-fidelity Figma prototype and designed login and registration prototype pages along with the AI features in the prototype. |
 | **Chandina Nilukshi**  | Docs/Development Team | Prepared documentation, coordinated presentation slides                                                                             |
-
----
 
 ## Sprint 1 Outcome
 
