@@ -1,7 +1,7 @@
 ![diagram](./fullstack_diagram.svg)
 
 
-## 📄 Documentation
+## 📄 Documents
 
-- [Sprint 1 Documentation](./Sprint1.md)
+- [Sprint 1 Deliverables](./Sprint1.md)
 
