@@ -1,4 +1,4 @@
-![diagram](./fullstack_diagram.svg)
+![diagram](./scrum/resources/fullstack_diagram.svg)
 
 ## 📄 Documents
 
