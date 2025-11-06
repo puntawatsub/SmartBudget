@@ -166,12 +166,12 @@ Action for next sprint: Assign deadlines per task and review mid-week.
 
 ## Team Contributions (Sprint 1)
 
-| Member                 | Role                  | Key Contributions                                                                                                                   |
-| ---------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| **Swostika Lama**      | Product Owner         | Created Trello Board, organized product backlog (INVEST & DEEP),coordinated presentation                                            |
-| **Jiya Jameela**       | Scrum Master          | Built low-fidelity Figma prototype which included dashboard,transaction and goals ,Scrum Ceremonies documentation                   |
-| **Puntawat Subhamani** | UI Designer           | Built low-fidelity Figma prototype and designed login and registration prototype pages along with the AI features in the prototype. |
-| **Chandina Nilukshi**  | Docs/Development Team | Prepared documentation and deliverables                                                                                             |
+| Member                 | Role                     | Key Contributions                                                                                                                 |
+| ---------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Swostika Lama**      | Product Owner            | Created Trello Board, organized product backlog (INVEST & DEEP),coordinated presentation                                          |
+| **Jiya Jameela**       | Scrum Master/UI Designer | Built low-fidelity Figma prototype which included dashboard, transaction and goals, and written Scrum Ceremonies documentation    |
+| **Puntawat Subhamani** | UI Designer              | Built low-fidelity Figma prototype and designed login and registration pages along with the AI-related features in the prototype. |
+| **Chandina Nilukshi**  | Docs/Development Team    | Prepared documentation and deliverables                                                                                           |
 
 ## Sprint 1 Outcome
 
