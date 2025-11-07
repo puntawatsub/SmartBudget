@@ -173,7 +173,7 @@ Action for next sprint: Assign deadlines per task and review mid-week.
 | Member                 | Role                     | Key Contributions                                                                                                                 |
 | ---------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Swostika Lama**      | Product Owner            | Created Trello Board, organized product backlog (INVEST & DEEP),coordinated presentation                                          |
-| **Jiya Jameela**       | Scrum Master/UI Designer | Built low-fidelity Figma prototype which included dashboard, transaction and goals, and written Scrum Ceremonies documentation    |
+| **Jiya Jameela**       | Scrum Master/UI Designer | Built low-fidelity Figma prototype which included dashboard, transaction and goals, and wrote Scrum Ceremonies documentation   |
 | **Puntawat Subhamani** | UI Designer              | Built low-fidelity Figma prototype and designed login and registration pages along with the AI-related features in the prototype. |
 | **Chandina Nilukshi**  | Docs/Development Team    | Prepared documentation and deliverables                                                                                           |
 
