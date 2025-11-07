@@ -163,17 +163,29 @@ Tasks were distributed as per member expertise using Trello.
 **Purpose:**  
 To reflect on what went well, what didn’t, and what can be improved for the next sprint.
 
-**Outcome:**  
-What went well: Team communication and task division. <br />
-What could improve: Better time scheduling.<br />
-Action for next sprint: Assign deadlines per task and review mid-week.
+**Outcome:**
+
+- **Liked:**
+  Strong teamwork and collaboration.
+  Clear role division and consistent communication throughout the sprint.
+
+- **Learned:**
+  Better understanding of Scrum principles (INVEST & DEEP).
+  Improved skills in using Trello and Figma effectively for workflow management.
+
+- **Lacked:**
+  Some tasks took longer than expected due to unclear scheduling.
+
+- **Longed For:**
+  More structured timelines and task-specific deadlines in Sprint 2.
+  Mid-week progress reviews to ensure steady advancement and accountability.
 
 ## Team Contributions (Sprint 1)
 
 | Member                 | Role                     | Key Contributions                                                                                                                 |
 | ---------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Swostika Lama**      | Product Owner            | Created Trello Board, organized product backlog (INVEST & DEEP),coordinated presentation                                          |
-| **Jiya Jameela**       | Scrum Master/UI Designer | Built low-fidelity Figma prototype which included dashboard, transaction and goals, and wrote Scrum Ceremonies documentation   |
+| **Jiya Jameela**       | Scrum Master/UI Designer | Built low-fidelity Figma prototype which included dashboard, transaction and goals, and wrote Scrum Ceremonies documentation      |
 | **Puntawat Subhamani** | UI Designer              | Built low-fidelity Figma prototype and designed login and registration pages along with the AI-related features in the prototype. |
 | **Chandina Nilukshi**  | Docs/Development Team    | Prepared documentation and deliverables                                                                                           |
 
