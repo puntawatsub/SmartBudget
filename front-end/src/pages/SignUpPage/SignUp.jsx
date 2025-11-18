@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Input from "../../components/Input";
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -66,13 +67,20 @@ const SignUp = () => {
             {["username", "email", "password", "confirmPassword"].map(
               (field) => (
                 <div key={field} className="mb-9">
-                  <input
+                  <Input
                     type={
-                      field.includes("password")
+                      field.toLowerCase().includes("password")
                         ? "password"
                         : field === "email"
                         ? "email"
                         : "text"
+                    }
+                    autoComplete={
+                      field.toLowerCase().includes("password")
+                        ? "new-password"
+                        : field === "email"
+                        ? "username"
+                        : "off"
                     }
                     name={field}
                     value={formData[field]}
@@ -82,7 +90,6 @@ const SignUp = () => {
                         ? "Confirm Password"
                         : field.charAt(0).toUpperCase() + field.slice(1)
                     }
-                    className="w-full focus:outline-none focus:ring-2 focus:ring-blue-500 py-2.5 px-3 border border-gray-300 rounded-[5px] shadow-inner"
                     required
                   />
                 </div>

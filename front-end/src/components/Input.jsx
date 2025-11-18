@@ -6,3 +6,5 @@ const Input = ({ className = "", ...props }) => {
     />
   );
 };
+
+export default Input;
