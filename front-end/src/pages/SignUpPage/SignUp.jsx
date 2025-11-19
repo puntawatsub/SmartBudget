@@ -15,21 +15,61 @@ const SignUp = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-    console.log("Form submitted:", formData);
-    setFormData({
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (formData.password !== formData.confirmPassword) {
+  //     alert("Passwords do not match");
+  //     return;
+  //   }
+  //   console.log("Form submitted:", formData);
+  //   setFormData({
+  //     username: "",
+  //     email: "",
+  //     password: "",
+  //     confirmPassword: "",
+  //   });
+  //   navigate("/login"); // optional redirect
+  // };
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (formData.password !== formData.confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:3000/api/signups", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
     });
-    navigate("/login"); // optional redirect
-  };
+
+    const data = await response.json();
+
+    if (response.ok) {
+      // Signup successful
+      alert(data.message || "Signup successful!");
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      navigate("/login"); // redirect to login page
+    } else {
+      // Signup failed
+      alert(data.message || "Signup failed");
+    }
+  } catch (error) {
+    console.error("Signup error:", error);
+    alert("Server error. Please try again later.");
+  }
+};
+
 
   return (
     <div className="flex flex-row h-full overflow-hidden">
