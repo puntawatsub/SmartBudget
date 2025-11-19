@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors")
 
 const loginRouter = require("./routes/loginRouter");
 const signupRouter = require("./routes/signupRouter")
@@ -12,6 +13,7 @@ const morgan = require("morgan");
 connectDB();
 
 app.use(morgan("dev"));
+app.use(cors());
 
 // Middleware to parse JSON
 app.use(express.json());
