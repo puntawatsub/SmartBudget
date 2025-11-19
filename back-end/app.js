@@ -2,21 +2,26 @@ const express = require("express");
 const app = express();
 
 const loginRouter = require("./routes/loginRouter");
+const signupRouter = require("./routes/signupRouter")
 const connectDB = require("./config/db");
-
+const { unknownEndpoint, errorHandler } = require("./middleware/customMiddleware");
 require('dotenv').config();
 
 const morgan = require("morgan");
 
 connectDB();
 
+app.use(morgan("dev"));
+
 // Middleware to parse JSON
 app.use(express.json());
-app.use(morgan("dev"));
  
+// Use the loginRouter for all "/tours" routes
+app.use("/api/login", loginRouter);
 
-// Use the loginRouter for all /logins routes
-app.use("/api/logins", loginRouter);
+
+//Use the signupRouter for all "/signups" routes
+app.use("/api/signups", signupRouter);
 
 // Example route that throws an error
 app.get('/error', (req, res, next) => {
@@ -25,16 +30,12 @@ app.get('/error', (req, res, next) => {
   next(error);
 });
 
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
-// Global error handler
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: err.message || "Internal Server Error" });
-});
-
-
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 // Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
+ 
