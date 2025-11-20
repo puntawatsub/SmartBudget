@@ -99,7 +99,7 @@ To reflect on what went well, what didn’t, and what can be improved for the ne
   - Back-end code Self-assessment
 
 > Team collaborated effectively using Scrum ceremonies.
-> Ready to begin **Sprint 3** focusing on building the first working prototype .
+> Ready to begin **Sprint 3** focusing on building the dashboard, viewing transactions, integrating AI back-end with front-end, and enable email verification for user registration.
 
 ---
 
