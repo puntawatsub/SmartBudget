@@ -26,39 +26,41 @@ const Login = () => {
   //   navigate('/dashboard') //redirect
   // }
 
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-    try {
-      const response = await fetch("http://localhost:3000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const response = await fetch("http://localhost:3000/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+      }),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (response.ok) {
-        // Example: if backend returns a token
-        localStorage.setItem("token", data.token); // store token if needed
-        navigate("/dashboard"); // redirect to dashboard
-      } else {
-        // If login fails
-        setError(data.message || "Login failed");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-      setEmail("");
-      setPassword("");
+    if (response.ok) {
+      localStorage.setItem("token", data.token);
+      navigate("/dashboard");
+    } else {
+      setError(data.message || "Login failed");
     }
-  };
+  } catch (err) {
+    console.error("Login error:", err);
+    setError("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+  
+  
 
   return (
     <div className="flex flex-row h-full overflow-hidden">
