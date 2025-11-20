@@ -13,22 +13,11 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault()
-  //   console.log('Form submitted:', formData)
 
-  //   // Reset form
-  //   setFormData({
-  //     email: '',
-  //     password: '',
-  //   })
-
-  //   navigate('/dashboard') //redirect
-  // }
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  
+
   const handleSubmit = async (e) => {
   e.preventDefault();
   setLoading(true);
