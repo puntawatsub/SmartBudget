@@ -6,7 +6,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Trigger password reset logic here (e.g., API call)
+    
     console.log('Password reset requested for:', email);
     alert('If this email is registered, a reset link has been sent.');
     setEmail('');
@@ -40,6 +40,7 @@ const ForgotPassword = () => {
             </button>
           </div>
         </form>
+
         <p className="mt-4 text-center text-sm text-gray-600">
           Remembered your password?{' '}
           <Link to="/login" className="text-blue-600 hover:underline">
