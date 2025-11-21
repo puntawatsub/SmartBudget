@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 
 const loginRouter = require("./routes/loginRouter");
-const signupRouter = require("./routes/signupRouter");
+const userRouter = require("./routes/userRouter");
 const categoryRouter = require("./routes/wastefulCategoryRouter");
 const connectDB = require("./config/db");
 const {
@@ -30,7 +30,7 @@ app.use(express.json());
 app.use("/api/login", loginRouter);
 
 //Use the signupRouter for all "/signups" routes
-app.use("/api/signups", signupRouter);
+app.use("/api/users", userRouter);
 
 // Use the categoryRouter for all "/api/selectCategory" routes
 app.use("/api/selectCategory", categoryRouter);
