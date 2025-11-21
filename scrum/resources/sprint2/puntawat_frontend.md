@@ -26,7 +26,7 @@
   - [x] Can your code or parts of it be reused elsewhere in the application? (You effectively used the `Input` component).
   - [x] Is logic modular and separated from unrelated concerns? (The array mapping strategy `{["username", "email"...].map(...) }` to generate fields is a **great** example of DRY - Don't Repeat Yourself - code).
 - **Comments and Documentation**
-  - [ ] Are there comments explaining complex logic? (Code is self-explanatory, so heavy comments aren't needed).
+  - [x] Are there comments explaining complex logic? (Code is self-explanatory, so heavy comments aren't needed).
   - [ ] Is there documentation for how to use your code unit?
   - **Note:** There is a large block of **commented-out (dead) code** (the previous `handleSubmit` function). This should be removed before merging to the main branch to keep the codebase clean.
 

@@ -19,6 +19,9 @@
 2.  [Back-end code](#2-back-end-code)
 3.  [Sprint Ceremony Insights](#3-sprint-ceremonies-insights)
 4.  [Tools and Technologies Used](#4-tools-technologies--collaboration)
+5.  [Presentation](#5-presentation)
+6.  [Back-end code self assessment](#6-back-end-code-self-assessment)
+7.  [Front-end code self assessment](#7-front-end-code-self-assessment)
 
 ---
 
@@ -128,4 +131,15 @@ To reflect on what went well, what didn’t, and what can be improved for the ne
 
 [Link to presentation](./resources/sprint2_presentation.pdf)
 
-# 6. Backend code self-assesment
+# 6. Back-end code self-assessment
+
+[Puntawat](./resources/sprint2/puntawat_backend.md)<br>
+[Swostika](./resources/sprint2/swostika_backend.md)<br>
+Others did not write back-end code for this sprint
+
+# 7. Front-end code self-assessment
+
+[Chandina](./resources/sprint2/chandina_frontend.md)<br>
+[Jiya](./resources/sprint2/jiya_frontend.md)<br>
+[Puntawat](./resources/sprint2/puntawat_frontend.md)<br>
+[Swostika](./resources/sprint2/swostika_frontend.md)
