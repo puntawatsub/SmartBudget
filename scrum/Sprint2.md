@@ -128,4 +128,15 @@ To reflect on what went well, what didn’t, and what can be improved for the ne
 
 [Link to presentation](./resources/sprint2_presentation.pdf)
 
-# 6. Backend code self-assesment
+# 6. Back-end code self-assessment
+
+[Puntawat](./resources/sprint2/puntawat_backend.md)<br>
+[Swostika](./resources/sprint2/swostika_backend.md)<br>
+Others did not write back-end code for this sprint
+
+# 7. Front-end code self-assessment
+
+[Chandina](./resources/sprint2/chandina_frontend.md)<br>
+[Jiya](./resources/sprint2/jiya_frontend.md)<br>
+[Puntawat](./resources/sprint2/puntawat_frontend.md)<br>
+[Swostika](./resources/sprint2/swostika_frontend.md)
