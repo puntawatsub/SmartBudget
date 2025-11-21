@@ -24,7 +24,11 @@
 
 # 1. Front-end code
 
+[Front-end code](https://github.com/puntawatsub/SmartBudget/tree/main/front-end)
+
 # 2. Back-end code
+
+[Back-end code](https://github.com/puntawatsub/SmartBudget/tree/main/back-end)
 
 # 3. Sprint Ceremonies Insights
 
@@ -119,3 +123,9 @@ To reflect on what went well, what didn’t, and what can be improved for the ne
 | **GitHub**             | Central repository for project files and documentation                          |
 
 ---
+
+# 5. Presentation
+
+[Link to presentation](./resources/sprint2_presentation.pdf)
+
+# 6. Backend code self-assesment
