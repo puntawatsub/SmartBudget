@@ -19,6 +19,9 @@
 2.  [Back-end code](#2-back-end-code)
 3.  [Sprint Ceremony Insights](#3-sprint-ceremonies-insights)
 4.  [Tools and Technologies Used](#4-tools-technologies--collaboration)
+5.  [Presentation](#5-presentation)
+6.  [Back-end code self assessment](#6-back-end-code-self-assessment)
+7.  [Front-end code self assessment](#7-front-end-code-self-assessment)
 
 ---
 
