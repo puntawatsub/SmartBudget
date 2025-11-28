@@ -10,7 +10,7 @@ const Layout = () => {
     pathname === "/";
 
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col font-['Inter']">
       {isAuthPage ? (
         <nav className="w-full flex items-center justify-between py-4 px-8 shadow-sm bg-white">
           {/* Logo */}
