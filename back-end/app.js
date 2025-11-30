@@ -1,52 +1,58 @@
-const express = require("express");
-const app = express();
-const cors = require("cors");
+const express = require('express')
+const app = express()
+const cors = require('cors')
 
-const loginRouter = require("./routes/loginRouter");
-const userRouter = require("./routes/userRouter");
-const categoryRouter = require("./routes/wastefulCategoryRouter");
-const connectDB = require("./config/db");
+const loginRouter = require('./routes/loginRouter')
+const userRouter = require('./routes/userRouter')
+const categoryRouter = require('./routes/wastefulCategoryRouter')
+const connectDB = require('./config/db')
+const dashboardRouter = require('./routes/dashboardRouter')
+
 const {
   unknownEndpoint,
   errorHandler,
-} = require("./middleware/customMiddleware");
-require("dotenv").config();
+} = require('./middleware/customMiddleware')
+require('dotenv').config()
 
-const morgan = require("morgan");
+const morgan = require('morgan')
 
-connectDB();
+connectDB()
 
-app.get("/", (req, res) => {
-  res.send("API is running");
-});
+app.get('/', (req, res) => {
+  res.send('API is running')
+})
 
-app.use(morgan("dev"));
-app.use(cors());
+app.use(morgan('dev'))
+app.use(cors())
 
 // Middleware to parse JSON
-app.use(express.json());
+app.use(express.json())
 
 // Use the loginRouter for all "/tours" routes
-app.use("/api/login", loginRouter);
+app.use('/api/login', loginRouter)
 
 //Use the signupRouter for all "/signups" routes
-app.use("/api/users", userRouter);
+app.use('/api/users', userRouter)
 
 // Use the categoryRouter for all "/api/selectCategory" routes
-app.use("/api/selectCategory", categoryRouter);
+app.use('/api/selectCategory', categoryRouter)
+
+//dasboard
+app.use('/api/dashboard', dashboardRouter)
 
 // Example route that throws an error
-app.get("/error", (req, res, next) => {
+app.get('/error', (req, res, next) => {
   // Trigger an error
-  const error = new Error("Network problem");
-  next(error);
-});
+  const error = new Error('Network problem')
+  next(error)
+})
 
-app.use(unknownEndpoint);
-app.use(errorHandler);
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 4000
 // Start the server
 app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+  console.log(`Server is running on http://localhost:${port}`)
+})
+app.js
