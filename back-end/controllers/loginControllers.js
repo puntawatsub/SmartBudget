@@ -1,6 +1,10 @@
 const Signup = require("../models/signupModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require("../lib/generateToken");
 
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -19,21 +23,27 @@ const loginUser = async (req, res) => {
     }
 
     // 3. Create token
-    const token = jwt.sign(
-      { id: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
+    const token = generateAccessToken(user);
+
+    // 4. Create refresh token
+    const refreshToken = generateRefreshToken(user);
+
+    // send cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: false, // true in production
+      sameSite: "strict",
+      path: "/refresh",
+    });
 
     return res.status(200).json({
       message: "Login successful",
       token,
       user: {
         username: user.username,
-        email: user.email
-      }
+        email: user.email,
+      },
     });
-
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

@@ -1,32 +1,41 @@
 const express = require("express");
 const app = express();
-const cors = require("cors")
+const cors = require("cors");
 
 const loginRouter = require("./routes/loginRouter");
-const signupRouter = require("./routes/signupRouter")
+const signupRouter = require("./routes/signupRouter");
 const connectDB = require("./config/db");
-const { unknownEndpoint, errorHandler } = require("./middleware/customMiddleware");
-require('dotenv').config();
+const {
+  unknownEndpoint,
+  errorHandler,
+} = require("./middleware/customMiddleware");
+require("dotenv").config();
 
 const morgan = require("morgan");
 
 connectDB();
 
 app.use(morgan("dev"));
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+  })
+);
 
 // Middleware to parse JSON
 app.use(express.json());
- 
+
 // Use the loginRouter for all "/tours" routes
 app.use("/api/login", loginRouter);
-
 
 //Use the signupRouter for all "/signups" routes
 app.use("/api/signups", signupRouter);
 
+// Use the refreshRouter for refresh
+app.use("/api/refresh");
+
 // Example route that throws an error
-app.get('/error', (req, res, next) => {
+app.get("/error", (req, res, next) => {
   // Trigger an error
   const error = new Error("Network problem");
   next(error);
@@ -40,4 +49,3 @@ const port = process.env.PORT || 4000;
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
- 
