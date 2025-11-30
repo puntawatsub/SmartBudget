@@ -5,6 +5,8 @@ const cors = require("cors");
 const loginRouter = require("./routes/loginRouter");
 const userRouter = require("./routes/userRouter");
 const categoryRouter = require("./routes/wastefulCategoryRouter");
+const goalRouter = require("./routes/goal.Router");
+
 const connectDB = require("./config/db");
 const {
   unknownEndpoint,
@@ -35,9 +37,11 @@ app.use("/api/users", userRouter);
 // Use the categoryRouter for all "/api/selectCategory" routes
 app.use("/api/selectCategory", categoryRouter);
 
+// Goal API route
+app.use("/api/goals", goalRouter);
+
 // Example route that throws an error
 app.get("/error", (req, res, next) => {
-  // Trigger an error
   const error = new Error("Network problem");
   next(error);
 });
