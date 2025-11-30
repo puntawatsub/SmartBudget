@@ -9,7 +9,7 @@
  
  const mongoose = require('mongoose');
 
-const signupSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   username: { 
     type: String, 
     required: true },
@@ -17,14 +17,15 @@ const signupSchema = new mongoose.Schema({
   email: { 
     type: String, 
     required: true,  
-    unique: true,      // Prevent duplicate emails
+    unique: true,      // Prevent duplicate emails 
   },
 
   password: {
     type: String,
     required: true,
+    minlength:6,
   }
 
 }, { timestamps: true });
 
-module.exports = mongoose.model("Signup", signupSchema);
+module.exports = mongoose.model("User", userSchema);
