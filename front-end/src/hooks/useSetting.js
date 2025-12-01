@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function useSetting() {
   const [title, setTitle] = useState("");
@@ -9,6 +9,10 @@ export function useSetting() {
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("en");
  
+  useEffect(() => {
+  document.documentElement.classList.remove("light", "dark");
+  document.documentElement.classList.add(theme);
+  }, [theme]);
 
 
   const reset = () => {
@@ -19,7 +23,6 @@ export function useSetting() {
     setAvatar(null);
     setTheme("light");
     setLanguage("en");
-    setNotifications(false);
   };
 
   return {
