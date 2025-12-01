@@ -5,6 +5,8 @@ const cors = require("cors");
 const loginRouter = require("./routes/loginRouter");
 const userRouter = require("./routes/userRouter");
 const categoryRouter = require("./routes/wastefulCategoryRouter");
+const settingRouter = require("./routes/settingRouter");
+
 const connectDB = require("./config/db");
 const {
   unknownEndpoint,
@@ -34,6 +36,9 @@ app.use("/api/users", userRouter);
 
 // Use the categoryRouter for all "/api/selectCategory" routes
 app.use("/api/selectCategory", categoryRouter);
+
+// Use the settingRouter for all routes that begin with "/api/settings"
+app.use("/api/settings", settingRouter);
 
 // Example route that throws an error
 app.get("/error", (req, res, next) => {
