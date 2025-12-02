@@ -14,14 +14,14 @@ const Layout = () => {
 
   return (
     <div className="h-screen flex flex-col">
+
+      {/* Auth pages show the top navbar */}
       {isAuthPage ? (
         <nav className="w-full flex items-center justify-between py-4 px-8 shadow-sm bg-white">
-          {/* Logo */}
-          <Link to={"/"} className="text-xl font-bold">
+          <Link to="/" className="text-xl font-bold">
             logo
           </Link>
 
-          {/* Login and Sign up at right corner */}
           <div className="flex items-center gap-4">
             <Link
               to="/login"
@@ -39,9 +39,12 @@ const Layout = () => {
           </div>
         </nav>
       ) : (
-        <></>
+        // Non-auth pages get a minimal top bar
+        <div className="w-full bg-white h-16 border-b shadow-sm"></div>
       )}
-      <main className="h-full">
+
+      {/* Main content */}
+      <main className="flex-1 overflow-auto bg-gray-100">
         <Outlet />
       </main>
     </div>
