@@ -1,7 +1,10 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import useRefresh from "./hooks/useRefresh";
+import { useEffect } from "react";
 
 const Layout = () => {
   const { pathname } = useLocation();
+  const { error, loading } = useRefresh();
 
   const isAuthPage =
     pathname === "/login" ||

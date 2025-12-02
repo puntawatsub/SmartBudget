@@ -1,5 +1,5 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import ResetPassword from "./components/ResetPasswordPage/ResetPassword";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "./Home";
 
@@ -13,6 +13,7 @@ import GoalPage from "./components/GoalPage/GoalPage";
 import AddGoalPage from "./pages/GoalPage/AddGoalPage";   // ✅ NEW GOAL PAGE
 
 import "./index.css";
+import useRefresh from "./hooks/useRefresh";
 
 function App() {
   return (
