@@ -25,3 +25,32 @@ Content-Type: application/json
     "email":"xz@yahoo.com",
     "password":"xz@123"
 }
+
+
+### Create Goal
+POST http://localhost:3000/api/goals
+Content-Type: application/json
+
+{
+  "title": "New Goal Test",
+  "target": 10000,
+  "saved": 2000,
+  "deadline": "2025-12-12"
+}
+
+### Get All Goals
+GET http://localhost:3000/api/goals
+
+### Update Goal
+PUT http://localhost:3000/api/goals/692bf9220e86b30dcb45a059
+Content-Type: application/json
+
+{
+  "title": "Updated Goal",
+  "target": 12000,
+  "saved": 5000,
+  "deadline": "2025-12-25"
+}
+
+### Delete Goal
+DELETE http://localhost:3000/api/goals/692bf9220e86b30dcb45a059
