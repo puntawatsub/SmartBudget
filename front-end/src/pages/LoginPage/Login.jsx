@@ -13,48 +13,44 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-  const { email, password } = formData;
+    const { email, password } = formData;
 
-  try {
-    const response = await fetch("http://localhost:3000/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const response = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    if (response.ok) {
-      localStorage.setItem("token", data.token); // save token
-      navigate("/dashboard"); // redirect to dashboard
-    } else if (response.status === 404) {
-      // if user does not exist
-      alert("User does not exist. Please sign up first.");
-    } else {
-      // Wrong password or other errors
-      setError(data.message || "Login failed");
+      if (response.ok) {
+        sessionStorage.setItem("token", data.token); // save token
+        navigate("/dashboard"); // redirect to dashboard
+      } else if (response.status === 404) {
+        // if user does not exist
+        alert("User does not exist. Please sign up first.");
+      } else {
+        // Wrong password or other errors
+        setError(data.message || "Login failed");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+      setFormData({ email: "", password: "" });
     }
-  } catch (err) {
-    console.error("Login error:", err);
-    setError("Something went wrong. Please try again.");
-  } finally {
-    setLoading(false);
-    setFormData({ email: "", password: "" });
-  }
-};
-
-  
-  
+  };
 
   return (
     <div className="flex flex-row h-full overflow-hidden">
@@ -122,13 +118,19 @@ const Login = () => {
                 required
               />
             </div>
+            {error && <p className="text-red-600 text-sm mb-4">{error}</p>}
 
             <div className="mt-14 flex flex-col">
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2.75 rounded-md hover:bg-blue-700 transition duration-200 font-semibold"
+                disabled={loading}
+                className={`w-full bg-blue-600 text-white py-2.75 rounded-md transition duration-200 font-semibold ${
+                  loading
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:bg-blue-700"
+                }`}
               >
-                Log In
+                {loading ? "Logging in..." : "Log In"}
               </button>
             </div>
           </form>

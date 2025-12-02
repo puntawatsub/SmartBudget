@@ -18,27 +18,36 @@ const Home = () => {
             Get Started
           </button>
         </div>
-        
       </section>
 
       {/* Why Choose Us Section */}
       <section className="text-center my-16">
         <h2 className="text-3xl font-semibold mb-10">Why choose us?</h2>
         <div className="flex flex-col md:flex-row justify-center gap-6 px-4 md:px-0">
-          {["Budget Tracking", "Budget Tracking", "Budget Tracking"].map((item, idx) => (
-            <div key={idx} className="bg-white rounded-xl shadow-md p-6 flex-1">
-              <h3 className="text-xl font-bold mb-3">{item}</h3>
-              <p className="text-gray-600 text-sm">
-                With the Budget Tracking feature, you can create budgets for different spending categories, earn fast info, transportation, extraamount, and more. Track daily expenses and helps you stay within your set budget.
-              </p>
-            </div>
-          ))}
+          {["Budget Tracking", "Budget Tracking", "Budget Tracking"].map(
+            (item, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-xl shadow-md p-6 flex-1"
+              >
+                <h3 className="text-xl font-bold mb-3">{item}</h3>
+                <p className="text-gray-600 text-sm">
+                  With the Budget Tracking feature, you can create budgets for
+                  different spending categories, earn fast info, transportation,
+                  extraamount, and more. Track daily expenses and helps you stay
+                  within your set budget.
+                </p>
+              </div>
+            )
+          )}
         </div>
       </section>
 
       {/* Revolutionise Section */}
       <section className="my-16 px-4 md:px-20">
-        <h2 className="text-3xl font-semibold text-center mb-10">Revolutionise</h2>
+        <h2 className="text-3xl font-semibold text-center mb-10">
+          Revolutionise
+        </h2>
         <div className="flex flex-col md:flex-row gap-6">
           {/* Before Using SmartBudget */}
           <div className="flex-1 bg-purple-100 rounded-xl p-6">
@@ -56,7 +65,9 @@ const Home = () => {
                 "Risk of losing data",
                 "Time-consuming, complicated",
               ].map((item, idx) => (
-                <li key={idx} className="mb-1">{item}</li>
+                <li key={idx} className="mb-1">
+                  {item}
+                </li>
               ))}
             </ul>
           </div>
@@ -75,7 +86,9 @@ const Home = () => {
                 "Secure",
                 "Fast, efficient",
               ].map((item, idx) => (
-                <li key={idx} className="mb-1">{item}</li>
+                <li key={idx} className="mb-1">
+                  {item}
+                </li>
               ))}
             </ul>
           </div>
@@ -86,4 +99,3 @@ const Home = () => {
 };
 
 export default Home;
-
