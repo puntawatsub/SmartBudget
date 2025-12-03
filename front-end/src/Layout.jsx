@@ -1,8 +1,11 @@
-import { Outlet, Link, useLocation } from "react-router-dom";
 import { Input } from "./components/ui/input";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import useRefresh from "./hooks/useRefresh";
+import { useEffect } from "react";
 
 const Layout = () => {
   const { pathname } = useLocation();
+  const { error, loading } = useRefresh();
 
   const isAuthPage =
     pathname === "/login" ||
@@ -12,14 +15,13 @@ const Layout = () => {
 
   return (
     <div className="h-screen flex flex-col font-['Inter']">
+      {/* Auth pages show the top navbar */}
       {isAuthPage ? (
         <nav className="w-full flex items-center justify-between py-4 px-8 shadow-sm bg-white">
-          {/* Logo */}
-          <Link to={"/"} className="text-xl font-bold">
+          <Link to="/" className="text-xl font-bold">
             logo
           </Link>
 
-          {/* Login and Sign up at right corner */}
           <div className="flex items-center gap-4">
             <Link
               to="/login"
@@ -46,7 +48,9 @@ const Layout = () => {
           </div>
         </header>
       )}
-      <main className="h-full">
+
+      {/* Main content */}
+      <main className="flex-1 overflow-auto bg-gray-100">
         <Outlet />
       </main>
     </div>
