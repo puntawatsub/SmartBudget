@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const Layout = () => {
   const { pathname } = useLocation();
-  const { error, loading } = useRefresh();
+  //const { error, loading } = useRefresh();
 
   const isAuthPage =
     pathname === "/login" ||
@@ -14,7 +14,6 @@ const Layout = () => {
 
   return (
     <div className="h-screen flex flex-col">
-
       {/* Auth pages show the top navbar */}
       {isAuthPage ? (
         <nav className="w-full flex items-center justify-between py-4 px-8 shadow-sm bg-white">

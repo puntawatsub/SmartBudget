@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 const loginRouter = require("./routes/loginRouter");
 const userRouter = require("./routes/userRouter");
 const categoryRouter = require("./routes/wastefulCategoryRouter");
-const goalRouter = require("./routes/goal.Router");
+const goalRouter = require("./routes/goals");
 
 const refreshRouter = require("./routes/refreshRouter");
 const connectDB = require("./config/db");

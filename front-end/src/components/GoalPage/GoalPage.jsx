@@ -1,4 +1,10 @@
 import { useState, useEffect } from "react";
+import {
+  getGoals,
+  createGoal,
+  updateGoal,
+  deleteGoal,
+} from "../../api/goalsApi";
 
 function GoalPage() {
   const [showForm, setShowForm] = useState(false);
@@ -10,52 +16,42 @@ function GoalPage() {
   const [saved, setSaved] = useState("");
   const [deadline, setDeadline] = useState("");
 
-  // Goals list
   const [goals, setGoals] = useState([]);
 
-  // NEW — prevents overwriting localStorage on page load
-  const [loaded, setLoaded] = useState(false);
-
-  // PROGRESS CALCULATOR
+  // PROGRESS CALCULATION
   const calculateProgress = (saved, target) => {
     if (!target || target <= 0) return 0;
     return Math.min(100, Math.round((saved / target) * 100));
   };
 
-  // LOAD FROM LOCAL STORAGE (runs once)
+  // LOAD GOALS FROM BACKEND
   useEffect(() => {
-    const stored = localStorage.getItem("goals");
-    if (stored) {
+    async function load() {
       try {
-        setGoals(JSON.parse(stored));
-      } catch (err) {
-        console.error("Invalid JSON in localStorage");
+        const data = await getGoals();
+        setGoals(data);
+      } catch (error) {
+        console.error("Failed to load goals", error);
       }
     }
-    setLoaded(true); // IMPORTANT
+    load();
   }, []);
 
-  // SAVE TO LOCAL STORAGE (only after loaded)
-  useEffect(() => {
-    if (!loaded) return; // prevents deletion during initial load
-    localStorage.setItem("goals", JSON.stringify(goals));
-  }, [goals, loaded]);
-
   // ADD NEW GOAL
-  const handleAddGoal = (e) => {
+  const handleAddGoal = async (e) => {
     e.preventDefault();
 
     const newGoal = {
-      id: Date.now(),
       title,
       target: Number(target),
       saved: Number(saved),
       deadline,
-      progress: calculateProgress(Number(saved), Number(target)),
     };
 
-    setGoals([...goals, newGoal]);
+    const created = await createGoal(newGoal);
+    setGoals([...goals, created]);
 
+    // Clear form
     setTitle("");
     setTarget("");
     setSaved("");
@@ -63,36 +59,40 @@ function GoalPage() {
     setShowForm(false);
   };
 
-  // EDIT GOAL
+  // START EDITING
   const startEditing = (goal) => {
     setEditingGoal({ ...goal });
     setShowForm(false);
   };
 
-  const saveEdit = (e) => {
+  // SAVE EDITED GOAL
+  const saveEdit = async (e) => {
     e.preventDefault();
 
     const updatedGoal = {
       ...editingGoal,
       target: Number(editingGoal.target),
       saved: Number(editingGoal.saved),
-      progress: calculateProgress(
-        Number(editingGoal.saved),
-        Number(editingGoal.target)
-      ),
     };
 
-    setGoals(goals.map((g) => (g.id === updatedGoal.id ? updatedGoal : g)));
+    const result = await updateGoal(editingGoal._id, updatedGoal);
+
+    setGoals(goals.map((g) => (g._id === result._id ? result : g)));
     setEditingGoal(null);
   };
 
   // DELETE GOAL
-  const handleDelete = (id) => {
-    const confirmed = window.confirm("Are you sure you want to delete this goal?");
-    if (!confirmed) return;
-    setGoals(goals.filter((g) => g.id !== id));
+  const handleDelete = async (id) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this goal?"
+    );
 
-    if (editingGoal && editingGoal.id === id) {
+    if (!confirmed) return;
+
+    await deleteGoal(id);
+    setGoals(goals.filter((g) => g._id !== id));
+
+    if (editingGoal && editingGoal._id === id) {
       setEditingGoal(null);
     }
   };
@@ -101,10 +101,8 @@ function GoalPage() {
     <div className="min-h-screen bg-gray-100 px-8 py-6">
       <h1 className="text-3xl font-bold mb-6">Goals</h1>
 
-      {/* TOP BAR */}
       <div className="bg-white p-4 shadow-sm border rounded-xl flex justify-between items-center">
         <h2 className="text-xl font-semibold">Available Balance | Limit</h2>
-
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
           onClick={() => {
@@ -116,12 +114,14 @@ function GoalPage() {
         </button>
       </div>
 
-      {/* ADD GOAL FORM */}
       {showForm && !editingGoal && (
         <div className="bg-white mt-4 p-6 rounded-xl shadow border">
           <h3 className="text-xl font-semibold mb-4">Add New Goal</h3>
 
-          <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={handleAddGoal}>
+          <form
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            onSubmit={handleAddGoal}
+          >
             <div>
               <label className="block font-medium mb-1">Goal Title</label>
               <input
@@ -134,7 +134,9 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Target Amount (€)</label>
+              <label className="block font-medium mb-1">
+                Target Amount (€)
+              </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -145,7 +147,9 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Current Saved (€)</label>
+              <label className="block font-medium mb-1">
+                Current Saved (€)
+              </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -166,7 +170,6 @@ function GoalPage() {
               />
             </div>
 
-            {/* Progress Preview */}
             <div className="col-span-full">
               <p>Progress: {calculateProgress(saved, target)}%</p>
               <div className="w-full bg-gray-300 h-2 rounded mt-1">
@@ -193,12 +196,14 @@ function GoalPage() {
         </div>
       )}
 
-      {/* EDIT GOAL FORM */}
       {editingGoal && (
         <div className="bg-white mt-4 p-6 rounded-xl shadow border">
           <h3 className="text-xl font-semibold mb-4">Edit Goal</h3>
 
-          <form className="grid grid-cols-1 sm:grid-cols-2 gap-4" onSubmit={saveEdit}>
+          <form
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            onSubmit={saveEdit}
+          >
             <div>
               <label className="block font-medium mb-1">Goal Title</label>
               <input
@@ -213,7 +218,9 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Target Amount (€)</label>
+              <label className="block font-medium mb-1">
+                Target Amount (€)
+              </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -226,7 +233,9 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Current Saved (€)</label>
+              <label className="block font-medium mb-1">
+                Current Saved (€)
+              </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -267,14 +276,15 @@ function GoalPage() {
         </div>
       )}
 
-      {/* GOAL LIST */}
       <div className="bg-white mt-6 p-6 rounded-xl shadow border">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {goals.map((goal) => (
-            <div key={goal.id} className="bg-gray-100 p-5 rounded-xl border shadow-sm">
+            <div
+              key={goal._id}
+              className="bg-gray-100 p-5 rounded-xl border shadow-sm"
+            >
               <h3 className="text-lg font-semibold">{goal.title}</h3>
 
-              {/* Edit + Delete buttons */}
               <div className="flex gap-2 mt-2">
                 <button
                   className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm"
@@ -285,7 +295,7 @@ function GoalPage() {
 
                 <button
                   className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm"
-                  onClick={() => handleDelete(goal.id)}
+                  onClick={() => handleDelete(goal._id)}
                 >
                   Delete
                 </button>
@@ -294,12 +304,16 @@ function GoalPage() {
               <div className="w-full bg-gray-300 h-2 rounded mt-3">
                 <div
                   className="bg-green-300 h-2 rounded"
-                  style={{ width: `${goal.progress}%` }}
+                  style={{
+                    width: `${calculateProgress(goal.saved, goal.target)}%`,
+                  }}
                 ></div>
               </div>
 
               <div className="text-sm mt-3 space-y-1">
-                <p><strong>€{goal.saved}</strong> saved</p>
+                <p>
+                  <strong>€{goal.saved}</strong> saved
+                </p>
                 <p>Target: €{goal.target}</p>
                 <p>Deadline: {goal.deadline}</p>
               </div>

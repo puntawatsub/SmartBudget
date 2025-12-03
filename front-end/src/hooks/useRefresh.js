@@ -17,7 +17,7 @@ const useRefresh = () => {
     const refresh = async () => {
       try {
         setLoading(true);
-        const response = await fetch("/api/refresh", {
+        const response = await fetch("http://localhost:3000/api/refresh", {
           method: "POST",
           credentials: "include",
         });
