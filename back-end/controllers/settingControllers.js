@@ -4,6 +4,7 @@ const validator = require ('validator');
 // create or update personal setting
 const personalSetting = async (req, res)=> {
     const {name, email} = req.body;
+    const userId = req.user._id;
     console.log(JSON.stringify(req.body));
 
     try{
@@ -15,15 +16,15 @@ const personalSetting = async (req, res)=> {
 
         // find existing or create new
         const personalInfo = await Setting.findOneAndUpdate(
-            {},
+            {userId},
             {name, email},
             {new:true , upsert:true} // (new:true) = updated version of doc and (upsert:true)= update or insert
         
         );
-        res.status(200).json({message: 'Personal info updated sucessfully', data: personalInfo});
+        res.status(200).json({message: 'Personal info updated successfully', data: personalInfo});
     
     }catch(err){
-        res.status(400).json({err: err.message});
+        res.status(500).json({err: err.message});
 
     }
             
@@ -34,6 +35,7 @@ const personalSetting = async (req, res)=> {
 
 const appSetting = async (req, res)=> {
     const {theme, language, currency , region} = req.body;
+    const userId = req.user._id;
     console.log(JSON.stringify(req.body));
 
     if( !theme || !language || !currency|| !region){
@@ -65,16 +67,16 @@ const appSetting = async (req, res)=> {
   try{
     //save and update app settings
     const app = await Setting.findOneAndUpdate(
-        {},
+        {userId},
         {theme, language, currency, region},
-        {new:true, upsert:true}
+        {new:true, upsert:true, runValidators:true}
     );
       res.status(200).json({
-        message: 'App settings updated sucessfully',
+        message: 'App settings updated successfully',
         data: app,
       });
     }catch(err){
-        res.status(400).json({err: err.message});
+        res.status(500).json({err: err.message});
     }
   
 };

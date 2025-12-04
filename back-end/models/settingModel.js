@@ -13,21 +13,27 @@
 const mongoose = require('mongoose');
 
 const settingSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    unique: true, // each user has exactly one settings document
+  },
+
   name: { 
     type: String, 
-    required: true 
+    required: true
   },
 
   email: { 
     type: String, 
     required: true,  
-    unique: true,      // Prevent duplicate emails 
   },
 
    theme: {
     type: String,
     enum: ['Light', 'Dark'],
-    default: 'light'
+    default: 'Light'
   },
 
   language: {
