@@ -1,6 +1,7 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import useRefresh from "./hooks/useRefresh";
 import { useEffect } from "react";
+import Footer from "./components/Footer/Footer";
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -14,7 +15,6 @@ const Layout = () => {
 
   return (
     <div className="h-screen flex flex-col">
-
       {/* Auth pages show the top navbar */}
       {isAuthPage ? (
         <nav className="w-full flex items-center justify-between py-4 px-8 shadow-sm bg-white">
@@ -47,6 +47,7 @@ const Layout = () => {
       <main className="flex-1 overflow-auto bg-gray-100">
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 };
