@@ -81,7 +81,46 @@ const appSetting = async (req, res)=> {
   
 };
 
+// Get user settings
+const getSettings = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    // Find settings for this user
+    const settings = await Setting.findOne({ userId });
+
+    if (!settings) {
+      // If no settings exist yet, return defaults
+      return res.status(200).json({
+        name: '',
+        email: '',
+        theme: 'Light',
+        language: 'English',
+        currency: 'USD',
+        region: 'USA',
+      });
+    }
+
+    // Return existing settings
+    res.status(200).json({
+      name: settings.name || '',
+      email: settings.email || '',
+      theme: settings.theme || 'Light',
+      language: settings.language || 'English',
+      currency: settings.currency || 'USD',
+      region: settings.region || 'USA',
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+
+
+
+
 module.exports = {
     personalSetting,
     appSetting,
+    getSettings,
 };
