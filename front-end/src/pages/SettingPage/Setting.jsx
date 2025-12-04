@@ -9,12 +9,12 @@ import { SelectValue } from "@/components/ui/select";
 export default function SettingsPage() {
   const settings = useSetting();
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    // Implement save logic here, e.g., send settings to backend or update context
-    console.log(settings);
-    alert("Settings saved!");
-  };
+  // const handleSave = (e) => {
+  //   e.preventDefault();
+  //   // Implement save logic here, e.g., send settings to backend or update context
+  //   console.log(settings);
+  //   alert("Settings saved!");
+  // };
 
 
   return (
@@ -94,7 +94,7 @@ export default function SettingsPage() {
                 {/* Button Actions */}
                 <div className="flex gap-2 pt-4">
                   <Button variant="outline" onClick={settings.reset}>Discard Changes</Button>
-                  <Button onClick={handleSave}>Save</Button>
+                  <Button onClick={settings.saveSettings}>Save</Button>
                 </div>
               </section>
             </TabsContent>
@@ -135,8 +135,8 @@ export default function SettingsPage() {
                   <Select value={settings.currency} onValueChange={settings.setCurrency}>
                     <SelectTrigger id="currency"><SelectValue placeholder="Select a currency" /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="eur">€ - Euro</SelectItem>
-                      <SelectItem value="usd">$ - USD</SelectItem>
+                      <SelectItem value="eur"> Euro</SelectItem>
+                      <SelectItem value="usd"> USD</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -156,7 +156,7 @@ export default function SettingsPage() {
                 {/* Button Actions */}
                 <div className="flex gap-2 pt-4">
                   <Button variant="outline" onClick={settings.reset}>Discard Changes</Button>
-                  <Button onClick={handleSave}>Save</Button>
+                  <Button onClick={settings.saveSettings}>Save</Button>
                 </div>                
                 </section>
             </TabsContent>
