@@ -1,17 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function useSetting() {
   const [title, setTitle] = useState("");
   const [email, setEmail] = useState("");
-  const [currency, setCurrency] = useState("eur");
+  const [currency, setCurrency] = useState("usd");
   const [region, setRegion] = useState("fi");
   const [avatar, setAvatar] = useState(null);
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("en");
- 
+
   const url = "http://localhost:3000/api/settings";
 
-  // Load settings 
+  // Load settings
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -19,8 +19,7 @@ export function useSetting() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            
-          }
+          },
         });
         if (!res.ok) throw new Error("Failed to fetch settings");
 
@@ -35,14 +34,13 @@ export function useSetting() {
         console.error(err);
       }
     };
-
     fetchSettings();
   }, []);
 
   // Apply theme to document
   useEffect(() => {
     document.documentElement.classList.remove("Light", "Dark");
-    document.documentElement.classList.add(theme);
+    document.documentElement.classList.add(theme === "light" ? "Light" : "Dark");
   }, [theme]);
 
   // Save settings to backend
@@ -51,10 +49,7 @@ export function useSetting() {
       // Save personal info
       const personalRes = await fetch(`${url}/personal`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name: title, email }),
       });
       if (!personalRes.ok) {
@@ -63,13 +58,15 @@ export function useSetting() {
       }
 
       // Save app settings
-      const appRes = await fetch(`${BACKEND_URL}/app`, {
+      const appRes = await fetch(`${url}/app`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          
-        },
-        body: JSON.stringify({ theme, language, currency, region }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          theme: theme === "light" ? "Light" : "Dark",
+          language: language === "en" ? "English" : "Finnish",
+          currency: currency === "usd" ? "USD" : "Euro",
+          region: region === "fi" ? "Finland" : "USA",
+        }),
       });
       if (!appRes.ok) {
         const err = await appRes.json();
@@ -83,34 +80,32 @@ export function useSetting() {
     }
   };
 
-
   const reset = () => {
     setTitle("");
     setEmail("");
     setCurrency("USD");
     setRegion("USA");
     setAvatar(null);
-    setTheme("Light");
-    setLanguage("English");
-    setNotifications(false);
+    setTheme("light");
+    setLanguage("en");
   };
 
   return {
-    title, 
+    title,
     setTitle,
-    email, 
+    email,
     setEmail,
-    currency, 
+    currency,
     setCurrency,
-    region, 
+    region,
     setRegion,
-    avatar, 
+    avatar,
     setAvatar,
-    theme, 
+    theme,
     setTheme,
     language,
     setLanguage,
     reset,
-    saveSettings
+    saveSettings,
   };
 }
