@@ -1,4 +1,6 @@
+require('dotenv').config()
 const express = require('express')
+
 const app = express()
 const cors = require('cors')
 
@@ -7,12 +9,12 @@ const userRouter = require('./routes/userRouter')
 const categoryRouter = require('./routes/wastefulCategoryRouter')
 const connectDB = require('./config/db')
 const dashboardRouter = require('./routes/dashboardRouter')
+const forgotPasswordRouter = require('./routes/forgetPasswordRouter')
 
 const {
   unknownEndpoint,
   errorHandler,
 } = require('./middleware/customMiddleware')
-require('dotenv').config()
 
 const morgan = require('morgan')
 
@@ -39,6 +41,9 @@ app.use('/api/selectCategory', categoryRouter)
 
 //dasboard
 app.use('/api/dashboard', dashboardRouter)
+
+//forgot password
+app.use('/api/forgot-password', forgotPasswordRouter)
 
 // Example route that throws an error
 app.get('/error', (req, res, next) => {
