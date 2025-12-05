@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUpPage/SignUp";
 import Login from "./pages/LoginPage/Login";
 import ForgotPassword from "./pages/ForgotPasswordPage/ForgotPassword";
 import Dashboard from "./pages/DashboardPage/Dashboard";
+import Setting from "./pages/SettingPage/Setting";
 import Transaction from "./pages/TransactionPage/Transaction";
 
 import ForgotPassword from './pages/ForgotPasswordPage/ForgotPassword'
@@ -33,6 +34,7 @@ function App() {
             {/* <Route path="reset-password" element={<ResetPassword />} /> */}
             <Route path='reset-password/:token' element={<ResetPassword />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="settings" element={<Setting />} />
             <Route path="transaction" element={<Transaction />} />
             {/* Goals system */}
             <Route path="goals" element={<GoalPage />} /> {/* Goals overview */}

@@ -12,6 +12,7 @@ const dashboardRouter = require('./routes/dashboardRouter')
 const forgotPasswordRouter = require('./routes/forgetPasswordRouter')
 const goalRouter = require("./routes/goal.Router");
 const transactionRouter = require("./routes/transactionRouter");
+const settingRouter = require("./routes/settingRouter");
 
 const refreshRouter = require("./routes/refreshRouter");
 
@@ -71,6 +72,9 @@ app.use("/api/transactions", transactionRouter);
 
 // Use the refreshRouter for refresh
 // app.use("/api/refresh");
+
+// Use the settingRouter for all routes that begin with "/api/settings"
+app.use("/api/settings", settingRouter);
 
 // Example route that throws an error
 app.get('/error', (req, res, next) => {
