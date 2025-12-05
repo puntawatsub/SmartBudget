@@ -8,6 +8,12 @@ import { useSetting } from "@/hooks/useSetting";
 export default function SettingsPage() {
   const settings = useSetting();
 
+  // const handleSave = (e) => {
+  //   e.preventDefault();
+  //   // Implement save logic here, e.g., send settings to backend or update context
+  //   console.log(settings);
+  //   alert("Settings saved!");
+  // };
   const handleSave = () => {
     console.log("Saving:", settings);
     alert("Settings saved!");
@@ -150,12 +156,10 @@ export default function SettingsPage() {
                 <div>
                   <Label htmlFor="currency" className="dark:text-white">Currency</Label>
                   <Select value={settings.currency} onValueChange={settings.setCurrency}>
-                    <SelectTrigger className="bg-white dark:bg-gray-800 dark:text-white border-gray-300 dark:border-gray-600">
-                      <SelectValue placeholder="Select a currency" />
-                    </SelectTrigger>
-                    <SelectContent className="dark:bg-gray-700 dark:text-white">
-                      <SelectItem value="eur">€ - Euro</SelectItem>
-                      <SelectItem value="usd">$ - USD</SelectItem>
+                    <SelectTrigger id="currency"><SelectValue placeholder="Select a currency" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="eur"> Euro</SelectItem>
+                      <SelectItem value="usd"> USD</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
