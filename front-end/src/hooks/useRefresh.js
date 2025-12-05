@@ -6,6 +6,7 @@ const useRefresh = () => {
   const { pathname } = useLocation();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  let ran = false;
 
   // excluded path name not to redirect to home if user not signed in
   const exclude = ["/login", "/signup"];
@@ -15,6 +16,10 @@ const useRefresh = () => {
       if (!exclude.includes(pathname)) navigate("/");
     };
     const refresh = async () => {
+      if (ran) {
+        return;
+      }
+      ran = true;
       try {
         setLoading(true);
         const response = await fetch("http://localhost:3000/api/refresh", {
