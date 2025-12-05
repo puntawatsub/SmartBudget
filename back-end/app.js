@@ -10,7 +10,7 @@ const categoryRouter = require('./routes/wastefulCategoryRouter')
 const connectDB = require('./config/db')
 const dashboardRouter = require('./routes/dashboardRouter')
 const forgotPasswordRouter = require('./routes/forgetPasswordRouter')
-const goalRouter = require('./routes/goal.Router')
+const goalRouter = require('./routes/goals')
 const transactionRouter = require('./routes/transactionRouter')
 const settingRouter = require('./routes/settingRouter')
 
