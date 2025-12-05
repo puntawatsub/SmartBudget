@@ -10,19 +10,21 @@ const categoryRouter = require('./routes/wastefulCategoryRouter')
 const connectDB = require('./config/db')
 const dashboardRouter = require('./routes/dashboardRouter')
 const forgotPasswordRouter = require('./routes/forgetPasswordRouter')
-const goalRouter = require("./routes/goal.Router");
-const transactionRouter = require("./routes/transactionRouter");
-const settingRouter = require("./routes/settingRouter");
+const goalRouter = require('./routes/goal.Router')
+const transactionRouter = require('./routes/transactionRouter')
+const settingRouter = require('./routes/settingRouter')
 
-const refreshRouter = require("./routes/refreshRouter");
+const cookieParser = require('cookie-parser')
+
+const refreshRouter = require('./routes/refreshRouter')
 
 const {
   unknownEndpoint,
   errorHandler,
 } = require('./middleware/customMiddleware')
 
-const morgan = require("morgan");
-const requireAuth = require("./middleware/requireAuth");
+const morgan = require('morgan')
+const requireAuth = require('./middleware/requireAuth')
 
 connectDB()
 
@@ -30,31 +32,34 @@ app.get('/', (req, res) => {
   res.send('API is running')
 })
 
-app.use(morgan("dev"));
+app.use(morgan('dev'))
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: 'http://localhost:5173',
     credentials: true,
   })
-);
+)
 
 // Middleware to parse JSON
 app.use(express.json())
 
 // cookie parser
-app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET))
 
 // Use the loginRouter for all "/tours" routes
 app.use('/api/login', loginRouter)
 
 //Use the signupRouter for all "/signups" routes
-app.use("/api/signups", userRouter);
+app.use('/api/signups', userRouter)
 
 // use the refreshRouter for refreshing user credentials
-app.use("/api/refresh", refreshRouter);
+app.use('/api/refresh', refreshRouter)
+
+//forgot password
+app.use('/api/forgot-password', forgotPasswordRouter)
 
 // auth middleware
-app.use(requireAuth);
+app.use(requireAuth)
 
 // Use the categoryRouter for all "/api/selectCategory" routes
 app.use('/api/selectCategory', categoryRouter)
@@ -62,19 +67,16 @@ app.use('/api/selectCategory', categoryRouter)
 //dasboard
 app.use('/api/dashboard', dashboardRouter)
 
-//forgot password
-app.use('/api/forgot-password', forgotPasswordRouter)
-
 // Goal API route
-app.use("/api/goals", goalRouter);
+app.use('/api/goals', goalRouter)
 
-app.use("/api/transactions", transactionRouter);
+app.use('/api/transactions', transactionRouter)
 
 // Use the refreshRouter for refresh
 // app.use("/api/refresh");
 
 // Use the settingRouter for all routes that begin with "/api/settings"
-app.use("/api/settings", settingRouter);
+app.use('/api/settings', settingRouter)
 
 // Example route that throws an error
 app.get('/error', (req, res, next) => {

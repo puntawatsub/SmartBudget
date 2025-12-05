@@ -55,7 +55,11 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/dashboard')
+        const res = await fetch('http://localhost:3000/api/dashboard', {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          },
+        })
         const json = await res.json()
         setData(json)
       } catch (err) {
