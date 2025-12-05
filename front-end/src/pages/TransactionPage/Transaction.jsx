@@ -49,9 +49,62 @@ import { Pie, PieChart } from "recharts";
 import ReactPaginate from "react-paginate";
 import { useState } from "react";
 import { List } from "lucide-react";
+import { useEffect } from "react";
+import { is } from "date-fns/locale/is";
 
 //mock data for now
-const transactions = [
+// const transactions = [
+//   {
+//     date: "31 Dec 2020",
+//     merchant: "Bulk",
+//     category: "Grocery",
+//     amount: "-€23.00",
+//   },
+//   {
+//     date: "30 Dec 2020",
+//     merchant: "Happiness Market Center",
+//     category: "Grocery",
+//     amount: "-€45.00",
+//   },
+//   {
+//     date: "17 Dec 2020",
+//     merchant: "income",
+//     category: "income",
+//     amount: "+€3,000.00",
+//   },
+//   {
+//     date: "11 Dec 2020",
+//     merchant: "Lattes",
+//     category: "Coffee",
+//     amount: "-€12.00",
+//   },
+//   {
+//     date: "10 Dec 2020",
+//     merchant: "Child Welfare",
+//     category: "Charity",
+//     amount: "-€100.00",
+//   },
+//   {
+//     date: "09 Dec 2020",
+//     merchant: "Electricity Bill",
+//     category: "Utility",
+//     amount: "-€120.00",
+//   },
+//   {
+//     date: "08 Dec 2020",
+//     merchant: "FDD Electricals",
+//     category: "Health",
+//     amount: "-€80.00",
+//   },
+//   {
+//     date: "04 Dec 2020",
+//     merchant: "Freelancing Project",
+//     category: "income",
+//     amount: "+€1,200.00",
+//   },
+// ];
+
+const hardCodedTransactions = [
   {
     date: "31 Dec 2020",
     merchant: "Bulk",
@@ -64,42 +117,6 @@ const transactions = [
     category: "Grocery",
     amount: "-€45.00",
   },
-  {
-    date: "17 Dec 2020",
-    merchant: "income",
-    category: "income",
-    amount: "+€3,000.00",
-  },
-  {
-    date: "11 Dec 2020",
-    merchant: "Lattes",
-    category: "Coffee",
-    amount: "-€12.00",
-  },
-  {
-    date: "10 Dec 2020",
-    merchant: "Child Welfare",
-    category: "Charity",
-    amount: "-€100.00",
-  },
-  {
-    date: "09 Dec 2020",
-    merchant: "Electricity Bill",
-    category: "Utility",
-    amount: "-€120.00",
-  },
-  {
-    date: "08 Dec 2020",
-    merchant: "FDD Electricals",
-    category: "Health",
-    amount: "-€80.00",
-  },
-  {
-    date: "04 Dec 2020",
-    merchant: "Freelancing Project",
-    category: "income",
-    amount: "+€1,200.00",
-  },
 ];
 
 const chartData = [
@@ -110,9 +127,82 @@ const chartData = [
 ];
 
 function Transaction() {
-  const [date, setDate] = React.useState();
+  const [date, setDate] = useState();
   const [transactionListOffset, setTransactionListOffset] = useState(0);
   const [wasteSpendingListOffset, setWasteSpendingListOffset] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [transactionsLoading, setTransactionsLoading] = useState(false);
+  const [transactionsError, setTransactionsError] = useState(null);
+  const [newTransactionName, setNewTransactionName] = useState("");
+  const [newTransactionAmount, setNewTransactionAmount] = useState("");
+  const [newTransactionCategory, setNewTransactionCategory] = useState("");
+  const [newTransactionDate, setNewTransactionDate] = useState(new Date());
+  const [isAddTransactionDialogOpen, setIsAddTransactionDialogOpen] =
+    useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setTransactionsLoading(true);
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+          throw new Error("Token not found");
+        }
+        const response = await fetch("/api/transactions", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(
+            `Response Status ${response.status}: ${response.statusText}`
+          );
+        }
+        const data = await response.json();
+        setTransactions(data);
+      } catch (err) {
+        setTransactionsError(err.message);
+      } finally {
+        setTransactionsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const addTransaction = async (e) => {
+    e.preventDefault();
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("User not authenticated");
+      return;
+    }
+    try {
+      const response = await fetch("/api/transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          date: newTransactionDate,
+          merchant: newTransactionName,
+          category: {
+            categoryName: newTransactionCategory,
+            categoryColor: "blue", // hardcoded for now
+          },
+          amount: newTransactionAmount,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to add transaction");
+      }
+      const data = await response.json();
+      setTransactions((prev) => [...prev, data]);
+      setIsAddTransactionDialogOpen(false);
+    } catch (err) {
+      alert(`Error adding transaction: ${err.message}`);
+    }
+  };
 
   return (
     <div className="p-6 flex gap-6 flex-col">
@@ -123,7 +213,10 @@ function Transaction() {
         <h1 className="text-2xl font-bold">Transactions</h1>
         {/* Add Transaction Dialog */}
         <div className="flex gap-4">
-          <Dialog>
+          <Dialog
+            open={isAddTransactionDialogOpen}
+            onOpenChange={setIsAddTransactionDialogOpen}
+          >
             <DialogTrigger asChild>
               <Button className="bg-green-700 hover:bg-green-800 border border-green-800">
                 <Plus />
@@ -136,32 +229,57 @@ function Transaction() {
                 <DialogTitle>Add Transaction</DialogTitle>
                 <DialogDescription>Fill in the details below</DialogDescription>
               </DialogHeader>
-              <Input placeholder="Transaction Name" />
-              <Input placeholder="Amount" />
-              <Select>
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="grocery">Grocery</SelectItem>
-                  <SelectItem value="rent">Rent</SelectItem>
-                  <SelectItem value="income">income</SelectItem>
-                </SelectContent>
-              </Select>
+              <form className="flex gap-y-3 flex-col" onSubmit={addTransaction}>
+                <Input
+                  value={newTransactionName}
+                  onChange={(e) => setNewTransactionName(e.target.value)}
+                  required
+                  placeholder="Transaction Name"
+                />
+                <Input
+                  value={newTransactionAmount}
+                  onChange={(e) => setNewTransactionAmount(e.target.value)}
+                  required
+                  placeholder="Amount"
+                />
+                <div className="flex flex-row">
+                  <Select
+                    value={newTransactionCategory}
+                    onValueChange={(value) => setNewTransactionCategory(value)}
+                  >
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent required onChange={(e) => console.log(e)}>
+                      <SelectItem value="grocery">Grocery</SelectItem>
+                      <SelectItem value="rent">Rent</SelectItem>
+                      <SelectItem value="income">Income</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <Button type="button" variant="outline" className="ml-2">
+                    Manage
+                  </Button>
+                </div>
 
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                captionLayout="dropdown"
-                showOutsideDays
-                className="rounded-lg border"
-              />
+                <Calendar
+                  mode="single"
+                  selected={newTransactionDate}
+                  onSelect={setNewTransactionDate}
+                  captionLayout="dropdown"
+                  showOutsideDays
+                  className="rounded-lg border"
+                />
 
-              <DialogFooter>
-                <Button>Add</Button>
-                <Button>Cancel</Button>
-              </DialogFooter>
+                <DialogFooter>
+                  <Button type="submit">Add</Button>
+                  <Button
+                    type="button"
+                    onClick={() => setIsAddTransactionDialogOpen(false)}
+                  >
+                    Cancel
+                  </Button>
+                </DialogFooter>
+              </form>
             </DialogContent>
           </Dialog>
           <Button variant="outline">
@@ -188,10 +306,16 @@ function Transaction() {
               .slice(0 + transactionListOffset, 5 + transactionListOffset)
               .map((tx, index) => (
                 <TableRow key={index}>
-                  <TableCell>{tx.date}</TableCell>
+                  <TableCell>
+                    {new Date(tx.date).toLocaleDateString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                    })}
+                  </TableCell>
                   <TableCell>{tx.merchant}</TableCell>
                   <TableCell>
-                    <Badge>{tx.category}</Badge>
+                    <Badge>{tx.category.categoryName}</Badge>
                   </TableCell>
                   <TableCell>{tx.amount}</TableCell>
                   <TableCell>
@@ -211,15 +335,21 @@ function Transaction() {
         </Table>
         <div className="flex justify-between items-center border-t border-gray-300">
           <div className="p-5 text-gray-600">
-            Showing{" "}
-            <span className="font-bold">
-              {1 + transactionListOffset}-
-              {transactions.slice(
-                0 + transactionListOffset,
-                5 + transactionListOffset
-              ).length + transactionListOffset}
-            </span>{" "}
-            of <span className="font-bold">{transactions.length}</span> data
+            {transactions.length <= 0 ? (
+              <>{"No data"}</>
+            ) : (
+              <>
+                Showing{" "}
+                <span className="font-bold">
+                  {1 + transactionListOffset}-
+                  {transactions.slice(
+                    0 + transactionListOffset,
+                    5 + transactionListOffset
+                  ).length + transactionListOffset}
+                </span>{" "}
+                of <span className="font-bold">{transactions.length}</span> data
+              </>
+            )}
           </div>
           <ReactPaginate
             pageCount={Math.ceil(transactions.length / 5)}
@@ -314,6 +444,7 @@ function Transaction() {
           </div>
         </div>
       </div>
+      {/* Spending Analysis Chart & Table */}
       <div className="flex flex-col md:flex-row w-full gap-4">
         <div className="flex flex-col flex-1 gap-3">
           <div className="rounded-xl border border-gray-300 shadow-xs overflow-hidden">
@@ -381,7 +512,7 @@ function Transaction() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {transactions
+                      {hardCodedTransactions
                         .slice(
                           0 + wasteSpendingListOffset,
                           5 + wasteSpendingListOffset

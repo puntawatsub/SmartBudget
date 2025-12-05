@@ -9,12 +9,11 @@ import ForgotPassword from "./pages/ForgotPasswordPage/ForgotPassword";
 import Dashboard from "./pages/DashboardPage/Dashboard";
 import Transaction from "./pages/TransactionPage/Transaction";
 
-import ResetPassword from "./components/ResetPasswordPage/ResetPassword";
+// import ResetPassword from "./components/ResetPasswordPage/ResetPassword";
 import GoalPage from "./components/GoalPage/GoalPage";
 import AddGoalPage from "./pages/GoalPage/AddGoalPage"; // ✅ NEW GOAL PAGE
 
 import "./index.css";
-import useRefresh from "./hooks/useRefresh";
 
 function App() {
   return (

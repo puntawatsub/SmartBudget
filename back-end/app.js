@@ -7,6 +7,7 @@ const loginRouter = require("./routes/loginRouter");
 const userRouter = require("./routes/userRouter");
 const categoryRouter = require("./routes/wastefulCategoryRouter");
 const goalRouter = require("./routes/goal.Router");
+const transactionRouter = require("./routes/transactionRouter");
 
 const refreshRouter = require("./routes/refreshRouter");
 const connectDB = require("./config/db");
@@ -17,6 +18,7 @@ const {
 require("dotenv").config();
 
 const morgan = require("morgan");
+const requireAuth = require("./middleware/requireAuth");
 
 connectDB();
 
@@ -44,13 +46,19 @@ app.use("/api/login", loginRouter);
 //Use the signupRouter for all "/signups" routes
 app.use("/api/signups", userRouter);
 
+// use the refreshRouter for refreshing user credentials
+app.use("/api/refresh", refreshRouter);
+
+// auth middleware
+app.use(requireAuth);
+
 // Use the categoryRouter for all "/api/selectCategory" routes
 app.use("/api/selectCategory", categoryRouter);
 
 // Goal API route
 app.use("/api/goals", goalRouter);
-// use the refreshRouter for refreshing user credentials
-app.use("/api/refresh", refreshRouter);
+
+app.use("/api/transactions", transactionRouter);
 
 // Use the refreshRouter for refresh
 // app.use("/api/refresh");

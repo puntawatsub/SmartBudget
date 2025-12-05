@@ -50,7 +50,7 @@ const Layout = () => {
       )}
 
       {/* Main content */}
-      <main className="flex-1 overflow-auto bg-gray-100">
+      <main className="flex-1 overflow-auto">
         <Outlet />
       </main>
     </div>
