@@ -1,4 +1,9 @@
+import { useState } from "react";
+import SignupModal from "./components/SignupModal/SignupModal";
+
 const Home = () => {
+  const [openSignup, setOpenSignup] = useState(false);
+
   return (
     <div className="bg-gray-50">
       {/* Hero Section */}
@@ -14,7 +19,14 @@ const Home = () => {
             With SmartBudget, managing your finances has never been easier.
             Start tracking, planning, and achieving your financial goals today.
           </p>
-          <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
+
+          {/* GET STARTED */}
+          <button
+            onClick={() => setOpenSignup(true)}
+            className="bg-blue-600 text-white px-8 py-3 rounded-full shadow-lg 
+             hover:bg-blue-700 hover:scale-105 active:scale-95 
+             transition-all duration-300"
+          >
             Get Started
           </button>
         </div>
@@ -94,6 +106,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* MODAL COMPONENT */}
+      <SignupModal open={openSignup} onClose={() => setOpenSignup(false)} />
     </div>
   );
 };
