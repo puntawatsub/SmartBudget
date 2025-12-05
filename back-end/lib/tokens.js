@@ -26,12 +26,13 @@ function hashToken(token) {
 
 const verifyRefreshToken = async (token) => {
   try {
+    console.log(`Token: ${token}`);
     const { id } = jwt.verify(token, process.env.JWT_REFRESH);
     if (!id) {
       return false;
     }
     const hashedToken = await Refresh.findOne({ userId: id });
-    // console.log(hashedToken);
+    console.log(hashedToken);
     // console.log(id);
     if (hashedToken.tokenHashed === hashToken(token)) {
       console.log("equals");
