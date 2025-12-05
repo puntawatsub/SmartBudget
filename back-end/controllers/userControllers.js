@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const Setting = require("../models/settingModel");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 
@@ -48,14 +49,26 @@ const createUser = async (req, res) => {
       email,
       password: hashedPassword
     });
-
+    
     await newUser.save();
+    // Automatically create settings for this new user
+    await Setting.create({
+      userId: newUser._id,
+      name: username,
+      email: email,
+      theme: "Light",
+      language: "English",
+      currency: "USD",
+      region: "USA",
+    });
 
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+ 
 
 // GET user by ID
 const getUserById = async (req, res) => {
@@ -130,6 +143,8 @@ const deleteUser= async (req, res) => {
     if (!deleteduser) {
       return res.status(404).json({ message: "User not found" });
     }
+    // Delete associated settings
+    await Setting.findOneAndDelete({userId})
 
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {

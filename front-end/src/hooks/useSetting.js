@@ -8,6 +8,11 @@ export function useSetting() {
   const [avatar, setAvatar] = useState(null);
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("en");
+ 
+  useEffect(() => {
+  document.documentElement.classList.remove("light", "dark");
+  document.documentElement.classList.add(theme);
+  }, [theme]);
 
   const url = "http://localhost:3000/api/settings";
 
