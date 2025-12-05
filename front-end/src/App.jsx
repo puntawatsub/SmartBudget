@@ -1,4 +1,5 @@
-import ResetPassword from "./components/ResetPasswordPage/ResetPassword";
+
+import ResetPassword from './components/ResetPasswordPage/ResetPassword'
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import Layout from "./Layout";
 import Home from "./Home";
@@ -8,6 +9,8 @@ import Login from "./pages/LoginPage/Login";
 import ForgotPassword from "./pages/ForgotPasswordPage/ForgotPassword";
 import Dashboard from "./pages/DashboardPage/Dashboard";
 import Transaction from "./pages/TransactionPage/Transaction";
+
+import ForgotPassword from './pages/ForgotPasswordPage/ForgotPassword'
 
 // import ResetPassword from "./components/ResetPasswordPage/ResetPassword";
 import GoalPage from "./components/GoalPage/GoalPage";
@@ -27,7 +30,8 @@ function App() {
             <Route path="signup" element={<SignUp />} />
             <Route path="login" element={<Login />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="reset-password" element={<ResetPassword />} />
+            {/* <Route path="reset-password" element={<ResetPassword />} /> */}
+            <Route path='reset-password/:token' element={<ResetPassword />} />
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="transaction" element={<Transaction />} />
             {/* Goals system */}
@@ -38,7 +42,7 @@ function App() {
         </Routes>
       </BrowserRouter>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
