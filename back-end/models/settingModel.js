@@ -8,54 +8,54 @@
 //     "Region": "USA"
 // }
 
+const mongoose = require("mongoose");
 
+const settingSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      unique: true, // each user has exactly one settings document
+    },
 
-const mongoose = require('mongoose');
+    name: {
+      type: String,
+      required: true,
+    },
 
-const settingSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-    unique: true, // each user has exactly one settings document
+    email: {
+      type: String,
+      required: true,
+    },
+
+    theme: {
+      type: String,
+      enum: ["Light", "Dark"],
+      default: "Light",
+    },
+
+    language: {
+      type: String,
+      enum: ["English", "Finnish"],
+      default: "English",
+    },
+
+    currency: {
+      type: String,
+      enum: ["USD", "Euro"],
+      default: "USD",
+    },
+
+    region: {
+      type: String,
+      enum: ["USA", "Finland"],
+      default: "USA",
+    },
   },
+  { timestamps: true }
+);
 
-  name: { 
-    type: String, 
-    required: true
-  },
+const Settings = mongoose.model("Setting", settingSchema);
 
-  email: { 
-    type: String, 
-    required: true,  
-  },
-
-   theme: {
-    type: String,
-    enum: ['Light', 'Dark'],
-    default: 'Light'
-  },
-
-  language: {
-    type: String,
-    enum:['English', 'Finnish'],
-    default: 'English'
-  },
-
-  currency: {
-    type: String,
-    enum: ['USD', 'Euro'],
-    default: 'USD'
-  },
-
-  region: {
-    type: String,
-    enum: ['USA', 'Finland'],
-    default: 'USA'
-  } 
-
-
-}, { timestamps: true });
-
-module.exports = mongoose.model("Setting", settingSchema);
-
+module.exports = Settings;
