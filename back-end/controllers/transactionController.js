@@ -1,5 +1,7 @@
 const Transactions = require("../models/transactionModel");
 const flattenObject = require("../lib/flattenObject");
+const Analytics = require("../models/analyticsModel");
+const Category = require("../models/categoryModel");
 
 // nst transactionSchema = new mongoose.Schema({
 //   date: {
@@ -27,6 +29,13 @@ const flattenObject = require("../lib/flattenObject");
 // userId as well
 // });
 
+function getMonthYear() {
+  const d = new Date();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${month}_${year}`;
+}
+
 const createOne = async (req, res) => {
   try {
     const { date, merchant, category, amount } = req.body;
@@ -46,6 +55,27 @@ const createOne = async (req, res) => {
     const newTransaction = new Transactions(temp);
 
     await newTransaction.save();
+
+    const currentCategory = await Category.findOne({
+      name: category.categoryName,
+      userId,
+    });
+
+    if (amount < 0) {
+      const currentTotalExpenses = (await Analytics.findOne({ userId }))
+        .totalExpense;
+      await Analytics.findOneAndUpdate(
+        { userId },
+        { totalExpense: currentTotalExpenses + Math.abs(amount) }
+      );
+    } else {
+      const currentTotalIncome = (await Analytics.findOne({ userId }))
+        .totalIncome;
+      await Analytics.findOneAndUpdate(
+        { userId },
+        { totalIncome: currentTotalIncome + amount }
+      );
+    }
 
     res.status(201).json(temp);
   } catch (err) {
@@ -108,6 +138,29 @@ const updateById = async (req, res) => {
     if (!transaction) {
       return res.status(404).json({ message: "Transaction not found" });
     }
+    if (body.amount) {
+      const analytics = await Analytics.findOne({ userId });
+      let newTotalIncome = analytics.totalIncome;
+      let newTotalExpense = analytics.totalExpense;
+
+      const oldTransaction = await Transactions.findOne({ _id: id, userId });
+      if (oldTransaction.amount < 0) {
+        newTotalExpense -= Math.abs(oldTransaction.amount);
+      } else {
+        newTotalIncome -= oldTransaction.amount;
+      }
+
+      if (body.amount < 0) {
+        newTotalExpense += Math.abs(body.amount);
+      } else {
+        newTotalIncome += body.amount;
+      }
+
+      await Analytics.findOneAndUpdate(
+        { userId },
+        { totalIncome: newTotalIncome, totalExpense: newTotalExpense }
+      );
+    }
     res.json(transaction);
   } catch (err) {
     res
@@ -131,6 +184,24 @@ const deleteById = async (req, res) => {
       return res
         .status(404)
         .json({ message: `Not deleted, transaction with id ${id} not found` });
+    }
+    if (deletedTransaction.amount < 0) {
+      const currentTotalExpenses = (await Analytics.findOne({ userId }))
+        .totalExpense;
+      await Analytics.findOneAndUpdate(
+        { userId },
+        {
+          totalExpense:
+            currentTotalExpenses - Math.abs(deletedTransaction.amount),
+        }
+      );
+    } else {
+      const currentTotalIncome = (await Analytics.findOne({ userId }))
+        .totalIncome;
+      await Analytics.findOneAndUpdate(
+        { userId },
+        { totalIncome: currentTotalIncome - deletedTransaction.amount }
+      );
     }
     res.status(204).send();
   } catch (err) {

@@ -30,12 +30,14 @@ export function useSetting() {
         if (!res.ok) throw new Error("Failed to fetch settings");
 
         const data = await res.json();
+        console.log(data);
         setTitle(data.name || "");
         setEmail(data.email || "");
         setTheme(data.theme || "Light");
         setLanguage(data.language || "English");
         setCurrency(data.currency || "USD");
         setRegion(data.region || "USA");
+        console.log(language);
       } catch (err) {
         console.error(err);
       }

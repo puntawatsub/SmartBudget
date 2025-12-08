@@ -1,4 +1,5 @@
 // const Transaction = require('../models/transactionModel')
+const Analytics = require("../models/analyticsModel");
 
 // const getDashboard = async (req, res) => {
 //   try {
@@ -102,27 +103,33 @@
 const getDashboard = async (req, res) => {
   try {
     // AnalyticalOverview data
+    // const analyticalOverview = {
+    //   income: 53999900,
+    //   expenses: 3111111100,
+    //   savings: 1800,
+    //   // balance: 1800, // optional, can calculate frontend if needed
+    // };
+    const analyticals = await Analytics.findOne({ userId: req.user._id });
     const analyticalOverview = {
-      income: 53999900,
-      expenses: 3111111100,
-      savings: 1800,
-      balance: 1800, // optional, can calculate frontend if needed
-    }
+      income: analyticals ? analyticals.totalIncome : 0,
+      expenses: analyticals ? analyticals.totalExpense : 0,
+      savings: 0,
+    };
 
     // ExpenditureOverview data
     const expenditureOverview = [
-      { title: 'Groceries', previous: 20, current: 400, max: 500 },
-      { title: 'Transport', previous: 200, current: 300, max: 500 },
-      { title: 'Eating Out', previous: 250, current: 360, max: 500 },
-      { title: 'Shopping', previous: 180, current: 400, max: 500 },
-      { title: 'Subscriptions', previous: 100, current: 140, max: 500 },
-      { title: 'Utilities', previous: 220, current: 310, max: 500 },
-    ]
+      { title: "Groceries", previous: 20, current: 400, max: 500 },
+      { title: "Transport", previous: 200, current: 300, max: 500 },
+      { title: "Eating Out", previous: 250, current: 360, max: 500 },
+      { title: "Shopping", previous: 180, current: 400, max: 500 },
+      { title: "Subscriptions", previous: 100, current: 140, max: 500 },
+      { title: "Utilities", previous: 220, current: 310, max: 500 },
+    ];
 
     // GoalCard data
     const goals = [
       {
-        title: 'Buy a car',
+        title: "Buy a car",
         totalSaved: 300999,
         totalTarget: 8000,
         periodData: {
@@ -131,32 +138,32 @@ const getDashboard = async (req, res) => {
           year: { progress: 7000, target: 12000 },
         },
       },
-    ]
+    ];
 
     // UpcomingBills data
     const upcomingBills = [
       {
-        deadline: '3 days',
-        date: '18.11.2025',
-        name: 'Spotify',
-        due: '€5.85',
-        status: 'ok',
+        deadline: "3 days",
+        date: "18.11.2025",
+        name: "Spotify",
+        due: "€5.85",
+        status: "ok",
       },
       {
-        deadline: '1 day',
-        date: '14.11.2025',
-        name: 'Netflix',
-        due: '€13.50',
-        status: 'ok',
+        deadline: "1 day",
+        date: "14.11.2025",
+        name: "Netflix",
+        due: "€13.50",
+        status: "ok",
       },
       {
-        deadline: '1 day ago',
-        date: '14.11.2025',
-        name: 'Laundromat',
-        due: '€2.87',
-        status: 'late',
+        deadline: "1 day ago",
+        date: "14.11.2025",
+        name: "Laundromat",
+        due: "€2.87",
+        status: "late",
       },
-    ]
+    ];
 
     // Send a single object with top-level analyticalOverview fields
     res.json({
@@ -164,11 +171,11 @@ const getDashboard = async (req, res) => {
       expenditureOverview,
       goals,
       upcomingBills,
-    })
+    });
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: 'Server error' })
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
-}
+};
 
-module.exports = { getDashboard }
+module.exports = { getDashboard };
