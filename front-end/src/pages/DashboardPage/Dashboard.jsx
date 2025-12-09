@@ -41,69 +41,77 @@
 // }
 
 // export default Dashboard
-import React, { useEffect, useState } from 'react'
-import AnalyticalOverview from './AnalyticalOverview.jsx'
-import ExpenditureOverview from '../DashboardPage/ExpenditureOverview.jsx'
-import GoalCard from '../DashboardPage/GoalCard'
-import UpcomingBills from '../DashboardPage/UpcomingBills'
+import React, { useEffect, useState } from "react";
+import AnalyticalOverview from "./AnalyticalOverview.jsx";
+import ExpenditureOverview from "../DashboardPage/ExpenditureOverview.jsx";
+import GoalCard from "../DashboardPage/GoalCard";
+import UpcomingBills from "../DashboardPage/UpcomingBills";
 
 const Dashboard = () => {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const res = await fetch('http://localhost:3000/api/dashboard')
-        const json = await res.json()
-        setData(json)
+        const res = await fetch("/api/dashboard", {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        });
+        if (!res.ok) {
+          throw new Error(`Error: ${res.status} ${res.statusText}`);
+        }
+        const json = await res.json();
+        setData(json);
       } catch (err) {
-        setError('Failed to load dashboard data')
+        setError("Failed to load dashboard data");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchDashboard()
-  }, [])
+    fetchDashboard();
+  }, []);
 
-  if (loading) return <p className='p-6'>Loading dashboard...</p>
-  if (error) return <p className='p-6 text-red-500'>{error}</p>
+  if (loading) return <p className="p-6">Loading dashboard...</p>;
+  if (error) return <p className="p-6 text-red-500">{error}</p>;
 
   return (
-    <div className='p-6 flex flex-col gap-6'>
-      <div className='text-2xl font-semibold text-gray-800'>Hi, User 👋</div>
+    <div className="p-6 flex flex-col gap-6">
+      <div className="text-2xl font-semibold text-gray-800">Hi, User 👋</div>
 
       {/* Now pass data down if needed */}
       <AnalyticalOverview data={data} />
       <ExpenditureOverview data={data.expenditureOverview} />
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <GoalCard data={data.goals[0]} />
         <UpcomingBills data={data.upcomingBills} />
       </div>
-      <button
-        className='p-2 bg-blue-500 text-white rounded'
+      {/* <button
+        className="p-2 bg-blue-500 text-white rounded"
         onClick={async () => {
-          setLoading(true)
-          setError(null)
+          setLoading(true);
+          setError(null);
           try {
-            const res = await fetch('http://localhost:3000/api/dashboard', {
-              cache: 'no-store',
-            })
-            const json = await res.json()
-            setData(json)
+            const res = await fetch("/api/dashboard", {
+              cache: "no-store",
+            });
+            const json = await res.json();
+            setData(json);
           } catch (err) {
-            setError('Failed to load dashboard data')
+            setError("Failed to load dashboard data");
           } finally {
-            setLoading(false)
+            setLoading(false);
           }
-        }}>
+        }}
+      >
         Refresh Dashboard
-      </button>
+      </button> */}
     </div>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

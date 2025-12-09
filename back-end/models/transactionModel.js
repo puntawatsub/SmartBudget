@@ -1,34 +1,39 @@
 const mongoose = require("mongoose");
 
-const transactionSchema = new mongoose.Schema({
-  date: {
-    type: Date,
-    required: true,
-  },
-  merchant: {
-    type: String,
-    required: true,
-  },
-  category: {
-    categoryName: {
+const transactionSchema = new mongoose.Schema(
+  {
+    date: {
+      type: Date,
+      required: true,
+    },
+    merchant: {
       type: String,
       required: true,
     },
-    categoryColor: {
-      type: String,
+    category: {
+      categoryName: {
+        type: String,
+        required: true,
+      },
+      categoryColor: {
+        type: String,
+        required: true,
+      },
+    },
+    amount: {
+      type: Number,
       required: true,
     },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
-  amount: {
-    type: Number,
-    required: true,
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    required: true,
-    ref: "User",
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 const Transaction = mongoose.model("Transactions", transactionSchema);
 

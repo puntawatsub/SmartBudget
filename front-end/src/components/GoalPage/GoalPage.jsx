@@ -15,6 +15,7 @@ function GoalPage() {
   const [target, setTarget] = useState("");
   const [saved, setSaved] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [weeklyTarget, setWeeklyTarget] = useState("");
 
   const [goals, setGoals] = useState([]);
 
@@ -46,6 +47,7 @@ function GoalPage() {
       target: Number(target),
       saved: Number(saved),
       deadline,
+      weeklyTarget,
     };
 
     const created = await createGoal(newGoal);
@@ -170,6 +172,18 @@ function GoalPage() {
               />
             </div>
 
+            <div>
+              <label className="block font-medium mb-1">
+                Weekly Target Amount (€)
+              </label>
+              <input
+                type="number"
+                className="w-full border rounded-lg px-3 py-2"
+                value={weeklyTarget}
+                onChange={(e) => setWeeklyTarget(e.target.value)}
+              />
+            </div>
+
             <div className="col-span-full">
               <p>Progress: {calculateProgress(saved, target)}%</p>
               <div className="w-full bg-gray-300 h-2 rounded mt-1">
@@ -260,6 +274,23 @@ function GoalPage() {
               />
             </div>
 
+            <div>
+              <label className="block font-medium mb-1">
+                Weekly Target Amount (€)
+              </label>
+              <input
+                type="number"
+                className="w-full border rounded-lg px-3 py-2"
+                value={editingGoal.weeklyTarget}
+                onChange={(e) =>
+                  setEditingGoal({
+                    ...editingGoal,
+                    weeklyTarget: e.target.value,
+                  })
+                }
+              />
+            </div>
+
             <div className="col-span-full mt-4">
               <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
                 Save Changes
@@ -267,7 +298,7 @@ function GoalPage() {
               <button
                 type="button"
                 className="px-4 py-2 rounded-lg border ml-3"
-                onClick={() => setEditingGoal(null)}
+                // onClick={() => setEditingGoal(null)}
               >
                 Cancel
               </button>

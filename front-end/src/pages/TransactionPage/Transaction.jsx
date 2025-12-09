@@ -1,6 +1,5 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectTrigger,
@@ -17,16 +16,6 @@ import {
   TableBody,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -51,6 +40,7 @@ import { useState } from "react";
 import { List } from "lucide-react";
 import { useEffect } from "react";
 import { is } from "date-fns/locale/is";
+import NewTransactionDialog from "./NewTransactionDialog";
 
 //mock data for now
 // const transactions = [
@@ -188,19 +178,45 @@ function Transaction() {
           merchant: newTransactionName,
           category: {
             categoryName: newTransactionCategory,
-            categoryColor: "blue", // hardcoded for now
+            categoryColor: "null", // hardcoded for now
           },
           amount: newTransactionAmount,
         }),
       });
-      if (!response.ok) {
-        throw new Error("Failed to add transaction");
-      }
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error(
+          `Failed to add transaction ${response.status}: ${response.statusText}`
+        );
+      }
       setTransactions((prev) => [...prev, data]);
       setIsAddTransactionDialogOpen(false);
     } catch (err) {
       alert(`Error adding transaction: ${err.message}`);
+    }
+  };
+
+  const handleDeleteTransaction = async (transactionId) => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      alert("User not authenticated");
+      return;
+    }
+    try {
+      const response = await fetch(`/api/transactions/${transactionId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(
+          `Failed to delete transaction ${response.status}: ${response.statusText}`
+        );
+      }
+      setTransactions((prev) => prev.filter((tx) => tx._id !== transactionId));
+    } catch (err) {
+      alert(`Error deleting transaction: ${err.message}`);
     }
   };
 
@@ -213,75 +229,19 @@ function Transaction() {
         <h1 className="text-2xl font-bold">Transactions</h1>
         {/* Add Transaction Dialog */}
         <div className="flex gap-4">
-          <Dialog
-            open={isAddTransactionDialogOpen}
-            onOpenChange={setIsAddTransactionDialogOpen}
-          >
-            <DialogTrigger asChild>
-              <Button className="bg-green-700 hover:bg-green-800 border border-green-800">
-                <Plus />
-                Add Transaction
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Add Transaction</DialogTitle>
-                <DialogDescription>Fill in the details below</DialogDescription>
-              </DialogHeader>
-              <form className="flex gap-y-3 flex-col" onSubmit={addTransaction}>
-                <Input
-                  value={newTransactionName}
-                  onChange={(e) => setNewTransactionName(e.target.value)}
-                  required
-                  placeholder="Transaction Name"
-                />
-                <Input
-                  value={newTransactionAmount}
-                  onChange={(e) => setNewTransactionAmount(e.target.value)}
-                  required
-                  placeholder="Amount"
-                />
-                <div className="flex flex-row">
-                  <Select
-                    value={newTransactionCategory}
-                    onValueChange={(value) => setNewTransactionCategory(value)}
-                  >
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select category" />
-                    </SelectTrigger>
-                    <SelectContent required onChange={(e) => console.log(e)}>
-                      <SelectItem value="grocery">Grocery</SelectItem>
-                      <SelectItem value="rent">Rent</SelectItem>
-                      <SelectItem value="income">Income</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Button type="button" variant="outline" className="ml-2">
-                    Manage
-                  </Button>
-                </div>
-
-                <Calendar
-                  mode="single"
-                  selected={newTransactionDate}
-                  onSelect={setNewTransactionDate}
-                  captionLayout="dropdown"
-                  showOutsideDays
-                  className="rounded-lg border"
-                />
-
-                <DialogFooter>
-                  <Button type="submit">Add</Button>
-                  <Button
-                    type="button"
-                    onClick={() => setIsAddTransactionDialogOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <NewTransactionDialog
+            isAddTransactionDialogOpen={isAddTransactionDialogOpen}
+            setIsAddTransactionDialogOpen={setIsAddTransactionDialogOpen}
+            newTransactionName={newTransactionName}
+            setNewTransactionName={setNewTransactionName}
+            newTransactionAmount={newTransactionAmount}
+            setNewTransactionAmount={setNewTransactionAmount}
+            newTransactionCategory={newTransactionCategory}
+            setNewTransactionCategory={setNewTransactionCategory}
+            newTransactionDate={newTransactionDate}
+            setNewTransactionDate={setNewTransactionDate}
+            addTransaction={addTransaction}
+          ></NewTransactionDialog>
           <Button variant="outline">
             Download CSV
             <Download />
@@ -303,6 +263,7 @@ function Transaction() {
           </TableHeader>
           <TableBody>
             {transactions
+              .sort((a, b) => new Date(b.date) - new Date(a.date))
               .slice(0 + transactionListOffset, 5 + transactionListOffset)
               .map((tx, index) => (
                 <TableRow key={index}>
@@ -325,7 +286,13 @@ function Transaction() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            handleDeleteTransaction(tx._id);
+                          }}
+                        >
+                          Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

@@ -8,13 +8,13 @@ export function useSetting() {
   const [avatar, setAvatar] = useState(null);
   const [theme, setTheme] = useState("light");
   const [language, setLanguage] = useState("en");
- 
+
   useEffect(() => {
-  document.documentElement.classList.remove("light", "dark");
-  document.documentElement.classList.add(theme);
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(theme);
   }, [theme]);
 
-  const url = "http://localhost:3000/api/settings";
+  const url = "/api/settings";
 
   // Load settings
   useEffect(() => {
@@ -24,17 +24,20 @@ export function useSetting() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
         if (!res.ok) throw new Error("Failed to fetch settings");
 
         const data = await res.json();
+        console.log(data);
         setTitle(data.name || "");
         setEmail(data.email || "");
         setTheme(data.theme || "Light");
         setLanguage(data.language || "English");
         setCurrency(data.currency || "USD");
         setRegion(data.region || "USA");
+        console.log(language);
       } catch (err) {
         console.error(err);
       }
@@ -45,7 +48,9 @@ export function useSetting() {
   // Apply theme to document
   useEffect(() => {
     document.documentElement.classList.remove("Light", "Dark");
-    document.documentElement.classList.add(theme === "light" ? "Light" : "Dark");
+    document.documentElement.classList.add(
+      theme === "light" ? "Light" : "Dark"
+    );
   }, [theme]);
 
   // Save settings to backend
@@ -54,7 +59,10 @@ export function useSetting() {
       // Save personal info
       const personalRes = await fetch(`${url}/personal`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
         body: JSON.stringify({ name: title, email }),
       });
       if (!personalRes.ok) {
@@ -65,7 +73,10 @@ export function useSetting() {
       // Save app settings
       const appRes = await fetch(`${url}/app`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
         body: JSON.stringify({
           theme: theme === "light" ? "Light" : "Dark",
           language: language === "en" ? "English" : "Finnish",
