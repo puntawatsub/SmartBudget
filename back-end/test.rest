@@ -86,7 +86,7 @@ DELETE http://localhost:3000/api/goals/692bf9220e86b30dcb45a059
 ###
 POST http://localhost:3000/api/transactions
 Content-Type: application/json
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MzE3Y2M0MTQ0OTczN2Q3MjY0OTAxMCIsImVtYWlsIjoieHpAeWFob28uY29tIiwiaWF0IjoxNzY0ODUwOTEzLCJleHAiOjE3NjU0NTU3MTN9.MFdAibf7_kjPiZ6-PUgd_cpmLeEf0GoG4h3p2Qpyf2Q
+#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5MzE3Y2M0MTQ0OTczN2Q3MjY0OTAxMCIsImVtYWlsIjoieHpAeWFob28uY29tIiwiaWF0IjoxNzY0ODUwOTEzLCJleHAiOjE3NjU0NTU3MTN9.MFdAibf7_kjPiZ6-PUgd_cpmLeEf0GoG4h3p2Qpyf2Q
 
 {
   "date": "2025-12-04T12:24:39.289Z",
@@ -97,5 +97,8 @@ Content-Type: application/json
   },
   "amount": 123
 }
+
+
+
 
 
