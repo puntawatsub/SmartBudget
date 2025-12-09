@@ -18,7 +18,7 @@ const GoalCard = ({ data }) => {
         </h3>
       </div>
 
-      {/* Progress + Info Row */}
+      {/* Progress + Info  */}
       <div className='flex flex-wrap items-center gap-4'>
         {/* Circular Progress */}
         <div

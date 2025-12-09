@@ -92,7 +92,7 @@ function UpcomingBillsPage() {
         </button>
       </div>
 
-      {/* Add Bill Form */}
+      {/* Add Bill form */}
       {showForm && !editingBill && (
         <div className='bg-white dark:bg-gray-800 mt-4 p-6 rounded-xl shadow border transition-colors duration-300'>
           <h3 className='text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100'>
@@ -228,7 +228,7 @@ function UpcomingBillsPage() {
         </div>
       )}
 
-      {/* Bills Table */}
+      {/* Bills table */}
       <div className='bg-white dark:bg-gray-800 mt-6 p-6 rounded-xl shadow border transition-colors duration-300 overflow-x-auto'>
         <table className='w-full text-sm text-gray-900 dark:text-gray-100'>
           <thead>

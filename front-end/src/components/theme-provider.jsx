@@ -13,6 +13,7 @@ export const ThemeProvider = ({
     const saved = localStorage.getItem(storageKey)
     if (saved) setTheme(saved)
   }, [storageKey])
+  //dark theme
 
   useEffect(() => {
     const root = document.documentElement

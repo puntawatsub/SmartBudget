@@ -5,7 +5,7 @@ const Home = () => {
 
   return (
     <div className='bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100'>
-      {/* Hero Section */}
+      {/* Hero Section.*/}
       <section className='bg-gradient-to-r from-blue-100 to-white dark:from-gray-800 dark:to-gray-900 p-10 rounded-xl shadow-lg m-10 flex flex-col md:flex-row items-center transform transition-transform duration-300 hover:scale-105 active:scale-95'>
         <div className='flex-1 text-left'>
           <h1 className='text-3xl md:text-5xl font-bold mb-4'>

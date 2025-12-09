@@ -14,13 +14,6 @@ import Sidebar from '@/components/Sidebar'
 
 export default function SettingsPage() {
   const settings = useSetting()
-
-  // const handleSave = (e) => {
-  //   e.preventDefault();
-  //   // Implement save logic here, e.g., send settings to backend or update context
-  //   console.log(settings);
-  //   alert("Settings saved!");
-  // };
   const handleSave = () => {
     console.log('Saving:', settings)
     alert('Settings saved!')
@@ -28,46 +21,6 @@ export default function SettingsPage() {
 
   return (
     <div className='flex h-screen bg-gray-50 dark:bg-gray-900 text-black dark:text-white'>
-      {/* Sidebar */}
-
-      {/* <aside className="w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 flex flex-col justify-between">
-        <div className="text-2xl font-medium">Logo</div>
-
-        <nav className="space-y-3 mt-6">
-          <Button
-            variant="ghost"
-            className="w-full justify-start dark:text-white"
-          >
-            Home
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start dark:text-white"
-          >
-            Dashboard
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start dark:text-white"
-          >
-            Transactions
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full justify-start dark:text-white"
-          >
-            Goals
-          </Button>
-        </nav>
-
-        <Button
-          variant="outline"
-          className="mt-auto w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-        >
-          Logout
-        </Button>
-      </aside> */}
-
       {/* Main */}
       <main className='flex-1 flex flex-col'>
         {/* Tabs + content */}

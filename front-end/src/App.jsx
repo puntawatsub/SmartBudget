@@ -40,7 +40,6 @@ function App() {
       <ThemeProvider defaultTheme='light' storageKey='smartbudget-theme'>
         <BrowserRouter>
           <Routes>
-            {/* Layout wrapper for nested routes */}
             <Route path='/' element={<Layout />}>
               {/* Main site pages */}
               <Route index element={<Home />} />
@@ -66,7 +65,7 @@ function App() {
                 path='upcoming-bills'
                 element={isAuth ? <UpcomingBillsPage /> : <Navigate to='/' />}
               />
-              {/* Goals system */}
+              {/* Goals  */}
               <Route
                 path='goals'
                 element={isAuth ? <GoalPage /> : <Navigate to='/' />}

@@ -49,7 +49,7 @@ const UpcomingBillsCard = () => {
         </h3>
       </div>
 
-      {/* Table */}
+      {/* Table. */}
       <table className='w-full text-sm text-gray-800 dark:text-gray-200'>
         <thead>
           <tr className='text-gray-400 dark:text-gray-500 text-left'>
