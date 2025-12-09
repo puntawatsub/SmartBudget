@@ -4,102 +4,131 @@ export function useSetting() {
   const [title, setTitle] = useState("");
   const [email, setEmail] = useState("");
   const [currency, setCurrency] = useState("usd");
-  const [region, setRegion] = useState("fi");
-  const [avatar, setAvatar] = useState(null);
-  const [theme, setTheme] = useState("light");
+  const [region, setRegion] = useState("usa");
+  const [theme, setTheme] = useState("light"); // 'light' | 'dark'
   const [language, setLanguage] = useState("en");
-
-  useEffect(() => {
-    document.documentElement.classList.remove("light", "dark");
-    document.documentElement.classList.add(theme);
-  }, [theme]);
 
   const url = "/api/settings";
 
-  // Load settings
+  // Single, consistent theme application
   useEffect(() => {
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(theme === "dark" ? "dark" : "light");
+  }, [theme]);
+
+  const applySettings = (data) => {
+    if (!data) return;
+    setTitle(data.name || data.title || "");
+    setEmail(data.email || "");
+    const t = (data.theme || "").toString().toLowerCase();
+    setTheme(t === "dark" ? "dark" : "light");
+    const lang = (data.language || "").toString().toLowerCase();
+    setLanguage(lang.startsWith("fin") || lang === "fi" ? "fi" : "en");
+
+    // currency mapping (unchanged)
+    const cur = (data.currency || "").toString().toLowerCase();
+    setCurrency(cur.includes("eur") || cur.includes("euro") ? "eur" : "usd");
+
+    // simplified region mapping (like currency): if contains 'fin' => 'fi' else 'usa'
+    const regRaw = (data.region || "").toString().toLowerCase();
+    setRegion(regRaw.includes("fin") ? "fi" : "usa");
+  };
+
+  // Load settings: localStorage fallback first, then server (if token present)
+  useEffect(() => {
+    try {
+      const cached = JSON.parse(localStorage.getItem("appSettings") || "null");
+      if (cached) {
+        applySettings(cached);
+        console.log("useSetting: applied cached appSettings", cached);
+      }
+    } catch (e) {
+      console.warn("useSetting: failed to read cached appSettings", e);
+    }
+
     const fetchSettings = async () => {
       try {
-        const res = await fetch(`${url}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        });
-        if (!res.ok) throw new Error("Failed to fetch settings");
+        const token = sessionStorage.getItem("token");
+        const headers = { "Content-Type": "application/json" };
+        if (token) headers.Authorization = `Bearer ${token}`;
 
+        const res = await fetch(url, { method: "GET", headers });
+        if (!res.ok) {
+          console.warn("useSetting: failed to fetch settings", res.status);
+          return;
+        }
         const data = await res.json();
-        setTitle(data.name || "");
-        setEmail(data.email || "");
-        setTheme(data.theme || "Light");
-        setLanguage(data.language || "English");
-        setCurrency(data.currency || "USD");
-        setRegion(data.region || "USA");
+        applySettings(data);
+        try {
+          // store UI-friendly region code in cache
+          const cacheData = {
+            name: data.name || data.title || "",
+            email: data.email || "",
+            theme: data.theme || "",
+            language: data.language || "",
+            currency: data.currency || "",
+            region: (data.region || "").toString().toLowerCase().includes("fin") ? "fi" : "usa",
+          };
+          localStorage.setItem("appSettings", JSON.stringify(cacheData));
+        } catch {}
       } catch (err) {
-        console.error(err);
+        console.error("useSetting: error fetching settings", err);
       }
     };
+
     fetchSettings();
   }, []);
 
-  // Apply theme to document
-  useEffect(() => {
-    document.documentElement.classList.remove("Light", "Dark");
-    document.documentElement.classList.add(
-      theme === "light" ? "Light" : "Dark"
-    );
-  }, [theme]);
-
-  // Save settings to backend
   const saveSettings = async () => {
     try {
-      // Save personal info
-      const personalRes = await fetch(`${url}/personal`, {
+      const token = sessionStorage.getItem("token");
+      const headers = { "Content-Type": "application/json" };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      await fetch(`${url}/personal`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
+        headers,
         body: JSON.stringify({ name: title, email }),
       });
-      if (!personalRes.ok) {
-        const err = await personalRes.json();
-        throw new Error(err.message || "Failed to save personal info");
-      }
 
-      // Save app settings
-      const appRes = await fetch(`${url}/app`, {
+      const serverPayload = {
+        theme: theme === "dark" ? "Dark" : "Light",
+        language: language === "fi" ? "Finnish" : "English",
+        currency: currency === "eur" ? "Euro" : "USD",
+        region: region === "fi" ? "Finland" : "USA",
+      };
+
+      await fetch(`${url}/app`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          theme: theme === "light" ? "Light" : "Dark",
-          language: language === "en" ? "English" : "Finnish",
-          currency: currency === "usd" ? "USD" : "Euro",
-          region: region === "fi" ? "Finland" : "USA",
-        }),
+        headers,
+        body: JSON.stringify(serverPayload),
       });
-      if (!appRes.ok) {
-        const err = await appRes.json();
-        throw new Error(err.message || "Failed to save app settings");
-      }
 
-      alert("Settings saved successfully!");
+      try {
+        // cache UI-friendly values (region as code)
+        const cached = {
+          name: title,
+          email,
+          theme: serverPayload.theme,
+          language: serverPayload.language,
+          currency: serverPayload.currency,
+          region: region, // 'fi' or 'usa'
+        };
+        localStorage.setItem("appSettings", JSON.stringify(cached));
+      } catch {}
+
+      alert("Settings saved");
     } catch (err) {
       console.error(err);
-      alert(err.message);
+      alert("Failed to save settings");
     }
   };
 
   const reset = () => {
     setTitle("");
     setEmail("");
-    setCurrency("USD");
-    setRegion("USA");
-    setAvatar(null);
+    setCurrency("usd");
+    setRegion("usa");
     setTheme("light");
     setLanguage("en");
   };
@@ -113,8 +142,6 @@ export function useSetting() {
     setCurrency,
     region,
     setRegion,
-    avatar,
-    setAvatar,
     theme,
     setTheme,
     language,

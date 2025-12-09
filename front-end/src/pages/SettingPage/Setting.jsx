@@ -41,20 +41,6 @@ export default function SettingsPage() {
       {/* Main */}
       <main className="flex-1 flex flex-col">
 
-        {/* Topbar */}
-        <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6">
-          <div className="text-lg font-semibold dark:text-white">Settings</div>
-          <div className="flex items-center gap-4">
-            <Input
-              placeholder="Search"
-              className="w-64 bg-gray-100 dark:bg-gray-700 dark:text-white border-gray-300 dark:border-gray-600"
-            />
-            <div className="w-8 h-8 rounded-full bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-black dark:text-white">
-              AA
-            </div>
-          </div>
-        </header>
-
         {/* Tabs + content */}
         <div className="flex-1 p-8 overflow-y-auto">
           <Tabs defaultValue="personal">
@@ -68,19 +54,6 @@ export default function SettingsPage() {
               <section className="space-y-6 mt-6">
 
                 <h2 className="text-lg font-bold dark:text-white">Personal Information</h2>
-
-                {/* Avatar */}
-                <div className="flex items-center gap-6">
-                  <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 flex items-center justify-center rounded text-black dark:text-white">
-                    Avatar
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <span className="text-base dark:text-white">Change profile picture</span>
-                    <Button variant="secondary" size="sm" className="dark:bg-gray-700 dark:text-white">
-                      Upload Avatar
-                    </Button>
-                  </div>
-                </div>
 
                 {/* Name */}
                 <div>
@@ -173,7 +146,7 @@ export default function SettingsPage() {
                     </SelectTrigger>
                     <SelectContent className="dark:bg-gray-700 dark:text-white">
                       <SelectItem value="fi">Finland</SelectItem>
-                      <SelectItem value="USA">USA</SelectItem>
+                      <SelectItem value="usa">USA</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
