@@ -45,7 +45,7 @@ export default function Sidebar() {
         </Link>
 
         <Link
-          to="/transactions"
+          to="/transaction"
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
         >
           <img src={transactionsIcon} className="w-6 h-6 dark:invert dark:brightness-150" alt="Transactions" />
