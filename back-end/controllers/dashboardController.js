@@ -126,9 +126,26 @@ const getDashboard = async (req, res) => {
     //   // balance: 1800, // optional, can calculate frontend if needed
     // };
     const analyticals = await Analytics.findOne({ userId: req.user._id });
+    const totalIncomeFromIncomeCategory = (
+      await Category.findOne({
+        name: "Income",
+        userId: req.user._id,
+        mm_yyyy: getMonthYear(),
+      })
+    )?.amountSpent;
+    // get expenses from all categories except Income
+    const categories = await Category.find({
+      userId: req.user._id,
+      mm_yyyy: getMonthYear(),
+      name: { $ne: "Income" },
+    });
+    let totalExpenses = 0;
+    categories.forEach((cat) => {
+      totalExpenses += cat.amountSpent;
+    });
     const analyticalOverview = {
-      income: analyticals ? analyticals.totalIncome : 0,
-      expenses: analyticals ? analyticals.totalExpense : 0,
+      income: totalIncomeFromIncomeCategory ? totalIncomeFromIncomeCategory : 0,
+      expenses: totalExpenses,
       savings: 0,
     };
 

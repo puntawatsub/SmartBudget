@@ -29,8 +29,7 @@ const Category = require("../models/categoryModel");
 // userId as well
 // });
 
-function getMonthYear() {
-  const d = new Date();
+function getMonthYear(d) {
   const month = String(d.getMonth() + 1).padStart(2, "0");
   const year = d.getFullYear();
   return `${month}_${year}`;
@@ -45,7 +44,7 @@ const createOne = async (req, res) => {
       date,
       merchant,
       category: {
-        categoryName: category.categoryName,
+        categoryName: amount <= 0 ? category.categoryName : "Income",
         categoryColor: category.categoryColor,
       },
       amount,
@@ -57,8 +56,8 @@ const createOne = async (req, res) => {
     await newTransaction.save();
 
     const currentCategory = await Category.findOne({
-      name: category.categoryName,
-      mm_yyyy: getMonthYear(),
+      name: amount <= 0 ? category.categoryName : "Income",
+      mm_yyyy: getMonthYear(new Date(date)),
       userId,
     });
 
@@ -83,11 +82,11 @@ const createOne = async (req, res) => {
       await currentCategory.save();
     } else {
       await Category.create({
-        name: category.categoryName,
+        name: amount <= 0 ? category.categoryName : "Income",
         limit: 0,
         amountSpent: Math.abs(amount),
         userId,
-        mm_yyyy: getMonthYear(),
+        mm_yyyy: getMonthYear(new Date(date)),
       });
     }
 
@@ -149,6 +148,7 @@ const updateById = async (req, res) => {
       { $set: body },
       { new: true, runValidators: true }
     );
+
     if (!transaction) {
       return res.status(404).json({ message: "Transaction not found" });
     }
@@ -174,6 +174,46 @@ const updateById = async (req, res) => {
         { userId },
         { totalIncome: newTotalIncome, totalExpense: newTotalExpense }
       );
+    }
+    // update category amountSpent if category or amount changed
+    if (body.category || body.amount) {
+      const oldTransaction = await Transactions.findOne({ _id: id, userId });
+      const oldCategory = await Category.findOne({
+        name: oldTransaction.category.categoryName,
+        mm_yyyy: getMonthYear(new Date(oldTransaction.date)),
+        userId,
+      });
+      if (oldCategory) {
+        oldCategory.amountSpent -= Math.abs(oldTransaction.amount);
+        await oldCategory.save();
+      }
+
+      const newCategoryName =
+        body["category.categoryName"] || oldTransaction.category.categoryName;
+      const newAmount = body.amount || oldTransaction.amount;
+      const newCategory = await Category.findOne({
+        name: newCategoryName,
+        mm_yyyy: getMonthYear(
+          body["date"] ? new Date(body["date"]) : new Date(oldTransaction.date)
+        ),
+        userId,
+      });
+      if (newCategory) {
+        newCategory.amountSpent += Math.abs(newAmount);
+        await newCategory.save();
+      } else {
+        await Category.create({
+          name: newCategoryName,
+          limit: 0,
+          amountSpent: Math.abs(newAmount),
+          userId,
+          mm_yyyy: getMonthYear(
+            body["date"]
+              ? new Date(body["date"])
+              : new Date(oldTransaction.date)
+          ),
+        });
+      }
     }
     res.json(transaction);
   } catch (err) {
@@ -216,6 +256,16 @@ const deleteById = async (req, res) => {
         { userId },
         { totalIncome: currentTotalIncome - deletedTransaction.amount }
       );
+    }
+    // Also update category amountSpent
+    const category = await Category.findOne({
+      name: deletedTransaction.category.categoryName,
+      mm_yyyy: getMonthYear(new Date(deletedTransaction.date)),
+      userId,
+    });
+    if (category) {
+      category.amountSpent -= Math.abs(deletedTransaction.amount);
+      await category.save();
     }
     res.status(204).send();
   } catch (err) {

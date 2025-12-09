@@ -39,11 +39,32 @@ const updateCategory = async (req, res) => {
 // DELETE — DELETE /api/categories/:id
 const deleteCategory = async (req, res) => {
   try {
-    await Category.findOneAndDelete({
+    const deleted = await Category.findOneAndDelete({
       _id: req.params.id,
       userId: req.user._id,
     });
+    if (!deleted) {
+      return res.status(404).json({ message: "Category with ID not found" });
+    }
     res.json({ message: "Category deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// DELETE - DELETE /api/categories/unique-names/:name
+const deleteCategoryByName = async (req, res) => {
+  try {
+    const deleted = await Category.deleteMany({
+      name: req.params.name,
+      userId: req.user._id,
+    });
+    if (deleted.deletedCount === 0) {
+      return res
+        .status(404)
+        .json({ message: "No categories with that name found" });
+    }
+    res.json({ message: "Categories deleted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -68,4 +89,5 @@ module.exports = {
   updateCategory,
   deleteCategory,
   getUniqueCategoryNames,
+  deleteCategoryByName,
 };
