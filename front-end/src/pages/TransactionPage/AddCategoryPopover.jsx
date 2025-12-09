@@ -16,6 +16,10 @@ const AddCategoryPopover = ({
   const [isOpen, setIsOpen] = useState(false);
 
   const handleAddCategory = () => {
+    if (categoryName === "Income") {
+      alert("Cannot add 'Income' as a category.");
+      return;
+    }
     setCategories((prevCategories) => [...prevCategories, categoryName]);
     onNewCategoryAdded && onNewCategoryAdded(categoryName);
     setCategoryName("");

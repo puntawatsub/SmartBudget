@@ -28,7 +28,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="w-40 bg-white dark:bg-gray-800 border-r border-t dark:border-gray-700 h-screen p-4 flex flex-col justify-between">
+    <div className="w-60 bg-white dark:bg-gray-800 border-r border-t dark:border-gray-700 h-screen p-4 flex flex-col justify-between">
       <div className="space-y-2">
         <Link
           to="/"
