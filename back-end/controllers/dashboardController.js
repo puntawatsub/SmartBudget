@@ -1,5 +1,6 @@
 // const Transaction = require('../models/transactionModel')
 const Analytics = require("../models/analyticsModel");
+const Category = require("../models/categoryModel");
 
 // const getDashboard = async (req, res) => {
 //   try {
@@ -98,6 +99,21 @@ const Analytics = require("../models/analyticsModel");
 //   }
 // }
 
+function getMonthYear() {
+  const d = new Date();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${month}_${year}`;
+}
+
+function getPreviousMonthYear() {
+  const d = new Date();
+  d.setMonth(d.getMonth() - 1);
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${month}_${year}`;
+}
+
 // module.exports = { getDashboard }
 // controllers/dashboardController.js
 const getDashboard = async (req, res) => {
@@ -117,14 +133,39 @@ const getDashboard = async (req, res) => {
     };
 
     // ExpenditureOverview data
-    const expenditureOverview = [
-      { title: "Groceries", previous: 20, current: 400, max: 500 },
-      { title: "Transport", previous: 200, current: 300, max: 500 },
-      { title: "Eating Out", previous: 250, current: 360, max: 500 },
-      { title: "Shopping", previous: 180, current: 400, max: 500 },
-      { title: "Subscriptions", previous: 100, current: 140, max: 500 },
-      { title: "Utilities", previous: 220, current: 310, max: 500 },
-    ];
+    // const expenditureOverview = [
+    //   { title: "Groceries", previous: 20, current: 400, max: 500 },
+    //   { title: "Transport", previous: 200, current: 300, max: 500 },
+    //   { title: "Eating Out", previous: 250, current: 360, max: 500 },
+    //   { title: "Shopping", previous: 180, current: 400, max: 500 },
+    //   { title: "Subscriptions", previous: 100, current: 140, max: 500 },
+    //   { title: "Utilities", previous: 220, current: 310, max: 500 },
+    // ];
+    const expenditureOverview = []; // Placeholder for dynamic data
+    const categoriesNames = await Category.find({
+      userId: req.user._id,
+    }).distinct("name");
+    for (const name of categoriesNames) {
+      const currentCategory = await Category.findOne({
+        name,
+        mm_yyyy: getMonthYear(),
+        userId: req.user._id,
+      });
+      if (currentCategory) {
+        expenditureOverview.push({
+          title: name,
+          previous:
+            (
+              await Category.findOne({
+                name,
+                mm_yyyy: getPreviousMonthYear(),
+                userId: req.user._id,
+              })
+            )?.amountSpent || 0, // Placeholder, implement previous month logic if needed
+          current: currentCategory.amountSpent || 0,
+        });
+      }
+    }
 
     // GoalCard data
     const goals = [

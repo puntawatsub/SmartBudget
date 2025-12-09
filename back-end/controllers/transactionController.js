@@ -58,6 +58,7 @@ const createOne = async (req, res) => {
 
     const currentCategory = await Category.findOne({
       name: category.categoryName,
+      mm_yyyy: getMonthYear(),
       userId,
     });
 
@@ -75,6 +76,19 @@ const createOne = async (req, res) => {
         { userId },
         { totalIncome: currentTotalIncome + amount }
       );
+    }
+
+    if (currentCategory) {
+      currentCategory.amountSpent += Math.abs(amount);
+      await currentCategory.save();
+    } else {
+      await Category.create({
+        name: category.categoryName,
+        limit: 0,
+        amountSpent: Math.abs(amount),
+        userId,
+        mm_yyyy: getMonthYear(),
+      });
     }
 
     res.status(201).json(temp);
