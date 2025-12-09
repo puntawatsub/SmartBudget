@@ -156,7 +156,9 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Target Amount (€)</label>
+              <label className="block font-medium mb-1">
+                Target Amount (€)
+              </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -167,7 +169,9 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Current Saved (€)</label>
+              <label className="block font-medium mb-1">
+                Current Saved (€)
+              </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -205,7 +209,9 @@ function GoalPage() {
               <div className="w-full bg-gray-300 h-2 rounded mt-1">
                 <div
                   className="bg-green-300 h-2 rounded"
-                  style={{ width: `${calculateProgress(saved, target)}%` }}
+                  style={{
+                    width: `${calculateProgress(saved, target)}%`,
+                  }}
                 ></div>
               </div>
             </div>
@@ -248,7 +254,9 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Target Amount (€)</label>
+              <label className="block font-medium mb-1">
+                Target Amount (€)
+              </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -261,7 +269,9 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Current Saved (€)</label>
+              <label className="block font-medium mb-1">
+                Current Saved (€)
+              </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -358,7 +368,10 @@ function GoalPage() {
                   <strong>€{goal.saved}</strong> saved
                 </p>
                 <p>Target: €{goal.target}</p>
-                <p>Deadline: {new Date(goal.deadline).toISOString().split("T")[0]}</p>
+                <p>
+                  Deadline:{" "}
+                  {new Date(goal.deadline).toISOString().split("T")[0]}
+                </p>
                 <p>Monthly Target: €{goal.monthlyTarget}</p>
               </div>
             </div>

@@ -34,17 +34,16 @@ const getDashboard = async (req, res) => {
         mm_yyyy: getMonthYear(),
       })
     )?.amountSpent;
-
-    // Calculate expenses
+    // get expenses from all categories except Income
     const categories = await Category.find({
       userId: req.user._id,
       mm_yyyy: getMonthYear(),
       name: { $ne: "Income" },
     });
-
     let totalExpenses = 0;
-    categories.forEach((cat) => (totalExpenses += cat.amountSpent));
-
+    categories.forEach((cat) => {
+      totalExpenses += cat.amountSpent;
+    });
     const analyticalOverview = {
       income: totalIncomeFromIncomeCategory || 0,
       expenses: totalExpenses,
@@ -63,7 +62,6 @@ const getDashboard = async (req, res) => {
         mm_yyyy: getMonthYear(),
         userId: req.user._id,
       });
-
       if (currentCategory) {
         expenditureOverview.push({
           title: name,
@@ -131,10 +129,9 @@ const getDashboard = async (req, res) => {
       upcomingBills,
     });
   } catch (err) {
-    console.error("Dashboard error:", err);
+    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 module.exports = { getDashboard };
-
