@@ -5,6 +5,11 @@ const Category = require("../models/categoryModel");
 
 //csv
 const exportTransactionsToCSV = require("../lib/exportCsv");
+const { normalizeCategory } = require("../utils/normalizedCategory");
+const {
+  wastefulCategoryQuery,
+} = require("../services/wastefulCategoryService");
+const Settings = require("../models/settingModel");
 //csv
 
 // nst transactionSchema = new mongoose.Schema({
@@ -43,17 +48,71 @@ const createOne = async (req, res) => {
   try {
     const { date, merchant, category, amount } = req.body;
     const userId = req.user._id;
+    const currency = (await Settings.findOne({ userId })).currency;
 
-    const temp = {
-      date,
-      merchant,
-      category: {
-        categoryName: amount <= 0 ? category.categoryName : "Income",
-        categoryColor: category.categoryColor,
-      },
-      amount,
-      userId,
-    };
+    if (!date || !merchant || !category || !amount) {
+      return res.status(400).json({ message: "All fields are required." });
+    }
+
+    const allTransactions = await Transactions.find({ userId }).lean();
+
+    console.log(allTransactions);
+
+    let temp = {};
+
+    if (amount < 0) {
+      const rawResponse = await wastefulCategoryQuery(
+        merchant,
+        amount,
+        category.categoryName,
+        date,
+        currency,
+        // all transactions of this user for context
+        allTransactions
+      );
+
+      // Try to extract JSON from markdown fences
+      console.log(typeof rawResponse);
+      const jsonMatch = rawResponse.match(/```json\s*([\s\S]*?)\s*```/);
+      const jsonString = jsonMatch ? jsonMatch[1] : rawResponse;
+      if (process.env.DEBUG_GEMINI === "true") {
+        console.log(jsonString);
+      }
+      let parsedCategory;
+      try {
+        parsedCategory = JSON.parse(jsonString);
+      } catch (err) {
+        return res
+          .status(500)
+          .json({ error: "Error parsing LLM JSON response." });
+      }
+
+      const normalizedCategory = normalizeCategory(parsedCategory);
+
+      temp = {
+        date,
+        merchant,
+        category: {
+          categoryName: amount <= 0 ? category.categoryName : "Income",
+          categoryColor: category.categoryColor,
+        },
+        amount,
+        wastefulCategory: normalizedCategory.category,
+        wastefulAnalysis: normalizedCategory.analysis,
+        userId,
+      };
+    } else {
+      temp = {
+        date,
+        merchant,
+        category: {
+          categoryName: amount <= 0 ? category.categoryName : "Income",
+          categoryColor: category.categoryColor,
+        },
+        amount,
+        userId,
+      };
+    }
 
     const newTransaction = new Transactions(temp);
 

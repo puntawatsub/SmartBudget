@@ -34,6 +34,12 @@ const model = async (prompt) => {
     );
 
     const jsonResponse = await fetchResponse.json();
+    console.log(jsonResponse);
+
+    if (fetchResponse.status === 429) {
+      console.log("Gemini API request exceed the rate limit.");
+      throw new Error("Rate limit exceeded");
+    }
     const responseString = String(
       jsonResponse.candidates[0].content.parts[0].text
     );

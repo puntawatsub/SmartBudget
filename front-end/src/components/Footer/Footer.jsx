@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="bg-[#0D1240] text-gray-200 py-6 w-full">
+    <footer className="bg-[#0D1240] text-gray-200 b-0 relative py-6 w-full">
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
         <p className="text-sm text-center md:text-left">
           © 2025 SmartBudget. All rights reserved

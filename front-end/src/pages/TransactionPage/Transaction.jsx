@@ -45,13 +45,13 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { Pie, PieChart } from "recharts";
+import { Legend, Pie, PieChart } from "recharts";
 import ReactPaginate from "react-paginate";
 import { useState } from "react";
 import { List } from "lucide-react";
 import { useEffect } from "react";
-import { is } from "date-fns/locale/is";
 import NewTransactionDialog from "./NewTransactionDialog";
+import useWastefulCategoryData from "@/hooks/useWastefulCategoryData";
 
 //mock data for now
 // const transactions = [
@@ -120,13 +120,6 @@ const hardCodedTransactions = [
   },
 ];
 
-const chartData = [
-  { category: "cat1", percentage: 25, fill: "#274754" },
-  { category: "cat2", percentage: 25, fill: "#2A9D90" },
-  { category: "cat3", percentage: 20, fill: "#E76E50" },
-  { category: "cat4", percentage: 30, fill: "#E8C468" },
-];
-
 function Transaction() {
   const [date, setDate] = useState();
   const [transactionListOffset, setTransactionListOffset] = useState(0);
@@ -140,6 +133,10 @@ function Transaction() {
   const [newTransactionDate, setNewTransactionDate] = useState(new Date());
   const [isAddTransactionDialogOpen, setIsAddTransactionDialogOpen] =
     useState(false);
+  const [duplicatePercentage, setDuplicatePercentage] = useState(0);
+  const [inefficentPercentage, setInefficentPercentage] = useState(0);
+  const [totalSpending, setTotalSpending] = useState(0);
+  const { data: chartData, loading } = useWastefulCategoryData();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -165,6 +162,33 @@ function Transaction() {
         setTransactionsError(err.message);
       } finally {
         setTransactionsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+          throw new Error("Token not found");
+        }
+        const response = await fetch("/api/llm/percentage", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch analysis percentages");
+        }
+        const data = await response.json();
+        setDuplicatePercentage(data.duplicatePercentage);
+        setInefficentPercentage(data.inefficentPercentage);
+        setTotalSpending(data.totalSpendings);
+      } catch (err) {
+        console.error(err);
+        alert(err.message);
       }
     };
     fetchData();
@@ -390,10 +414,10 @@ function Transaction() {
                 <span className="text-gray-500 text-sm font-medium">
                   Total Spendings
                 </span>
-                <span className="text-red-500 text-sm font-medium">+15%</span>
+                <span className="text-red-500 text-sm font-medium"></span>
               </div>
               <div className="text-black text-3xl font-medium self-start">
-                €3000
+                €{totalSpending}
               </div>
             </div>
             <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
@@ -403,11 +427,11 @@ function Transaction() {
                   Duplicates
                 </span>
                 <span className="text-gray-500 text-sm font-medium">
-                  -10,24%
+                  {/* {duplicatePercentage}% */}
                 </span>
               </div>
               <div className="text-black text-3xl font-medium self-start">
-                20%
+                {duplicatePercentage || 0}%
               </div>
             </div>
             <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
@@ -416,10 +440,10 @@ function Transaction() {
                 <span className="text-gray-500 text-sm font-medium">
                   Inefficients
                 </span>
-                <span className="text-red-500 text-sm font-medium">-5%</span>
+                <span className="text-red-500 text-sm font-medium"></span>
               </div>
               <div className="text-black text-3xl font-medium self-start">
-                15%
+                {inefficentPercentage || 0}%
               </div>
             </div>
           </div>
@@ -455,41 +479,40 @@ function Transaction() {
               <ChartPie size={16} />
               Spending Analysis
             </div>
-            <div className="flex flex-row w-full overflow-hidden">
-              <div className="flex-1 relative p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
+            <div className="flex flex-row w-full">
+              <div className="flex-1 relative p-7 border-gray-100 flex flex-col justify-center items-center">
                 <h1 className="font-semibold">Spending Analysis</h1>
                 <h2 className="text-sm text-[#60646C] pt-[0.313rem]">
-                  01 - 28 November 2025
+                  {/* November 2025 */}
+                  {/* Get current month and year */}
+                  {new Date().toLocaleString("default", { month: "long" })}{" "}
+                  {new Date().getFullYear()}
                 </h2>
                 <PieChart
                   style={{
                     width: "100%",
                     aspectRatio: 1,
                   }}
+                  margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
                   responsive
                   className="pointer-events-none select-none touch-none"
                 >
                   <Pie
                     data={chartData}
                     dataKey="percentage"
-                    labelLine={false}
+                    labelLine={true}
+                    outerRadius="75%"
+                    // FIX 3: Ensure the label function returns clean text
                     // isAnimationActive={false}
-                    label={({ payload, ...props }) => {
-                      return (
-                        <text
-                          cx={props.cx}
-                          cy={props.cy}
-                          x={props.x}
-                          y={props.y}
-                          textAnchor={props.textAnchor}
-                          dominantBaseline={props.dominantBaseline}
-                          fill="#000000"
-                        >
-                          {payload.category}: {payload.percentage}%
-                        </text>
-                      );
-                    }}
+                    label={({ name, percent }) =>
+                      `${(percent * 100).toFixed(0)}%`
+                    }
                     nameKey="category"
+                  />
+                  <Legend
+                    layout="horizontal" // or "vertical"
+                    align="center"
+                    wrapperStyle={{ padding: "10px 0" }}
                   />
                 </PieChart>
               </div>
@@ -509,7 +532,7 @@ function Transaction() {
                     <TableHeader className="bg-[#f4f4f4] hidden">
                       <TableRow>
                         <TableHead>Date</TableHead>
-                        <TableHead>Merchant</TableHead>
+                        <TableHead>Title</TableHead>
                         <TableHead>Category</TableHead>
                         <TableHead>Amount</TableHead>
                       </TableRow>
