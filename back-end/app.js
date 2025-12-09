@@ -19,6 +19,7 @@ const aiSpendingAnalysisRouter = require("./routes/aiSpendingAnalysisRouter");
 const cookieParser = require("cookie-parser");
 
 const refreshRouter = require("./routes/refreshRouter");
+const upcomingBillsRouter = require("./routes/upcomingBillsRouter");
 
 const {
   unknownEndpoint,
@@ -76,6 +77,9 @@ app.use("/api/transactions", transactionRouter);
 
 // Category API route
 app.use("/api/categories", categoryRouter);
+
+//upcoming bill API route
+app.use("/api/upcoming-bills", upcomingBillsRouter);
 
 // Use the refreshRouter for refresh
 // app.use("/api/refresh");

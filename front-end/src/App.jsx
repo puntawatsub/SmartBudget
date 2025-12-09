@@ -19,6 +19,7 @@ import Transaction from "./pages/TransactionPage/Transaction";
 // import ResetPassword from './components/ResetPasswordPage/ResetPassword'
 import GoalPage from "./components/GoalPage/GoalPage";
 import AddGoalPage from "./pages/GoalPage/AddGoalPage"; // ✅ NEW GOAL PAGE
+import UpcomingBillsPage from "./pages/UpcomingBillPage/UpcomingBillsPage";
 
 import "./index.css";
 import useRefresh from "./hooks/useRefresh";
@@ -58,6 +59,11 @@ function App() {
             <Route
               path="transaction"
               element={isAuth ? <Transaction /> : <Navigate to="/" />}
+            />
+
+            <Route
+              path="upcoming-bills"
+              element={isAuth ? <UpcomingBillsPage /> : <Navigate to="/" />}
             />
             {/* Goals system */}
             <Route

@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 
 const Goal = require("../models/goal.model");
+const requireAuth = require("../middleware/requireAuth");
+
+// Apply authentication middleware to all routes
+router.use(requireAuth);
 
 // CREATE — POST /api/goals
 router.post("/", async (req, res) => {
