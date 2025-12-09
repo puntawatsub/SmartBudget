@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectItem, SelectContent, SelectValue } from "@/components/ui/select";
 import { useSetting } from "@/hooks/useSetting";
+import Sidebar from "@/components/Sidebar";
 
 export default function SettingsPage() {
   const settings = useSetting();
@@ -23,7 +24,12 @@ export default function SettingsPage() {
     <div className="flex h-screen bg-gray-50 dark:bg-gray-900 text-black dark:text-white">
 
       {/* Sidebar */}
-      <aside className="w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 flex flex-col justify-between">
+      
+        <Sidebar/>
+        
+
+
+      {/* <aside className="w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 p-6 flex flex-col justify-between">
         <div className="text-2xl font-medium">Logo</div>
 
         <nav className="space-y-3 mt-6">
@@ -36,7 +42,7 @@ export default function SettingsPage() {
         <Button variant="outline" className="mt-auto w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white">
           Logout
         </Button>
-      </aside>
+      </aside> */}
 
       {/* Main */}
       <main className="flex-1 flex flex-col">

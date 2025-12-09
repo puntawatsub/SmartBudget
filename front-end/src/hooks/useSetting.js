@@ -14,6 +14,12 @@ export function useSetting() {
   useEffect(() => {
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(theme === "dark" ? "dark" : "light");
+    // persist theme immediately so other components / App.jsx can read/apply it
+    try {
+      const cached = JSON.parse(localStorage.getItem("appSettings") || "null") || {};
+      cached.theme = theme === "dark" ? "Dark" : "Light";
+      localStorage.setItem("appSettings", JSON.stringify(cached));
+    } catch {}
   }, [theme]);
 
   const applySettings = (data) => {
