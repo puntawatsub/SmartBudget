@@ -24,6 +24,14 @@ const transactionSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    wastefulAnalysis: {
+      type: String,
+      required: false,
+    },
+    wastefulCategory: {
+      type: String,
+      required: false,
+    },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

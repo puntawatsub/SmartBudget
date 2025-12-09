@@ -20,7 +20,6 @@ async function generateText(req, res) {
     if (process.env.DEBUG_GEMINI === "true") {
       console.log(jsonString);
     }
-
     let parsedCategory;
     try {
       parsedCategory = JSON.parse(jsonString);

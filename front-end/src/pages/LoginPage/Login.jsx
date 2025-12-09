@@ -36,6 +36,7 @@ const Login = () => {
 
       if (response.ok) {
         sessionStorage.setItem("token", data.token); // save token
+        sessionStorage.setItem("user", JSON.stringify(data.user)); // save user data
         window.location.href = "/dashboard"; // redirect to dashboard
       } else if (response.status === 404) {
         // if user does not exist
