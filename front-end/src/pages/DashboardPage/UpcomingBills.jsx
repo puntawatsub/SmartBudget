@@ -95,19 +95,102 @@
 // }
 
 // export default UpcomingBills
-const UpcomingBills = ({ data }) => {
-  if (!data) return <p>Loading upcoming bills...</p>
+
+import React, { useState, useEffect } from 'react'
+import { getUpcomingBills } from '../../api/upcomingBillsApi' // adjust path
+
+const UpcomingBillsCard = () => {
+  const [bills, setBills] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  // Helper to calculate days left
+  const getDaysLeft = (dueDate) => {
+    const today = new Date()
+    const due = new Date(dueDate)
+    const diffTime = due - today
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    return diffDays
+  }
+
+  // Format the deadline string
+  const formatDeadline = (dueDate) => {
+    const daysLeft = getDaysLeft(dueDate)
+    if (daysLeft < 0) return `Late by ${Math.abs(daysLeft)} day(s)`
+    if (daysLeft === 0) return 'Due today'
+    return `${daysLeft} day(s) left`
+  }
+
+  // Fetch upcoming bills
+  useEffect(() => {
+    const fetchBills = async () => {
+      try {
+        setLoading(true)
+        const data = await getUpcomingBills()
+        setBills(data)
+      } catch (err) {
+        setError('Failed to fetch bills')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchBills()
+  }, [])
+
+  if (loading) return <p>Loading upcoming bills...</p>
+  if (error) return <p>{error}</p>
 
   return (
-    <div className='w-full bg-white rounded-lg shadow p-4'>
-      <h2 className='text-sm font-medium mb-2'>Upcoming Bills</h2>
-      {data.map((bill, i) => (
-        <div key={i} className='flex justify-between border-b py-1'>
-          <span>{bill.name}</span>
-          <span>{bill.due}</span>
-        </div>
-      ))}
+    <div className='w-full max-w-[700px] bg-white rounded-[10px] shadow-[0px_1px_2px_0px_rgba(0,0,0,0.05)] outline outline-1 outline-offset-[-1px] outline-gray-200 flex flex-col p-4 gap-4 transition-transform duration-300 hover:shadow-lg hover:scale-105'>
+      {/* Header */}
+      <div className='flex items-center gap-2'>
+        <h3 className='font-semibold text-lg'>Upcoming Bills</h3>
+      </div>
+
+      {/* Table */}
+      <table className='w-full text-sm'>
+        <thead>
+          <tr className='text-gray-400 text-left'>
+            <th>Deadline</th>
+            <th>Date</th>
+            <th>Name</th>
+            <th className='text-right'>Due</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {bills.map((b, i) => (
+            <tr key={b._id || i} className='border-t'>
+              {/* Deadline */}
+              <td className='py-2'>
+                {getDaysLeft(b.date) < 0 ? (
+                  <div className='px-2 py-0.5 bg-red-50 rounded-full outline outline-[0.5px] outline-offset-[-0.5px] outline-red-500 inline-flex justify-center items-center'>
+                    <div className='text-red-700 text-xs font-medium'>
+                      {formatDeadline(b.date)}
+                    </div>
+                  </div>
+                ) : (
+                  <div className='text-black text-xs font-medium'>
+                    {formatDeadline(b.date)}
+                  </div>
+                )}
+              </td>
+
+              {/* Formatted due date */}
+              <td>{new Date(b.date).toLocaleDateString('en-GB')}</td>
+
+              {/* Name */}
+              <td>{b.name}</td>
+
+              {/* Amount */}
+              <td className='text-right font-medium'>€{b.due}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
-export default UpcomingBills
+
+export default UpcomingBillsCard
