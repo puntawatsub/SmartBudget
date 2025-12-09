@@ -2,6 +2,7 @@ import { Input } from "./components/ui/input";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import useRefresh from "./hooks/useRefresh";
 import { useEffect } from "react";
+import Sidebar from "./components/Sidebar";
 
 const Layout = () => {
   const { pathname } = useLocation();
@@ -48,6 +49,8 @@ const Layout = () => {
           </div>
         </header>
       )}
+
+      <Sidebar />
 
       {/* Main content */}
       <main className="flex-1 overflow-auto">

@@ -59,7 +59,7 @@ const refresh = async (req, res) => {
     });
   } catch (error) {
     if (errorCode !== 0) {
-      res.clearCookie("refreshToken");
+      res.clearCookie("refreshToken", { path: "/api/refresh" });
       return res.status(errorCode).json({ message: error.message });
     } else {
       res.status(500).json({ message: "Server error" });

@@ -12,27 +12,45 @@ export default function Sidebar() {
 
   const handleLogout = async () => {
     try {
-      // optional server-side logout
-      await fetch("/api/logout", { method: "POST", credentials: "include" }).catch(() => {});
+      await fetch("/api/signups/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("Logout error:", err);
     } finally {
       // clear client auth/cache
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("user");
       localStorage.removeItem("appSettings");
-      navigate("/home");
+      navigate("/");
     }
   };
 
   return (
-    <div className="w-40 bg-white dark:bg-gray-800 border-r dark:border-gray-700 h-screen p-4 flex flex-col justify-between">
+    <div className="w-40 bg-white dark:bg-gray-800 border-r border-t dark:border-gray-700 h-screen p-4 flex flex-col justify-between">
       <div className="space-y-2">
-        <Link to="/home" className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-          <img src={homeIcon} className="w-6 h-6 dark:invert dark:brightness-150" alt="Home" />
+        <Link
+          to="/"
+          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        >
+          <img
+            src={homeIcon}
+            className="w-6 h-6 dark:invert dark:brightness-150"
+            alt="Home"
+          />
           <span className="text-sm font-medium dark:text-white">Home</span>
         </Link>
 
-        <Link to="/dashboard" className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-          <img src={dashboardIcon} className="w-6 h-6 dark:invert dark:brightness-150" alt="Dashboard" />
+        <Link
+          to="/dashboard"
+          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        >
+          <img
+            src={dashboardIcon}
+            className="w-6 h-6 dark:invert dark:brightness-150"
+            alt="Dashboard"
+          />
           <span className="text-sm font-medium dark:text-white">Dashboard</span>
         </Link>
 
@@ -40,7 +58,11 @@ export default function Sidebar() {
           to="/goals"
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
         >
-          <img src={goalsIcon} className="w-6 h-6 dark:invert dark:brightness-150" alt="Goals" />
+          <img
+            src={goalsIcon}
+            className="w-6 h-6 dark:invert dark:brightness-150"
+            alt="Goals"
+          />
           <span className="text-sm font-medium dark:text-white">Goals</span>
         </Link>
 
@@ -48,22 +70,39 @@ export default function Sidebar() {
           to="/transaction"
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
         >
-          <img src={transactionsIcon} className="w-6 h-6 dark:invert dark:brightness-150" alt="Transactions" />
-          <span className="text-sm font-medium dark:text-white">Transaction</span>
+          <img
+            src={transactionsIcon}
+            className="w-6 h-6 dark:invert dark:brightness-150"
+            alt="Transactions"
+          />
+          <span className="text-sm font-medium dark:text-white">
+            Transaction
+          </span>
         </Link>
 
         <Link
           to="/settings"
           className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
         >
-          <img src={settingsIcon} className="w-6 h-6 dark:invert dark:brightness-150" alt="Settings" />
+          <img
+            src={settingsIcon}
+            className="w-6 h-6 dark:invert dark:brightness-150"
+            alt="Settings"
+          />
           <span className="text-sm font-medium dark:text-white">Settings</span>
         </Link>
       </div>
 
       {/* LOGOUT */}
-      <button onClick={handleLogout} className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full text-left">
-        <img src={logoutIcon} className="w-6 h-6 dark:invert dark:brightness-150" alt="Logout" />
+      <button
+        onClick={handleLogout}
+        className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full text-left"
+      >
+        <img
+          src={logoutIcon}
+          className="w-6 h-6 dark:invert dark:brightness-150"
+          alt="Logout"
+        />
         <span className="text-sm font-medium dark:text-white">Logout</span>
       </button>
     </div>
