@@ -156,10 +156,16 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const logUserOut = async (req, res) => {
+  res.clearCookie("refreshToken", { path: "/api/refresh" });
+  return res.status(200).json({ message: "Logged out successfully" });
+};
+
 module.exports = {
   getAllUsers,
   createUser,
   getUserById,
   updateUser,
   deleteUser,
+  logUserOut,
 };
