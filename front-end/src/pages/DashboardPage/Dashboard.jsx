@@ -9,8 +9,21 @@ const Dashboard = () => {
   const [goals, setGoals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userName, setUserName] = useState("User");
 
   useEffect(() => {
+    // Get user name from sessionStorage first
+    const storedUser = sessionStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        // Try to get username from stored user data
+        setUserName(parsedUser.username || parsedUser.name || "User");
+      } catch (err) {
+        console.error("Failed to parse stored user data:", err);
+      }
+    }
+
     const fetchDashboard = async () => {
       try {
         const res = await fetch("/api/dashboard", {
@@ -21,6 +34,11 @@ const Dashboard = () => {
         if (!res.ok) throw new Error();
         const json = await res.json();
         setData(json);
+        
+        // Also try to get user name from API response as fallback
+        if (json.user && json.user.name) {
+          setUserName(json.user.name);
+        }
       } catch (err) {
         setError("Failed to load dashboard data");
       } finally {
@@ -52,7 +70,7 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 flex flex-col gap-6">
-      <div className="text-2xl font-semibold text-gray-800">Hi, User 👋</div>
+      <div className="text-2xl font-semibold text-gray-800">Hi, {userName} 👋</div>
 
       <AnalyticalOverview data={data} />
 

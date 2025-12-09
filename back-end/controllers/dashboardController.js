@@ -1,9 +1,8 @@
-// const Transaction = require('../models/transactionModel')
 const Analytics = require("../models/analyticsModel");
 const Category = require("../models/categoryModel");
+const User = require("../models/userModel");
 
-
-
+// Helpers to get month-year keys
 function getMonthYear() {
   const d = new Date();
   const month = String(d.getMonth() + 1).padStart(2, "0");
@@ -19,12 +18,15 @@ function getPreviousMonthYear() {
   return `${month}_${year}`;
 }
 
-// module.exports = { getDashboard }
-// controllers/dashboardController.js
 const getDashboard = async (req, res) => {
   try {
-    
+    //  Fetch logged-in user's profile
+    const user = await User.findById(req.user._id).select("name email");
+
+    // Fetch analytics
     const analyticals = await Analytics.findOne({ userId: req.user._id });
+
+    // Calculate income
     const totalIncomeFromIncomeCategory = (
       await Category.findOne({
         name: "Income",
@@ -32,41 +34,36 @@ const getDashboard = async (req, res) => {
         mm_yyyy: getMonthYear(),
       })
     )?.amountSpent;
-    // get expenses from all categories except Income
+
+    // Calculate expenses
     const categories = await Category.find({
       userId: req.user._id,
       mm_yyyy: getMonthYear(),
       name: { $ne: "Income" },
     });
+
     let totalExpenses = 0;
-    categories.forEach((cat) => {
-      totalExpenses += cat.amountSpent;
-    });
+    categories.forEach((cat) => (totalExpenses += cat.amountSpent));
+
     const analyticalOverview = {
-      income: totalIncomeFromIncomeCategory ? totalIncomeFromIncomeCategory : 0,
+      income: totalIncomeFromIncomeCategory || 0,
       expenses: totalExpenses,
-      savings: 0,
+      savings: 0, // you can replace with your calculation
     };
 
-    // ExpenditureOverview data
-    // const expenditureOverview = [
-    //   { title: "Groceries", previous: 20, current: 400, max: 500 },
-    //   { title: "Transport", previous: 200, current: 300, max: 500 },
-    //   { title: "Eating Out", previous: 250, current: 360, max: 500 },
-    //   { title: "Shopping", previous: 180, current: 400, max: 500 },
-    //   { title: "Subscriptions", previous: 100, current: 140, max: 500 },
-    //   { title: "Utilities", previous: 220, current: 310, max: 500 },
-    // ];
-    const expenditureOverview = []; // Placeholder for dynamic data
+    // Build expenditure overview dataset
+    const expenditureOverview = [];
     const categoriesNames = await Category.find({
       userId: req.user._id,
     }).distinct("name");
+
     for (const name of categoriesNames) {
       const currentCategory = await Category.findOne({
         name,
         mm_yyyy: getMonthYear(),
         userId: req.user._id,
       });
+
       if (currentCategory) {
         expenditureOverview.push({
           title: name,
@@ -77,13 +74,13 @@ const getDashboard = async (req, res) => {
                 mm_yyyy: getPreviousMonthYear(),
                 userId: req.user._id,
               })
-            )?.amountSpent || 0, // Placeholder, implement previous month logic if needed
+            )?.amountSpent || 0,
           current: currentCategory.amountSpent || 0,
         });
       }
     }
 
-    // GoalCard data
+    // Static goal data (replace with DB if needed)// it was before but now takes from mongo db
     const goals = [
       {
         title: "Buy a car",
@@ -97,7 +94,7 @@ const getDashboard = async (req, res) => {
       },
     ];
 
-    // UpcomingBills data
+    // Static upcoming bills (replace with DB if needed)
     const upcomingBills = [
       {
         deadline: "3 days",
@@ -122,17 +119,22 @@ const getDashboard = async (req, res) => {
       },
     ];
 
-    // Send a single object with top-level analyticalOverview fields
+    // ✅ SEND EVERYTHING (including user info!)
     res.json({
-      ...analyticalOverview, // spreads income, expenses, savings, balance
+      user: {
+        name: user?.name,
+        email: user?.email,
+      },
+      ...analyticalOverview,
       expenditureOverview,
       goals,
       upcomingBills,
     });
   } catch (err) {
-    console.error(err);
+    console.error("Dashboard error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 module.exports = { getDashboard };
+
