@@ -315,7 +315,7 @@ function Transaction() {
           <TableHeader className="bg-[#f4f4f4]">
             <TableRow>
               <TableHead>Date</TableHead>
-              <TableHead>Merchant</TableHead>
+              <TableHead>Title</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Actions</TableHead>
@@ -345,7 +345,6 @@ function Transaction() {
                         <Button variant="ghost">⋮</Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
                             handleDeleteTransaction(tx._id);
