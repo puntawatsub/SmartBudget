@@ -3,6 +3,10 @@ const flattenObject = require("../lib/flattenObject");
 const Analytics = require("../models/analyticsModel");
 const Category = require("../models/categoryModel");
 
+//csv
+const exportTransactionsToCSV = require("../lib/exportCsv");
+//csv
+
 // nst transactionSchema = new mongoose.Schema({
 //   date: {
 //     type: Date,
@@ -275,10 +279,35 @@ const deleteById = async (req, res) => {
   }
 };
 
+//csv
+const exportCSV = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const transactions = await Transactions.find({ userId });
+
+    const csv = exportTransactionsToCSV(transactions);
+
+    const fileName = `transactions_${getMonthYear(new Date())}.csv`;
+
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+
+    res.status(200).send(csv);
+  } catch (err) {
+    res.status(500).json({
+      message: `Cannot export CSV: ${err.message}`,
+    });
+  }
+};
+//csv
+
 module.exports = {
   createOne,
   getAll,
   getById,
   updateById,
   deleteById,
+
+  //csv
+  exportCSV,
 };

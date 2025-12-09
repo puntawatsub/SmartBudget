@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectTrigger,
@@ -16,6 +17,16 @@ import {
   TableBody,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -242,7 +253,32 @@ function Transaction() {
             setNewTransactionDate={setNewTransactionDate}
             addTransaction={addTransaction}
           ></NewTransactionDialog>
-          <Button variant="outline">
+          <Button
+            variant="outline"
+            onClick={async () => {
+              const token = sessionStorage.getItem("token");
+              if (!token) return alert("User not authenticated");
+              try {
+                const response = await fetch("/api/transactions/export/csv", {
+                  headers: { Authorization: `Bearer ${token}` },
+                });
+                if (!response.ok) throw new Error("Failed to export CSV");
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute(
+                  "download",
+                  `transactions_${new Date().toISOString().slice(0, 10)}.csv`
+                );
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+              } catch (err) {
+                alert(err.message);
+              }
+            }}
+          >
             Download CSV
             <Download />
           </Button>
