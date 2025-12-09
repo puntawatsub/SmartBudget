@@ -62,6 +62,7 @@ const Layout = () => {
           </div>
         </header>
       )}
+<<<<<<< merge-fix
 
       <Sidebar />
 
@@ -69,6 +70,15 @@ const Layout = () => {
       <main className="flex-1 overflow-auto">
         <Outlet />
       </main>
+=======
+      <div className="flex flex-row">
+        {isAuth && <Sidebar />}
+        {/* Main content */}
+        <main className="flex-1 overflow-auto">
+          <Outlet />
+        </main>
+      </div>
+>>>>>>> local
     </div>
   );
 };
