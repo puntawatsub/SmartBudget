@@ -14,6 +14,7 @@ const goalRouter = require("./routes/goals");
 const transactionRouter = require("./routes/transactionRouter");
 const settingRouter = require("./routes/settingRouter");
 const categoryRouter = require("./routes/categoryRouter");
+const aiSpendingAnalysisRouter = require("./routes/aiSpendingAnalysisRouter");
 
 const cookieParser = require("cookie-parser");
 
@@ -78,6 +79,8 @@ app.use("/api/categories", categoryRouter);
 
 // Use the refreshRouter for refresh
 // app.use("/api/refresh");
+
+app.use("/api/llm", aiSpendingAnalysisRouter);
 
 // Use the settingRouter for all routes that begin with "/api/settings"
 app.use("/api/settings", settingRouter);

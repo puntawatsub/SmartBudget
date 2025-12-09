@@ -15,7 +15,7 @@ function GoalPage() {
   const [target, setTarget] = useState("");
   const [saved, setSaved] = useState("");
   const [deadline, setDeadline] = useState("");
-  const [weeklyTarget, setWeeklyTarget] = useState("");
+  const [monthlyTarget, setMonthlyTarget] = useState("");
 
   const [goals, setGoals] = useState([]);
 
@@ -24,6 +24,26 @@ function GoalPage() {
     if (!target || target <= 0) return 0;
     return Math.min(100, Math.round((saved / target) * 100));
   };
+
+  // AUTO CALCULATE MONTHLY TARGET
+  const calculateMonthlyTarget = (target, saved, deadline) => {
+    if (!target || !deadline) return 0;
+    const remainingAmount = target - saved;
+    const now = new Date();
+    const endDate = new Date(deadline);
+    const monthsLeft =
+      endDate.getMonth() -
+      now.getMonth() +
+      12 * (endDate.getFullYear() - now.getFullYear());
+    if (monthsLeft <= 0) return remainingAmount; // due this month
+    return Math.ceil(remainingAmount / monthsLeft);
+  };
+
+  useEffect(() => {
+    setMonthlyTarget(
+      calculateMonthlyTarget(Number(target), Number(saved), deadline)
+    );
+  }, [target, saved, deadline]);
 
   // LOAD GOALS FROM BACKEND
   useEffect(() => {
@@ -47,7 +67,7 @@ function GoalPage() {
       target: Number(target),
       saved: Number(saved),
       deadline,
-      weeklyTarget,
+      monthlyTarget,
     };
 
     const created = await createGoal(newGoal);
@@ -75,10 +95,10 @@ function GoalPage() {
       ...editingGoal,
       target: Number(editingGoal.target),
       saved: Number(editingGoal.saved),
+      monthlyTarget: Number(editingGoal.monthlyTarget),
     };
 
     const result = await updateGoal(editingGoal._id, updatedGoal);
-
     setGoals(goals.map((g) => (g._id === result._id ? result : g)));
     setEditingGoal(null);
   };
@@ -136,9 +156,7 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
-                Target Amount (€)
-              </label>
+              <label className="block font-medium mb-1">Target Amount (€)</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -149,9 +167,7 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
-                Current Saved (€)
-              </label>
+              <label className="block font-medium mb-1">Current Saved (€)</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -174,13 +190,13 @@ function GoalPage() {
 
             <div>
               <label className="block font-medium mb-1">
-                Weekly Target Amount (€)
+                Monthly Target Amount (€)
               </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
-                value={weeklyTarget}
-                onChange={(e) => setWeeklyTarget(e.target.value)}
+                value={monthlyTarget}
+                onChange={(e) => setMonthlyTarget(e.target.value)}
               />
             </div>
 
@@ -232,9 +248,7 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
-                Target Amount (€)
-              </label>
+              <label className="block font-medium mb-1">Target Amount (€)</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -247,9 +261,7 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
-                Current Saved (€)
-              </label>
+              <label className="block font-medium mb-1">Current Saved (€)</label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
@@ -276,16 +288,16 @@ function GoalPage() {
 
             <div>
               <label className="block font-medium mb-1">
-                Weekly Target Amount (€)
+                Monthly Target Amount (€)
               </label>
               <input
                 type="number"
                 className="w-full border rounded-lg px-3 py-2"
-                value={editingGoal.weeklyTarget}
+                value={editingGoal.monthlyTarget}
                 onChange={(e) =>
                   setEditingGoal({
                     ...editingGoal,
-                    weeklyTarget: e.target.value,
+                    monthlyTarget: e.target.value,
                   })
                 }
               />
@@ -298,7 +310,7 @@ function GoalPage() {
               <button
                 type="button"
                 className="px-4 py-2 rounded-lg border ml-3"
-                // onClick={() => setEditingGoal(null)}
+                onClick={() => setEditingGoal(null)}
               >
                 Cancel
               </button>
@@ -346,7 +358,8 @@ function GoalPage() {
                   <strong>€{goal.saved}</strong> saved
                 </p>
                 <p>Target: €{goal.target}</p>
-                <p>Deadline: {goal.deadline}</p>
+                <p>Deadline: {new Date(goal.deadline).toISOString().split("T")[0]}</p>
+                <p>Monthly Target: €{goal.monthlyTarget}</p>
               </div>
             </div>
           ))}

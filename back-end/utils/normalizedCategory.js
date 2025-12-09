@@ -7,13 +7,14 @@ function normalizeCategory(category) {
       spendingCategory = JSON.parse(spendingCategory);
     } catch (err) {
       console.error("❌ Failed to parse spending category JSON:", err);
-      return { category: "" };
+      return { category: "", analysis: "" };
     }
   }
 
   // Ensure the simplified schema with safe defaults
   return {
     category: spendingCategory.category || "No category provided",
+    analysis: spendingCategory.analysis || "No analysis provided",
   };
 }
 
