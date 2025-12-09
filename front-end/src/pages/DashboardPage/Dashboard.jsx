@@ -60,6 +60,9 @@ const Dashboard = () => {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
+        if (!res.ok) {
+          throw new Error(`Error: ${res.status} ${res.statusText}`);
+        }
         const json = await res.json();
         setData(json);
       } catch (err) {

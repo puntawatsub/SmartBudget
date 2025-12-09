@@ -17,6 +17,11 @@ const requireAuth = async (req, res, next) => {
     req.user = await User.findOne({ _id: id }).select("_id");
     next();
   } catch (error) {
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({
+        error: "Session expired. Please refresh the page or log in again.",
+      });
+    }
     console.log(error);
     res.status(401).json({ error: "Request is not authorized" });
   }

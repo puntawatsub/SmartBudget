@@ -21,6 +21,10 @@ const categorySchema = new mongoose.Schema({
     required: true,
     ref: "User",
   },
+  mm_yyyy: {
+    type: String,
+    required: true,
+  },
 });
 
 const Category = mongoose.model("Category", categorySchema);

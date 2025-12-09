@@ -7,6 +7,7 @@ const {
   updateCategory,
   deleteCategory,
   getUniqueCategoryNames,
+  deleteCategoryByName,
 } = require("../controllers/categoryControllers");
 // CREATE — POST /api/categories
 router.post("/", createCategory);
@@ -18,5 +19,7 @@ router.put("/:id", updateCategory);
 router.delete("/:id", deleteCategory);
 // GET unique category names — GET /api/categories/unique
 router.get("/unique", getUniqueCategoryNames);
+// DELETE - DELETE /api/categories/unique-names/:name
+router.delete("/unique/:name", deleteCategoryByName);
 
 module.exports = router;

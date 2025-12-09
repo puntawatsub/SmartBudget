@@ -41,10 +41,7 @@ function App() {
           {/* Layout wrapper for nested routes */}
           <Route path="/" element={<Layout />}>
             {/* Main site pages */}
-            <Route
-              index
-              element={!isAuth ? <Home /> : <Navigate to="/dashboard" />}
-            />
+            <Route index element={<Home />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="login" element={<Login />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
