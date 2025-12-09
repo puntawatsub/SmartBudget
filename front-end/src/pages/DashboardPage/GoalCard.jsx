@@ -12,7 +12,7 @@ const GoalCard = ({ data }) => {
   const pct = Math.min(100, Math.round((saved / target) * 100));
 
   return (
-    <div className="w-full max-w-[700px] bg-white rounded-[10px] shadow p-4 gap-4 flex flex-col">
+    <div className="w-full max-w-[700px] bg-white rounded-[10px] shadow p-4 gap-4 flex flex-col hover:scale-105 hover:shadow-lg transition-transform duration-300">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">{data.title}</h3>
