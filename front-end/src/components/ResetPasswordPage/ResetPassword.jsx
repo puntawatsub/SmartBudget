@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+  const { token } = useParams();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
@@ -14,11 +17,23 @@ const ResetPassword = () => {
       return;
     }
 
-    
-    console.log("Password reset successfully");
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/forgot-password/reset-password/${token}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
 
-    alert("Password reset successfully!");
-    navigate("/login"); // redirect to login page
+      const data = await res.json();
+      alert(data.message);
+      navigate("/login");
+    } catch (error) {
+      console.error(error);
+      alert("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -32,26 +47,27 @@ const ResetPassword = () => {
           <input
             type="password"
             placeholder="New Password"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg"
             required
           />
 
           <input
             type="password"
             placeholder="Confirm Password"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-lg"
             required
           />
 
           <button
             type="submit"
-            className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all"
+            className="w-full py-3 bg-blue-600 text-white rounded-lg font-semibold"
+            disabled={loading}
           >
-            Reset Password
+            {loading ? "Resetting..." : "Reset Password"}
           </button>
         </form>
       </div>
