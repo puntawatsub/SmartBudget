@@ -118,31 +118,35 @@ const NewTransactionDialog = ({
             required
             placeholder="Amount"
           />
-          <div className="flex flex-row">
-            <Select
-              value={newTransactionCategory}
-              onValueChange={(value) => {
-                setNewTransactionCategory(value);
-                console.log(value);
-              }}
-              required
-            >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent required>
-                {transactionCategories.map((category) => (
-                  <SelectItem key={category} value={category}>
-                    {category}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <AddCategoryPopover
-              className="ml-2"
-              setCategories={setTransactionCategories}
-            />
-          </div>
+          {transactionType === "expense" && (
+            <div className="flex flex-row">
+              <Select
+                value={newTransactionCategory}
+                onValueChange={(value) => {
+                  setNewTransactionCategory(value);
+                  console.log(value);
+                }}
+                required
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent required>
+                  {transactionCategories
+                    .filter((e) => e !== "Income")
+                    .map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+              <AddCategoryPopover
+                className="ml-2"
+                setCategories={setTransactionCategories}
+              />
+            </div>
+          )}
           <div className="flex flex-row">
             <Select
               value={transactionType}

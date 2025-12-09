@@ -21,6 +21,10 @@ const analyticsSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
+  aIAnalysis: {
+    type: Object,
+    required: false,
+  },
 });
 
 const Analytics = mongoose.model("Analytics", analyticsSchema);

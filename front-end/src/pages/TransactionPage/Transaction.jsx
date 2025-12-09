@@ -45,13 +45,15 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { Pie, PieChart } from "recharts";
+import { Legend, Pie, PieChart } from "recharts";
 import ReactPaginate from "react-paginate";
 import { useState } from "react";
 import { List } from "lucide-react";
 import { useEffect } from "react";
-import { is } from "date-fns/locale/is";
 import NewTransactionDialog from "./NewTransactionDialog";
+import useWastefulCategoryData from "@/hooks/useWastefulCategoryData";
+import useWastefulTransactions from "@/hooks/useWastefulTransactions";
+import useAISuggestion from "@/hooks/useAISuggestion";
 
 //mock data for now
 // const transactions = [
@@ -105,28 +107,6 @@ import NewTransactionDialog from "./NewTransactionDialog";
 //   },
 // ];
 
-const hardCodedTransactions = [
-  {
-    date: "31 Dec 2020",
-    merchant: "Bulk",
-    category: "Grocery",
-    amount: "-€23.00",
-  },
-  {
-    date: "30 Dec 2020",
-    merchant: "Happiness Market Center",
-    category: "Grocery",
-    amount: "-€45.00",
-  },
-];
-
-const chartData = [
-  { category: "cat1", percentage: 25, fill: "#274754" },
-  { category: "cat2", percentage: 25, fill: "#2A9D90" },
-  { category: "cat3", percentage: 20, fill: "#E76E50" },
-  { category: "cat4", percentage: 30, fill: "#E8C468" },
-];
-
 function Transaction() {
   const [date, setDate] = useState();
   const [transactionListOffset, setTransactionListOffset] = useState(0);
@@ -140,6 +120,18 @@ function Transaction() {
   const [newTransactionDate, setNewTransactionDate] = useState(new Date());
   const [isAddTransactionDialogOpen, setIsAddTransactionDialogOpen] =
     useState(false);
+  const [duplicatePercentage, setDuplicatePercentage] = useState(0);
+  const [inefficentPercentage, setInefficentPercentage] = useState(0);
+  const [totalSpending, setTotalSpending] = useState(0);
+  const { data: chartData, loading } = useWastefulCategoryData();
+  const { transactions: wasteChartData, loading: wasteLoading } =
+    useWastefulTransactions();
+
+  const {
+    data: aiText,
+    loading: aiLoading,
+    error: aiError,
+  } = useAISuggestion();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -165,6 +157,33 @@ function Transaction() {
         setTransactionsError(err.message);
       } finally {
         setTransactionsLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        if (!token) {
+          throw new Error("Token not found");
+        }
+        const response = await fetch("/api/llm/percentage", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch analysis percentages");
+        }
+        const data = await response.json();
+        setDuplicatePercentage(data.duplicatePercentage);
+        setInefficentPercentage(data.inefficentPercentage);
+        setTotalSpending(data.totalSpendings);
+      } catch (err) {
+        console.error(err);
+        alert(err.message);
       }
     };
     fetchData();
@@ -202,6 +221,7 @@ function Transaction() {
       }
       setTransactions((prev) => [...prev, data]);
       setIsAddTransactionDialogOpen(false);
+      window.location.reload();
     } catch (err) {
       alert(`Error adding transaction: ${err.message}`);
     }
@@ -291,7 +311,7 @@ function Transaction() {
           <TableHeader className="bg-[#f4f4f4]">
             <TableRow>
               <TableHead>Date</TableHead>
-              <TableHead>Merchant</TableHead>
+              <TableHead>Title</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Amount</TableHead>
               <TableHead>Actions</TableHead>
@@ -321,7 +341,6 @@ function Transaction() {
                         <Button variant="ghost">⋮</Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => {
                             handleDeleteTransaction(tx._id);
@@ -390,10 +409,10 @@ function Transaction() {
                 <span className="text-gray-500 text-sm font-medium">
                   Total Spendings
                 </span>
-                <span className="text-red-500 text-sm font-medium">+15%</span>
+                <span className="text-red-500 text-sm font-medium"></span>
               </div>
               <div className="text-black text-3xl font-medium self-start">
-                €3000
+                €{totalSpending}
               </div>
             </div>
             <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
@@ -403,11 +422,11 @@ function Transaction() {
                   Duplicates
                 </span>
                 <span className="text-gray-500 text-sm font-medium">
-                  -10,24%
+                  {/* {duplicatePercentage}% */}
                 </span>
               </div>
               <div className="text-black text-3xl font-medium self-start">
-                20%
+                {duplicatePercentage || 0}%
               </div>
             </div>
             <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
@@ -416,10 +435,10 @@ function Transaction() {
                 <span className="text-gray-500 text-sm font-medium">
                   Inefficients
                 </span>
-                <span className="text-red-500 text-sm font-medium">-5%</span>
+                <span className="text-red-500 text-sm font-medium"></span>
               </div>
               <div className="text-black text-3xl font-medium self-start">
-                15%
+                {inefficentPercentage || 0}%
               </div>
             </div>
           </div>
@@ -435,14 +454,13 @@ function Transaction() {
           <div className="flex flex-row w-full overflow-hidden">
             <div className="flex-1 relative border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
               <div className="w-[127%] h-[400px] left-0 top-[43px] absolute bg-[conic-gradient(from_334deg_at_50.00%_50.00%,rgba(120.92,72.16,255,0.15)_48deg,rgba(243.68,202.75,255,0.15)_360deg)] rounded-full blur-2xl" />
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius
-              doloremque cum at, cupiditate, eligendi quidem ab eveniet tempora
-              autem voluptates, eaque quasi ratione itaque maxime asperiores quo
-              consectetur aliquid? Aut? Exercitationem impedit assumenda illum
-              officiis nostrum accusantium facere eligendi, iusto possimus
-              soluta quibusdam aspernatur sint tempore rerum laborum atque sunt
-              quos dolores. Laborum recusandae cumque, pariatur dolorum debitis
-              dignissimos nesciunt.
+              {aiLoading ? (
+                <div>Loading...</div>
+              ) : aiError ? (
+                <div>Error loading suggestions.</div>
+              ) : (
+                <div>{aiText}</div>
+              )}
             </div>
           </div>
         </div>
@@ -455,41 +473,40 @@ function Transaction() {
               <ChartPie size={16} />
               Spending Analysis
             </div>
-            <div className="flex flex-row w-full overflow-hidden">
-              <div className="flex-1 relative p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
+            <div className="flex flex-row w-full">
+              <div className="flex-1 relative p-7 border-gray-100 flex flex-col justify-center items-center">
                 <h1 className="font-semibold">Spending Analysis</h1>
                 <h2 className="text-sm text-[#60646C] pt-[0.313rem]">
-                  01 - 28 November 2025
+                  {/* November 2025 */}
+                  {/* Get current month and year */}
+                  {new Date().toLocaleString("default", { month: "long" })}{" "}
+                  {new Date().getFullYear()}
                 </h2>
                 <PieChart
                   style={{
                     width: "100%",
                     aspectRatio: 1,
                   }}
+                  margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
                   responsive
                   className="pointer-events-none select-none touch-none"
                 >
                   <Pie
                     data={chartData}
                     dataKey="percentage"
-                    labelLine={false}
+                    labelLine={true}
+                    outerRadius="75%"
+                    // FIX 3: Ensure the label function returns clean text
                     // isAnimationActive={false}
-                    label={({ payload, ...props }) => {
-                      return (
-                        <text
-                          cx={props.cx}
-                          cy={props.cy}
-                          x={props.x}
-                          y={props.y}
-                          textAnchor={props.textAnchor}
-                          dominantBaseline={props.dominantBaseline}
-                          fill="#000000"
-                        >
-                          {payload.category}: {payload.percentage}%
-                        </text>
-                      );
-                    }}
+                    label={({ name, percent }) =>
+                      `${(percent * 100).toFixed(0)}%`
+                    }
                     nameKey="category"
+                  />
+                  <Legend
+                    layout="horizontal" // or "vertical"
+                    align="center"
+                    wrapperStyle={{ padding: "10px 0" }}
                   />
                 </PieChart>
               </div>
@@ -509,27 +526,28 @@ function Transaction() {
                     <TableHeader className="bg-[#f4f4f4] hidden">
                       <TableRow>
                         <TableHead>Date</TableHead>
-                        <TableHead>Merchant</TableHead>
+                        <TableHead>Title</TableHead>
                         <TableHead>Category</TableHead>
                         <TableHead>Amount</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {hardCodedTransactions
-                        .slice(
-                          0 + wasteSpendingListOffset,
-                          5 + wasteSpendingListOffset
-                        )
-                        .map((tx, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{tx.date}</TableCell>
-                            <TableCell>{tx.merchant}</TableCell>
-                            <TableCell>
-                              <Badge>{tx.category}</Badge>
-                            </TableCell>
-                            <TableCell>{tx.amount}</TableCell>
-                          </TableRow>
-                        ))}
+                      {wasteChartData &&
+                        wasteChartData
+                          .slice(
+                            0 + wasteSpendingListOffset,
+                            5 + wasteSpendingListOffset
+                          )
+                          .map((tx, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{tx.date}</TableCell>
+                              <TableCell>{tx.merchant}</TableCell>
+                              <TableCell>
+                                <Badge>{tx.category}</Badge>
+                              </TableCell>
+                              <TableCell>{tx.amount}</TableCell>
+                            </TableRow>
+                          ))}
                     </TableBody>
                   </Table>
                   <div className="flex justify-between items-center border-t border-gray-300">
@@ -537,17 +555,17 @@ function Transaction() {
                       Showing{" "}
                       <span className="font-bold">
                         {1 + wasteSpendingListOffset}-
-                        {transactions.slice(
+                        {wasteChartData.slice(
                           0 + wasteSpendingListOffset,
                           5 + wasteSpendingListOffset
                         ).length + wasteSpendingListOffset}
                       </span>{" "}
                       of{" "}
-                      <span className="font-bold">{transactions.length}</span>{" "}
+                      <span className="font-bold">{wasteChartData.length}</span>{" "}
                       data
                     </div>
                     <ReactPaginate
-                      pageCount={Math.ceil(transactions.length / 5)}
+                      pageCount={Math.ceil(wasteChartData.length / 5)}
                       onPageChange={(e) => {
                         console.log(e.selected * 5);
                         setWasteSpendingListOffset(e.selected * 5);

@@ -28,7 +28,7 @@ const goalSchema = new mongoose.Schema(
       max: 100,
       default: 0,
     },
-    weeklyTarget: {
+    monthlyTarget: {
       type: Number,
       required: true,
     },
