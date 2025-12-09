@@ -52,6 +52,8 @@ import { List } from "lucide-react";
 import { useEffect } from "react";
 import NewTransactionDialog from "./NewTransactionDialog";
 import useWastefulCategoryData from "@/hooks/useWastefulCategoryData";
+import useWastefulTransactions from "@/hooks/useWastefulTransactions";
+import useAISuggestion from "@/hooks/useAISuggestion";
 
 //mock data for now
 // const transactions = [
@@ -105,21 +107,6 @@ import useWastefulCategoryData from "@/hooks/useWastefulCategoryData";
 //   },
 // ];
 
-const hardCodedTransactions = [
-  {
-    date: "31 Dec 2020",
-    merchant: "Bulk",
-    category: "Grocery",
-    amount: "-€23.00",
-  },
-  {
-    date: "30 Dec 2020",
-    merchant: "Happiness Market Center",
-    category: "Grocery",
-    amount: "-€45.00",
-  },
-];
-
 function Transaction() {
   const [date, setDate] = useState();
   const [transactionListOffset, setTransactionListOffset] = useState(0);
@@ -137,6 +124,14 @@ function Transaction() {
   const [inefficentPercentage, setInefficentPercentage] = useState(0);
   const [totalSpending, setTotalSpending] = useState(0);
   const { data: chartData, loading } = useWastefulCategoryData();
+  const { transactions: wasteChartData, loading: wasteLoading } =
+    useWastefulTransactions();
+
+  const {
+    data: aiText,
+    loading: aiLoading,
+    error: aiError,
+  } = useAISuggestion();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -226,6 +221,7 @@ function Transaction() {
       }
       setTransactions((prev) => [...prev, data]);
       setIsAddTransactionDialogOpen(false);
+      window.location.reload();
     } catch (err) {
       alert(`Error adding transaction: ${err.message}`);
     }
@@ -458,14 +454,13 @@ function Transaction() {
           <div className="flex flex-row w-full overflow-hidden">
             <div className="flex-1 relative border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
               <div className="w-[127%] h-[400px] left-0 top-[43px] absolute bg-[conic-gradient(from_334deg_at_50.00%_50.00%,rgba(120.92,72.16,255,0.15)_48deg,rgba(243.68,202.75,255,0.15)_360deg)] rounded-full blur-2xl" />
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius
-              doloremque cum at, cupiditate, eligendi quidem ab eveniet tempora
-              autem voluptates, eaque quasi ratione itaque maxime asperiores quo
-              consectetur aliquid? Aut? Exercitationem impedit assumenda illum
-              officiis nostrum accusantium facere eligendi, iusto possimus
-              soluta quibusdam aspernatur sint tempore rerum laborum atque sunt
-              quos dolores. Laborum recusandae cumque, pariatur dolorum debitis
-              dignissimos nesciunt.
+              {aiLoading ? (
+                <div>Loading...</div>
+              ) : aiError ? (
+                <div>Error loading suggestions.</div>
+              ) : (
+                <div>{aiText}</div>
+              )}
             </div>
           </div>
         </div>
@@ -537,21 +532,22 @@ function Transaction() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {hardCodedTransactions
-                        .slice(
-                          0 + wasteSpendingListOffset,
-                          5 + wasteSpendingListOffset
-                        )
-                        .map((tx, index) => (
-                          <TableRow key={index}>
-                            <TableCell>{tx.date}</TableCell>
-                            <TableCell>{tx.merchant}</TableCell>
-                            <TableCell>
-                              <Badge>{tx.category}</Badge>
-                            </TableCell>
-                            <TableCell>{tx.amount}</TableCell>
-                          </TableRow>
-                        ))}
+                      {wasteChartData &&
+                        wasteChartData
+                          .slice(
+                            0 + wasteSpendingListOffset,
+                            5 + wasteSpendingListOffset
+                          )
+                          .map((tx, index) => (
+                            <TableRow key={index}>
+                              <TableCell>{tx.date}</TableCell>
+                              <TableCell>{tx.merchant}</TableCell>
+                              <TableCell>
+                                <Badge>{tx.category}</Badge>
+                              </TableCell>
+                              <TableCell>{tx.amount}</TableCell>
+                            </TableRow>
+                          ))}
                     </TableBody>
                   </Table>
                   <div className="flex justify-between items-center border-t border-gray-300">
@@ -559,17 +555,17 @@ function Transaction() {
                       Showing{" "}
                       <span className="font-bold">
                         {1 + wasteSpendingListOffset}-
-                        {transactions.slice(
+                        {wasteChartData.slice(
                           0 + wasteSpendingListOffset,
                           5 + wasteSpendingListOffset
                         ).length + wasteSpendingListOffset}
                       </span>{" "}
                       of{" "}
-                      <span className="font-bold">{transactions.length}</span>{" "}
+                      <span className="font-bold">{wasteChartData.length}</span>{" "}
                       data
                     </div>
                     <ReactPaginate
-                      pageCount={Math.ceil(transactions.length / 5)}
+                      pageCount={Math.ceil(wasteChartData.length / 5)}
                       onPageChange={(e) => {
                         console.log(e.selected * 5);
                         setWasteSpendingListOffset(e.selected * 5);

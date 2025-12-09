@@ -1,6 +1,6 @@
 const { GoogleGenAI } = require("@google/genai");
 
-const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 // https://ai.google.dev/gemini-api/docs/models
 // "models/gemini-2.5-flash", "models/gemini-2.0-flash","models/gemini-2.5-flash-lite","models/gemini-2.5-flash-image-preview", "models/gemini-1.5-flash"
