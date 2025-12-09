@@ -28,16 +28,22 @@ const goalSchema = new mongoose.Schema(
       max: 100,
       default: 0,
     },
+    weeklyTarget: {
+      type: Number,
+      required: true,
+    },
+    userId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
 
 goalSchema.pre("save", function (next) {
   if (this.target > 0) {
-    this.progress = Math.min(
-      100,
-      Math.round((this.saved / this.target) * 100)
-    );
+    this.progress = Math.min(100, Math.round((this.saved / this.target) * 100));
   } else {
     this.progress = 0;
   }
