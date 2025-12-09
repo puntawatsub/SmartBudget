@@ -12,18 +12,6 @@ const Dashboard = () => {
   const [userName, setUserName] = useState("User");
 
   useEffect(() => {
-    // Get user name from sessionStorage first
-    const storedUser = sessionStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        // Try to get username from stored user data
-        setUserName(parsedUser.username || parsedUser.name || "User");
-      } catch (err) {
-        console.error("Failed to parse stored user data:", err);
-      }
-    }
-
     const fetchDashboard = async () => {
       try {
         const res = await fetch("/api/dashboard", {
@@ -102,7 +90,7 @@ const Dashboard = () => {
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Goals</h2>
 
-        <div className="flex flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           {goals.slice(0, 3).map((goal) => (
             <GoalCard key={goal._id} data={goal} />
           ))}
