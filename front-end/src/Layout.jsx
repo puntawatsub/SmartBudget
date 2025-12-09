@@ -2,6 +2,7 @@ import { Input } from "./components/ui/input";
 import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import useRefresh from "./hooks/useRefresh";
 import { useEffect } from "react";
+import Footer from "./components/Footer/Footer";
 import Sidebar from "./components/Sidebar";
 
 const Layout = () => {
@@ -70,6 +71,7 @@ const Layout = () => {
           <Outlet />
         </main>
       </div>
+      <Footer />
     </div>
   );
 };
