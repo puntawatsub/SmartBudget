@@ -99,7 +99,7 @@ const UpcomingBills = ({ data }) => {
   if (!data) return <p>Loading upcoming bills...</p>
 
   return (
-    <div className='w-full bg-white rounded-lg shadow p-4'>
+    <div className='w-full bg-white rounded-lg shadow p-4 '>
       <h2 className='text-sm font-medium mb-2'>Upcoming Bills</h2>
       {data.map((bill, i) => (
         <div key={i} className='flex justify-between border-b py-1'>
