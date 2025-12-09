@@ -86,23 +86,19 @@ const getWastefulCategoryPercentage = async (req, res) => {
       return res.status(400).json({ message: "User ID is required" });
     }
 
-    const categories = await Category.find({
-      userId: req.user._id,
-      mm_yyyy: getMonthYear(),
-      name: { $ne: "Income" },
-    });
-    let totalExpenses = 0;
-    categories.forEach((cat) => {
-      totalExpenses += cat.amountSpent;
-    });
+    const totalExpenses = 10000; // replace with real total if needed
 
-    // Aggregation to sum amounts per category
     const result = await Transaction.aggregate([
-      { $match: { userId } }, // filter by user
+      {
+        $match: {
+          userId,
+          wastefulCategory: { $exists: true, $ne: null }, // exclude missing/null categories
+        },
+      },
       {
         $group: {
           _id: "$wastefulCategory",
-          totalAmount: { $sum: { $abs: "$amount" } }, // sum amount per category
+          totalAmount: { $sum: { $abs: "$amount" } }, // sum absolute amount
         },
       },
       {
