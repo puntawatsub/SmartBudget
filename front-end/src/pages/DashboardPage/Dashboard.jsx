@@ -31,10 +31,28 @@ const Dashboard = () => {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
-        if (!res.ok) throw new Error();
+        if (!res.ok) {
+          throw new Error(`Error: ${res.status} ${res.statusText}`);
+        }
         const json = await res.json();
+
+        // compute max for each
+        if (json.expenditureOverview) {
+          const maxVal = Math.max(
+            ...json.expenditureOverview.flatMap((row) => [
+              row.current,
+              row.previous,
+            ]),
+            1
+          );
+          json.expenditureOverview = json.expenditureOverview.map((row) => ({
+            ...row,
+            max: maxVal,
+          }));
+        }
+
         setData(json);
-        
+
         // Also try to get user name from API response as fallback
         if (json.user && json.user.name) {
           setUserName(json.user.name);
@@ -70,7 +88,9 @@ const Dashboard = () => {
 
   return (
     <div className="p-6 flex flex-col gap-6">
-      <div className="text-2xl font-semibold text-gray-800">Hi, {userName} 👋</div>
+      <div className="text-2xl font-semibold text-gray-800">
+        Hi, {userName} 👋
+      </div>
 
       <AnalyticalOverview data={data} />
 
@@ -81,7 +101,7 @@ const Dashboard = () => {
       {/* Goals Section Container */}
       <div className="bg-white rounded-lg shadow p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Your Goals</h2>
-        
+
         <div className="flex flex-row gap-6">
           {goals.slice(0, 3).map((goal) => (
             <GoalCard key={goal._id} data={goal} />
@@ -103,9 +123,8 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <UpcomingBills data={data.upcomingBills} />
       </div>
-
     </div>
-  );  
-};     
+  );
+};
 
 export default Dashboard;
