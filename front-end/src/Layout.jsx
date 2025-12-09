@@ -53,14 +53,15 @@ const Layout = () => {
           </div>
         </nav>
       ) : (
-        <header className="bg-white border-b border-gray-200 flex items-center py-3 justify-end px-6">
-          <div className="flex items-center gap-4">
-            <div className="h-9 bg-white border border-gray-300 rounded-md w-64 shadow-xs"></div>
-            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-              AA
-            </div>
-          </div>
-        </header>
+        // <header className="bg-white border-b border-gray-200 flex items-center py-3 justify-end px-6">
+        //   <div className="flex items-center gap-4">
+        //     <div className="h-9 bg-white border border-gray-300 rounded-md w-64 shadow-xs"></div>
+        //     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+        //       AA
+        //     </div>
+        //   </div>
+        // </header>
+        <></>
       )}
       <div className="flex flex-row">
         {isAuth && <Sidebar />}

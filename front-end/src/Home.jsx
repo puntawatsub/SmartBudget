@@ -1,8 +1,9 @@
 import { useState } from "react";
 import SignupModal from "./components/SignupModal/SignupModal";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [openSignup, setOpenSignup] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="bg-gray-50">
@@ -22,7 +23,7 @@ const Home = () => {
 
           {/* GET STARTED */}
           <button
-            onClick={() => setOpenSignup(true)}
+            onClick={() => navigate("/signup")}
             className="bg-blue-600 text-white px-8 py-3 rounded-full shadow-lg 
              hover:bg-blue-700 hover:scale-105 active:scale-95 
              transition-all duration-300"
@@ -106,9 +107,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      {/* MODAL COMPONENT */}
-      <SignupModal open={openSignup} onClose={() => setOpenSignup(false)} />
     </div>
   );
 };
