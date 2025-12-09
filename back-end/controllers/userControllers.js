@@ -2,6 +2,7 @@ const User = require("../models/userModel");
 const Setting = require("../models/settingModel");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const Analytics = require("../models/analyticsModel");
 
 // GET all users
 const getAllUsers = async (req, res) => {
@@ -59,6 +60,14 @@ const createUser = async (req, res) => {
       language: "English",
       currency: "USD",
       region: "USA",
+    });
+
+    // create analytics for the new user
+    await Analytics.create({
+      userId: newUser._id,
+      totalIncome: 0,
+      totalExpense: 0,
+      totalSavings: 0,
     });
 
     res.status(201).json({ message: "User registered successfully" });

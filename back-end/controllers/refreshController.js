@@ -60,6 +60,7 @@ const refresh = async (req, res) => {
   } catch (error) {
     if (errorCode !== 0) {
       res.clearCookie("refreshToken", { path: "/api/refresh" });
+      console.log("Cleared cookie due to error:", error.message);
       return res.status(errorCode).json({ message: error.message });
     } else {
       res.status(500).json({ message: "Server error" });

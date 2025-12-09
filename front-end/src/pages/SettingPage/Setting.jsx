@@ -34,13 +34,36 @@ export default function SettingsPage() {
         <div className="text-2xl font-medium">Logo</div>
 
         <nav className="space-y-3 mt-6">
-          <Button variant="ghost" className="w-full justify-start dark:text-white">Home</Button>
-          <Button variant="ghost" className="w-full justify-start dark:text-white">Dashboard</Button>
-          <Button variant="ghost" className="w-full justify-start dark:text-white">Transactions</Button>
-          <Button variant="ghost" className="w-full justify-start dark:text-white">Goals</Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start dark:text-white"
+          >
+            Home
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start dark:text-white"
+          >
+            Dashboard
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start dark:text-white"
+          >
+            Transactions
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full justify-start dark:text-white"
+          >
+            Goals
+          </Button>
         </nav>
 
-        <Button variant="outline" className="mt-auto w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <Button
+          variant="outline"
+          className="mt-auto w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        >
           Logout
         </Button>
       </aside> */}

@@ -6,13 +6,14 @@ const cors = require("cors");
 
 const loginRouter = require("./routes/loginRouter");
 const userRouter = require("./routes/userRouter");
-const categoryRouter = require("./routes/wastefulCategoryRouter");
+const selectCategoryRouter = require("./routes/wastefulCategoryRouter");
 const connectDB = require("./config/db");
 const dashboardRouter = require("./routes/dashboardRouter");
 const forgotPasswordRouter = require("./routes/forgetPasswordRouter");
 const goalRouter = require("./routes/goals");
 const transactionRouter = require("./routes/transactionRouter");
 const settingRouter = require("./routes/settingRouter");
+const categoryRouter = require("./routes/categoryRouter");
 
 const cookieParser = require("cookie-parser");
 
@@ -62,7 +63,7 @@ app.use("/api/forgot-password", forgotPasswordRouter);
 app.use(requireAuth);
 
 // Use the categoryRouter for all "/api/selectCategory" routes
-app.use("/api/selectCategory", categoryRouter);
+app.use("/api/selectCategory", selectCategoryRouter);
 
 //dasboard
 app.use("/api/dashboard", dashboardRouter);
@@ -71,6 +72,9 @@ app.use("/api/dashboard", dashboardRouter);
 app.use("/api/goals", goalRouter);
 
 app.use("/api/transactions", transactionRouter);
+
+// Category API route
+app.use("/api/categories", categoryRouter);
 
 // Use the refreshRouter for refresh
 // app.use("/api/refresh");

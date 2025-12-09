@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const expenseSchema = mongoose.Schema({
   userId: mongoose.Types.ObjectId,
@@ -6,6 +6,6 @@ const expenseSchema = mongoose.Schema({
   previous: Number,
   current: Number,
   max: Number,
-})
+});
 
-export default mongoose.model('Expense', expenseSchema)
+export default mongoose.model("Expense", expenseSchema);
