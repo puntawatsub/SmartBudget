@@ -1,7 +1,7 @@
 # Self-Assessment
 
 - **Member name:** Jiya Jameela
-- **Contribution area:** Backend development for SmartBudget application. Worked on authentication, user management, goal management, analytics/dashboard, and upcoming bills functionality.
+- **Contribution area:** Backend development for SmartBudget application. Worked on authentication, analytics/dashboard, csv update and upcoming bills functionality
 
 ---
 
@@ -9,13 +9,10 @@
 
 - **Does the code meet the requirements?**
 
-  - [x] Implemented all backend routes for signup, login, password reset, goals, dashboard, categories, and upcoming bills.
+  - [x] Implemented all backend routes for forget password reset, dashboard and upcoming bills.
   - [x] Edge cases are handled:
-    - Duplicate emails during signup.
-    - Invalid login credentials.
-    - Unauthorized access to protected routes.
     - Missing or invalid input in CRUD operations.
-  - [x] Backend integrates properly with MongoDB for persistent storage of users, goals, analytics, and bills.
+  - [x] Backend integrates properly with MongoDB for persistent storage of bills and csv transaction
 
 - **Integration**
   - [x] All routes are protected by authentication middleware where required.
