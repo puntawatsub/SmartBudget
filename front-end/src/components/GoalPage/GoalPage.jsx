@@ -10,7 +10,6 @@ function GoalPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingGoal, setEditingGoal] = useState(null);
 
-  // Form fields
   const [title, setTitle] = useState("");
   const [target, setTarget] = useState("");
   const [saved, setSaved] = useState("");
@@ -35,7 +34,7 @@ function GoalPage() {
       endDate.getMonth() -
       now.getMonth() +
       12 * (endDate.getFullYear() - now.getFullYear());
-    if (monthsLeft <= 0) return remainingAmount; // due this month
+    if (monthsLeft <= 0) return remainingAmount;
     return Math.ceil(remainingAmount / monthsLeft);
   };
 
@@ -73,7 +72,6 @@ function GoalPage() {
     const created = await createGoal(newGoal);
     setGoals([...goals, created]);
 
-    // Clear form
     setTitle("");
     setTarget("");
     setSaved("");
@@ -105,11 +103,7 @@ function GoalPage() {
 
   // DELETE GOAL
   const handleDelete = async (id) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this goal?"
-    );
-
-    if (!confirmed) return;
+    if (!window.confirm("Are you sure you want to delete this goal?")) return;
 
     await deleteGoal(id);
     setGoals(goals.filter((g) => g._id !== id));
@@ -120,11 +114,15 @@ function GoalPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 px-8 py-6">
-      <h1 className="text-3xl font-bold mb-6">Goals</h1>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 px-8 py-6">
+      <h1 className="text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100">
+        Goals
+      </h1>
 
-      <div className="bg-white p-4 shadow-sm border rounded-xl flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Available Balance | Limit</h2>
+      <div className="bg-white dark:bg-gray-800 p-4 shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700 rounded-xl flex justify-between items-center">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+          Available Balance | Limit
+        </h2>
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
           onClick={() => {
@@ -137,76 +135,67 @@ function GoalPage() {
       </div>
 
       {showForm && !editingGoal && (
-        <div className="bg-white mt-4 p-6 rounded-xl shadow border">
-          <h3 className="text-xl font-semibold mb-4">Add New Goal</h3>
+        <div className="bg-white dark:bg-gray-800 mt-4 p-6 rounded-xl shadow border border-gray-200 dark:border-gray-700">
+          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+            Add New Goal
+          </h3>
 
           <form
             className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             onSubmit={handleAddGoal}
           >
-            <div>
-              <label className="block font-medium mb-1">Goal Title</label>
-              <input
-                type="text"
-                className="w-full border rounded-lg px-3 py-2"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium mb-1">
-                Target Amount (€)
-              </label>
-              <input
-                type="number"
-                className="w-full border rounded-lg px-3 py-2"
-                value={target}
-                onChange={(e) => setTarget(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium mb-1">
-                Current Saved (€)
-              </label>
-              <input
-                type="number"
-                className="w-full border rounded-lg px-3 py-2"
-                value={saved}
-                onChange={(e) => setSaved(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium mb-1">Deadline</label>
-              <input
-                type="date"
-                className="w-full border rounded-lg px-3 py-2"
-                value={deadline}
-                onChange={(e) => setDeadline(e.target.value)}
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block font-medium mb-1">
-                Monthly Target Amount (€)
-              </label>
-              <input
-                type="number"
-                className="w-full border rounded-lg px-3 py-2"
-                value={monthlyTarget}
-                onChange={(e) => setMonthlyTarget(e.target.value)}
-              />
-            </div>
+            {/* Form inputs */}
+            {[
+              {
+                label: "Goal Title",
+                value: title,
+                setValue: setTitle,
+                type: "text",
+              },
+              {
+                label: "Target Amount (€)",
+                value: target,
+                setValue: setTarget,
+                type: "number",
+              },
+              {
+                label: "Current Saved (€)",
+                value: saved,
+                setValue: setSaved,
+                type: "number",
+              },
+              {
+                label: "Deadline",
+                value: deadline,
+                setValue: setDeadline,
+                type: "date",
+              },
+              {
+                label: "Monthly Target Amount (€)",
+                value: monthlyTarget,
+                setValue: setMonthlyTarget,
+                type: "number",
+              },
+            ].map((field, idx) => (
+              <div key={idx}>
+                <label className="block font-medium mb-1 text-gray-900 dark:text-gray-100">
+                  {field.label}
+                </label>
+                <input
+                  type={field.type}
+                  className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
+                  value={field.value}
+                  onChange={(e) => field.setValue(e.target.value)}
+                  required
+                />
+              </div>
+            ))}
 
             <div className="col-span-full">
-              <p>Progress: {calculateProgress(saved, target)}%</p>
-              <div className="w-full bg-gray-300 h-2 rounded mt-1">
+              <p className="text-gray-900 dark:text-gray-100">
+                Progress: {calculateProgress(saved, target)}%
+              </p>
+              <div className="w-full bg-gray-300 dark:bg-gray-600 h-2 rounded mt-1">
                 <div
                   className="bg-green-300 h-2 rounded"
                   style={{
@@ -222,7 +211,7 @@ function GoalPage() {
               </button>
               <button
                 type="button"
-                className="px-4 py-2 rounded-lg border"
+                className="px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100"
                 onClick={() => setShowForm(false)}
               >
                 Cancel
@@ -233,18 +222,21 @@ function GoalPage() {
       )}
 
       {editingGoal && (
-        <div className="bg-white mt-4 p-6 rounded-xl shadow border">
-          <h3 className="text-xl font-semibold mb-4">Edit Goal</h3>
-
+        <div className="bg-white dark:bg-gray-800 mt-4 p-6 rounded-xl shadow border border-gray-200 dark:border-gray-700">
+          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
+            Edit Goal
+          </h3>
           <form
             className="grid grid-cols-1 sm:grid-cols-2 gap-4"
             onSubmit={saveEdit}
           >
             <div>
-              <label className="block font-medium mb-1">Goal Title</label>
+              <label className="block font-medium mb-1 text-gray-900 dark:text-gray-100">
+                Goal Title
+              </label>
               <input
                 type="text"
-                className="w-full border rounded-lg px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                 value={editingGoal.title}
                 onChange={(e) =>
                   setEditingGoal({ ...editingGoal, title: e.target.value })
@@ -254,12 +246,12 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
+              <label className="block font-medium mb-1 text-gray-900 dark:text-gray-100">
                 Target Amount (€)
               </label>
               <input
                 type="number"
-                className="w-full border rounded-lg px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                 value={editingGoal.target}
                 onChange={(e) =>
                   setEditingGoal({ ...editingGoal, target: e.target.value })
@@ -269,12 +261,12 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
+              <label className="block font-medium mb-1 text-gray-900 dark:text-gray-100">
                 Current Saved (€)
               </label>
               <input
                 type="number"
-                className="w-full border rounded-lg px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                 value={editingGoal.saved}
                 onChange={(e) =>
                   setEditingGoal({ ...editingGoal, saved: e.target.value })
@@ -284,10 +276,12 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">Deadline</label>
+              <label className="block font-medium mb-1 text-gray-900 dark:text-gray-100">
+                Deadline
+              </label>
               <input
                 type="date"
-                className="w-full border rounded-lg px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                 value={editingGoal.deadline}
                 onChange={(e) =>
                   setEditingGoal({ ...editingGoal, deadline: e.target.value })
@@ -297,12 +291,12 @@ function GoalPage() {
             </div>
 
             <div>
-              <label className="block font-medium mb-1">
+              <label className="block font-medium mb-1 text-gray-900 dark:text-gray-100">
                 Monthly Target Amount (€)
               </label>
               <input
                 type="number"
-                className="w-full border rounded-lg px-3 py-2"
+                className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600"
                 value={editingGoal.monthlyTarget}
                 onChange={(e) =>
                   setEditingGoal({
@@ -314,12 +308,12 @@ function GoalPage() {
             </div>
 
             <div className="col-span-full mt-4">
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition">
                 Save Changes
               </button>
               <button
                 type="button"
-                className="px-4 py-2 rounded-lg border ml-3"
+                className="px-4 py-2 rounded-lg border ml-3 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
                 onClick={() => setEditingGoal(null)}
               >
                 Cancel
@@ -329,14 +323,16 @@ function GoalPage() {
         </div>
       )}
 
-      <div className="bg-white mt-6 p-6 rounded-xl shadow border">
+      <div className="bg-white dark:bg-gray-800 mt-6 p-6 rounded-xl shadow border border-gray-200 dark:border-gray-700">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {goals.map((goal) => (
             <div
               key={goal._id}
-              className="bg-gray-100 p-5 rounded-xl border shadow-sm"
+              className="bg-gray-100 dark:bg-gray-700 p-5 rounded-xl border border-gray-200 dark:border-gray-600 shadow-sm"
             >
-              <h3 className="text-lg font-semibold">{goal.title}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                {goal.title}
+              </h3>
 
               <div className="flex gap-2 mt-2">
                 <button
@@ -345,7 +341,6 @@ function GoalPage() {
                 >
                   Edit
                 </button>
-
                 <button
                   className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg text-sm"
                   onClick={() => handleDelete(goal._id)}
@@ -354,7 +349,7 @@ function GoalPage() {
                 </button>
               </div>
 
-              <div className="w-full bg-gray-300 h-2 rounded mt-3">
+              <div className="w-full bg-gray-300 dark:bg-gray-600 h-2 rounded mt-3">
                 <div
                   className="bg-green-300 h-2 rounded"
                   style={{
@@ -363,7 +358,7 @@ function GoalPage() {
                 ></div>
               </div>
 
-              <div className="text-sm mt-3 space-y-1">
+              <div className="text-sm mt-3 space-y-1 text-gray-900 dark:text-gray-100">
                 <p>
                   <strong>€{goal.saved}</strong> saved
                 </p>
