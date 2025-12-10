@@ -36,7 +36,7 @@ const refresh = async (req, res) => {
     // send refresh token as cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: false,
+      secure: process.env.PRODUCTION,
       sameSite: "Strict",
       path: "/api/refresh",
       signed: true,

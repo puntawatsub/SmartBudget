@@ -1,4 +1,4 @@
-const { GoogleGenAI } = require('@google/genai')
+const { GoogleGenAI } = require("@google/genai");
 
 // const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
@@ -6,59 +6,59 @@ const { GoogleGenAI } = require('@google/genai')
 // "models/gemini-2.5-flash", "models/gemini-2.0-flash","models/gemini-2.5-flash-lite","models/gemini-2.5-flash-image-preview", "models/gemini-1.5-flash"
 
 // GoogleGenerativeAI setup
-const MODEL_NAME = 'models/gemini-2.5-flash-lite'
+const MODEL_NAME = "models/gemma-3-12b-it";
 
 const model = async (prompt) => {
-  const contents = [{ role: 'user', parts: [{ text: prompt }] }]
+  const contents = [{ role: "user", parts: [{ text: prompt }] }];
 
   try {
     const fetchResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/${MODEL_NAME}:generateContent`,
       {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'x-goog-api-key': process.env.GEMINI_API_KEY,
-          'Content-Type': 'application/json',
+          "x-goog-api-key": process.env.GEMINI_API_KEY,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           contents: contents,
           generationConfig: { temperature: 0.1 },
         }),
       }
-    )
+    );
 
-    const jsonResponse = await fetchResponse.json()
-    console.log(jsonResponse)
+    const jsonResponse = await fetchResponse.json();
+    console.log(jsonResponse);
 
     if (fetchResponse.status === 429) {
-      console.log('Gemini API request exceed the rate limit.')
-      throw new Error('Rate limit exceeded')
+      console.log("Gemini API request exceed the rate limit.");
+      throw new Error("Rate limit exceeded");
     }
     const responseString = String(
       jsonResponse.candidates[0].content.parts[0].text
-    )
+    );
     const response = {
       text: responseString,
-    }
+    };
 
-    if (process.env.DEBUG_GEMINI === 'true') {
+    if (process.env.DEBUG_GEMINI === "true") {
       console.log(
-        '🔍 FULL Gemini SDK response object:',
+        "🔍 FULL Gemini SDK response object:",
         JSON.stringify(response, null, 2)
-      )
+      );
 
       if (response?.text) {
-        console.log('✅ Gemini .text property:', response.text)
+        console.log("✅ Gemini .text property:", response.text);
       } else {
-        console.warn('⚠ No .text property found on Gemini response')
+        console.warn("⚠ No .text property found on Gemini response");
       }
     }
-    console.log(response)
-    return response // return the full object so service can do result.text
+    console.log(response);
+    return response; // return the full object so service can do result.text
   } catch (err) {
-    console.error('❌ Gemini API error:', err)
-    throw err
+    console.error("❌ Gemini API error:", err);
+    throw err;
   }
-}
+};
 
-module.exports = model
+module.exports = model;

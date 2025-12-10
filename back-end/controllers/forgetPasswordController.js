@@ -3,17 +3,19 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
+const { Resend } = require("resend");
 
 // Setup Nodemailer transporter
-const transporter = nodemailer.createTransport({
-  host: "smtp.resend.com",
-  secure: true,
-  port: 465,
-  auth: {
-    user: "resend",
-    pass: process.env.RESEND_API_KEY,
-  },
-});
+// const transporter = nodemailer.createTransport({
+//   host: "smtp.resend.com",
+//   secure: true,
+//   port: 465,
+//   auth: {
+//     user: "resend",
+//     pass: process.env.RESEND_API_KEY,
+//   },
+// });
+const resend = new Resend(`${process.env.RESEND_API_KEY}`);
 
 // Forgot Password
 
@@ -33,7 +35,7 @@ exports.forgotPassword = async (req, res) => {
     user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
 
-    const resetURL = `http://localhost:5173/reset-password/${token}`;
+    const resetURL = `${process.env.WEB_URL}/reset-password/${token}`;
 
     const mailOptions = {
       from: "smartbudget@resend.puntawat.dev",
@@ -42,7 +44,8 @@ exports.forgotPassword = async (req, res) => {
       html: `<p>Click <a href="${resetURL}">here</a> to reset your password.</p>`,
     };
 
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
+    await resend.emails.send(mailOptions);
     res.json({ message: "Reset link sent to your email" });
   } catch (err) {
     console.error(err);
