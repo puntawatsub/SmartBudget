@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const upcomingBillSchema = new mongoose.Schema(
   {
@@ -7,12 +7,14 @@ const upcomingBillSchema = new mongoose.Schema(
     date: { type: Date, required: true }, // store as Date instead of string
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
       required: true,
     },
-    status: { type: String, default: 'ok' }, // ok / late
+    status: { type: String, default: "ok" }, // ok / late
   },
   { timestamps: true }
-)
+);
 
-module.exports = mongoose.model('UpcomingBill', upcomingBillSchema)
+const UpcomingBill = mongoose.model("UpcomingBill", upcomingBillSchema);
+
+module.exports = UpcomingBill;

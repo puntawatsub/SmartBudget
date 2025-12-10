@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import logo from './assets/logo.png'
 
 const Home = () => {
   const navigate = useNavigate()
@@ -8,6 +9,7 @@ const Home = () => {
       {/* Hero Section.*/}
       <section className='bg-gradient-to-r from-blue-100 to-white dark:from-gray-800 dark:to-gray-900 p-10 rounded-xl shadow-lg m-10 flex flex-col md:flex-row items-center transform transition-transform duration-300 hover:scale-105 active:scale-95'>
         <div className='flex-1 text-left'>
+<<<<<<< HEAD
           <h1 className='text-3xl md:text-5xl font-bold mb-4'>
             Your Money Your Rules
           </h1>
@@ -15,12 +17,28 @@ const Home = () => {
             SMART BUDGET
           </h2>
           <p className='text-gray-600 dark:text-gray-300 mb-6'>
+=======
+          <img src={logo} alt='SmartBudget Logo' className='w-75 h-10 mb-4' />
+          <h1 className='text-2xl md:text-4xl font-bold text-blue-500 mb-4'>
+            Your Money Your Rules
+          </h1>
+          <h2 className='text-2xl md:text-4xl font-semibold text-blue-500 mb-4'></h2>
+
+          <p className='text-gray-600 mb-6'>
+>>>>>>> origin/main
             With SmartBudget, managing your finances has never been easier.
             Start tracking, planning, and achieving your financial goals today.
           </p>
+
           <button
             onClick={() => navigate('/signup')}
+<<<<<<< HEAD
             className='bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 active:scale-95'>
+=======
+            className='bg-blue-600 text-white px-8 py-3 rounded-full shadow-lg 
+                 hover:bg-blue-700 hover:scale-105 active:scale-95 
+                 transition-all duration-300'>
+>>>>>>> origin/main
             Get Started
           </button>
         </div>
@@ -55,10 +73,21 @@ const Home = () => {
         </h2>
         <div className='flex flex-col md:flex-row items-stretch gap-6 md:gap-8'>
           {/* Before Using SmartBudget */}
+<<<<<<< HEAD
           <div className='flex-1 bg-gray-900 dark:bg-gray-700 rounded-2xl p-6 md:p-10 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl'>
             <h3 className='font-bold text-lg md:text-xl text-white dark:text-gray-200 mb-6'>
               Before Using SmartBudget
             </h3>
+=======
+          <div
+            className='flex-1 bg-gray-900 rounded-2xl p-6 md:p-10
+                        transform transition-transform duration-300
+                        hover:scale-105 hover:shadow-xl'>
+            <h3 className='font-bold text-lg md:text-xl text-white mb-6'>
+              Before Using SmartBudget
+            </h3>
+
+>>>>>>> origin/main
             <ul className='space-y-2 md:space-y-3'>
               {[
                 'Manual, disorganized',
@@ -73,7 +102,11 @@ const Home = () => {
               ].map((item, idx) => (
                 <li
                   key={idx}
+<<<<<<< HEAD
                   className='flex items-start gap-2 md:gap-3 text-gray-300 dark:text-gray-200 text-sm md:text-base'>
+=======
+                  className='flex items-start gap-2 md:gap-3 text-gray-300 text-sm md:text-base'>
+>>>>>>> origin/main
                   <span className='text-red-500 text-lg md:text-xl flex-shrink-0 mt-0.5'>
                     ✕
                   </span>
@@ -87,15 +120,30 @@ const Home = () => {
           <div className='flex md:hidden items-center justify-center py-4'>
             <div className='text-3xl text-gray-400 dark:text-gray-300'>↓</div>
           </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
           <div className='hidden md:flex items-center justify-center'>
             <div className='text-4xl text-gray-400 dark:text-gray-300'>→</div>
           </div>
 
           {/* After Using SmartBudget */}
+<<<<<<< HEAD
           <div className='flex-1 bg-green-50 dark:bg-green-900 rounded-2xl p-6 md:p-10 border-2 border-green-300 dark:border-green-700 transform transition-transform duration-300 hover:scale-105 hover:shadow-xl'>
             <h3 className='font-bold text-lg md:text-xl text-gray-800 dark:text-gray-100 mb-6'>
               After Using SmartBudget
             </h3>
+=======
+          <div
+            className='flex-1 bg-green-50 rounded-2xl p-6 md:p-10 border-2 border-green-300
+                        transform transition-transform duration-300
+                        hover:scale-105 hover:shadow-xl'>
+            <h3 className='font-bold text-lg md:text-xl text-gray-800 mb-6'>
+              After Using SmartBudget
+            </h3>
+
+>>>>>>> origin/main
             <ul className='space-y-2 md:space-y-3'>
               {[
                 'Automated, organized',
@@ -109,7 +157,11 @@ const Home = () => {
               ].map((item, idx) => (
                 <li
                   key={idx}
+<<<<<<< HEAD
                   className='flex items-start gap-2 md:gap-3 text-gray-700 dark:text-gray-300 text-sm md:text-base'>
+=======
+                  className='flex items-start gap-2 md:gap-3 text-gray-700 text-sm md:text-base'>
+>>>>>>> origin/main
                   <span className='text-green-500 text-lg md:text-xl flex-shrink-0 mt-0.5'>
                     ✓
                   </span>

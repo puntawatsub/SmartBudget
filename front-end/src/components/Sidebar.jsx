@@ -6,6 +6,7 @@ import goalsIcon from "@/assets/goalsIcon.svg";
 import transactionsIcon from "@/assets/transactionsIcon.svg";
 import settingsIcon from "@/assets/settingsIcon.svg";
 import logoutIcon from "@/assets/logoutIcon.svg";
+import billsIcon from "@/assets/bill-Icon.svg";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -64,6 +65,17 @@ export default function Sidebar() {
             alt="Goals"
           />
           <span className="text-sm font-medium dark:text-white">Goals</span>
+        </Link>
+        <Link
+          to="/upcoming-bills"
+          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
+        >
+          <img
+            src={billsIcon}
+            className="w-6 h-6 dark:invert dark:brightness-150"
+            alt="Bills"
+          />
+          <span className="text-sm font-medium dark:text-white">Bills</span>
         </Link>
 
         <Link
