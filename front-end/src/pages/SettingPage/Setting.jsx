@@ -17,7 +17,7 @@ export default function SettingsPage() {
   const handleSave = () => {
     console.log("Saving:", settings);
     settings.saveSettings();
-    // alert("Settings saved!");
+    alert("Settings saved!");
   };
 
   return (

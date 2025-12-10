@@ -49,6 +49,12 @@ export function useSetting() {
         applySettings(cached);
         setTheme(cached.theme === "dark" ? "dark" : "light");
         console.log("useSetting: applied cached appSettings", cached);
+      } else {
+        saveSettings();
+        applySettings({
+          theme: theme,
+          region: region,
+        });
       }
     } catch (e) {
       console.warn("useSetting: failed to read cached appSettings", e);
@@ -140,7 +146,7 @@ export function useSetting() {
       region: region,
     };
     localStorage.setItem("appSettings", JSON.stringify(cached));
-    alert("Settings saved");
+    // alert("Settings saved");
   };
 
   const reset = () => {
