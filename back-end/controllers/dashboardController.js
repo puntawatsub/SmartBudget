@@ -24,7 +24,6 @@ const getDashboard = async (req, res) => {
     const user = await User.findById(req.user._id).select('name email')
 
     // Fetch analytics
-    const analyticals = await Analytics.findOne({ userId: req.user._id })
 
     // Calculate income
     const totalIncomeFromIncomeCategory = (
