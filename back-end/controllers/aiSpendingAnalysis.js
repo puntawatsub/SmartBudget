@@ -90,17 +90,25 @@ const getWastefulCategoryPercentage = async (req, res) => {
 
     const totalExpenses = 10000; // replace with real total if needed
 
+    const startOfMonth = new Date();
+    startOfMonth.setDate(1);
+    startOfMonth.setHours(0, 0, 0, 0);
+
+    const endOfMonth = new Date(startOfMonth);
+    endOfMonth.setMonth(endOfMonth.getMonth() + 1); // next month
+
     const result = await Transaction.aggregate([
       {
         $match: {
           userId,
-          wastefulCategory: { $exists: true, $ne: null }, // exclude missing/null categories
+          wastefulCategory: { $exists: true, $ne: null },
+          date: { $gte: startOfMonth, $lt: endOfMonth }, // <-- THIS MONTH ONLY
         },
       },
       {
         $group: {
           _id: "$wastefulCategory",
-          totalAmount: { $sum: { $abs: "$amount" } }, // sum absolute amount
+          totalAmount: { $sum: { $abs: "$amount" } },
         },
       },
       {
