@@ -67,6 +67,17 @@ describe("Upcoming Bills API, Authenticated", () => {
     expect(new Date(response.body.date)).toEqual(newBill.date);
   });
 
+  it("fails when invalid info is provided", async () => {
+    const newBill = {
+      name: "Electricity",
+    };
+    const response = await api
+      .post("/api/upcoming-bills")
+      .set("Authorization", `Bearer ${token}`)
+      .send(newBill)
+      .expect(400);
+  });
+
   it("Fetch Upcoming Bills for logged-in user", async () => {
     const response = await api
       .get("/api/upcoming-bills")
@@ -89,6 +100,16 @@ describe("Upcoming Bills API, Authenticated", () => {
     expect(response.body.due).toBe(55);
   });
 
+  it("returns 404 when Update Upcoming Bill not found", async () => {
+    const response = await api
+      .put(`/api/upcoming-bills/${new mongoose.Types.ObjectId()}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        due: 55,
+      })
+      .expect(404);
+  });
+
   it("Delete upcoming bill by user", async () => {
     await api
       .delete(`/api/upcoming-bills/${billId}`)
@@ -100,6 +121,13 @@ describe("Upcoming Bills API, Authenticated", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
     expect(response.body).toHaveLength(0);
+  });
+
+  it("returns 404 when Delete upcoming bill by user bill not found", async () => {
+    await api
+      .delete(`/api/upcoming-bills/${new mongoose.Types.ObjectId()}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404);
   });
 });
 
