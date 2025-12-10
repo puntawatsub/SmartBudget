@@ -9,7 +9,7 @@ import logoutIcon from "@/assets/logoutIcon.svg";
 import billsIcon from "@/assets/bill-Icon.svg";
 
 export default function Sidebar() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -24,7 +24,8 @@ export default function Sidebar() {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("user");
       localStorage.removeItem("appSettings");
-      navigate("/");
+      // navigate("/");
+      window.location.href = "/";
     }
   };
 
