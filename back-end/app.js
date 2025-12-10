@@ -37,9 +37,10 @@ app.get("/", (req, res) => {
 });
 
 app.use(morgan("dev"));
+console.log(`Cors: ${process.env.WEB_URL}`);
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: `${process.env.WEB_URL}`,
     credentials: true,
   })
 );
