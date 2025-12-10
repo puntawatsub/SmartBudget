@@ -2,9 +2,9 @@ const request = require("supertest");
 const server = require("../app");
 
 describe("Transactions API tests (protected routes)", () => {
-  afterAll((done) => {
-    server.close(done);
-  });
+  // afterAll((done) => {
+  //   server.close(done);
+  // });
 
   test("POST /api/transactions - requires auth", async () => {
     const res = await request(server).post("/api/transactions").send({
