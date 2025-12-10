@@ -209,7 +209,8 @@ function Transaction() {
           date: newTransactionDate,
           merchant: newTransactionName,
           category: {
-            categoryName: newTransactionCategory,
+            categoryName:
+              newTransactionAmount >= 0 ? "Income" : newTransactionCategory,
             categoryColor: "null", // hardcoded for now
           },
           amount: newTransactionAmount,
