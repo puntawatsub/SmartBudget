@@ -33,7 +33,7 @@ exports.forgotPassword = async (req, res) => {
     user.resetTokenExpiry = Date.now() + 15 * 60 * 1000; // 15 minutes
     await user.save();
 
-    const resetURL = `http://localhost:5173/reset-password/${token}`;
+    const resetURL = `${process.env.WEB_URL}/reset-password/${token}`;
 
     const mailOptions = {
       from: "smartbudget@resend.puntawat.dev",
