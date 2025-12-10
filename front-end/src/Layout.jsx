@@ -20,6 +20,21 @@ const Layout = () => {
     <div className='h-screen flex flex-col'>
       {/* Auth pages show the top navbar */}
       {isAuthPage ? (
+<<<<<<< HEAD
+        <nav className="w-full flex items-center justify-between py-4 px-8 shadow-sm bg-white dark:bg-gray-900">
+          <Link to="/" className="text-xl font-bold text-black dark:text-white">
+            logo
+          </Link>
+
+          <div className="flex items-center gap-4">
+            {!isAuth ? (
+              <>
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+                >
+                  Login
+=======
         <nav className='w-full flex items-center justify-between py-4 px-6 shadow-sm bg-white'>
           <Link to='/' className='text-xl font-bold'>
             <img
@@ -50,9 +65,24 @@ const Layout = () => {
                   to='/dashboard'
                   className='text-black px-4 py-2 rounded-md hover:bg-gray-100 transition'>
                   Dashboard
+>>>>>>> origin/main
                 </Link>
-              )
-            }
+                <div className="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
+                <Link
+                  to="/signup"
+                  className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+                >
+                  Sign up
+                </Link>
+              </>
+            ) : (
+              <Link
+                to="/dashboard"
+                className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+              >
+                Dashboard
+              </Link>
+            )}
           </div>
         </nav>
       ) : (
@@ -69,11 +99,17 @@ const Layout = () => {
       <div className='flex flex-row'>
         {isAuth && <Sidebar />}
         {/* Main content */}
+<<<<<<< HEAD
+        <main className={`flex-1 overflow-auto ${isAuth && "ml-60"}`}>
+=======
         <main className='flex-1 overflow-auto'>
+>>>>>>> origin/main
           <Outlet />
         </main>
       </div>
-      <Footer />
+      <div className={isAuth && "ml-60"}>
+        <Footer />
+      </div>
     </div>
   )
 }

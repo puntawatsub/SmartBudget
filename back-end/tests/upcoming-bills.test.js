@@ -18,6 +18,15 @@ const sampleBill = {
 
 let billId;
 
+beforeAll(async () => {
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect("mongodb://127.0.0.1:27017/testdb", {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  }
+});
+
 beforeEach(async () => {
   await User.deleteMany({});
   await UpcomingBill.deleteMany({});

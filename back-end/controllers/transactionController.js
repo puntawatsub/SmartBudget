@@ -155,21 +155,7 @@ const createOne = async (req, res) => {
     }
 
     const analytics = await Analytics.findOne({ userId });
-    const transactions = await Transactions.find({
-      userId,
-      date: {
-        $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-        $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
-      },
-    }).lean();
-    const text = (
-      await model(
-        `Provide personalized spending analysis and suggestions for the user based on their transaction history. Focus on identifying wasteful spending patterns, duplicate expenses, and inefficiencies. Offer actionable recommendations to help the user optimize their budget and reduce unnecessary expenditures. Format the response in a clear and concise manner, no bold, italic, or any special formatting, just plain text, also no enter/return/new line, not in markdown format. Based on the following data: ${JSON.stringify(
-          transactions
-        )}`
-      )
-    ).text;
-    analytics.aIAnalysis = `${text}`;
+    analytics.aIAnalysis = undefined;
     await analytics.save();
 
     res.status(201).json(temp);
@@ -349,6 +335,9 @@ const deleteById = async (req, res) => {
       category.amountSpent -= Math.abs(deletedTransaction.amount);
       await category.save();
     }
+    const analytics = await Analytics.findOne({ userId: req.user._id });
+    analytics.aIAnalysis = undefined;
+    await analytics.save();
     res.status(204).send();
   } catch (err) {
     res

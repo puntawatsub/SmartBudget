@@ -171,7 +171,7 @@ const getAISuggestions = async (req, res) => {
       }).lean();
       const text = (
         await model(
-          `Provide personalized spending analysis and suggestions for the user based on their transaction history. Focus on identifying wasteful spending patterns, duplicate expenses, and inefficiencies. Offer actionable recommendations to help the user optimize their budget and reduce unnecessary expenditures. Format the response in a clear and concise manner, no bold, italic, or any special formatting, just plain text, also no enter/return/new line, not in markdown format. Based on the following data: ${JSON.stringify(
+          `Provide personalized spending analysis and suggestions for the user based on their transaction history. Focus on identifying wasteful spending patterns, duplicate expenses, and inefficiencies. Offer actionable recommendations to help the user optimize their budget and reduce unnecessary expenditures. Format the response in a clear and concise manner, no bold, italic, or any special formatting, just plain text, also no enter/return/new line, not in markdown format, write like a suggestion, not a conversation, and do not refer to yourself in anyway. Based on the following data: ${JSON.stringify(
             transactions
           )}`
         )

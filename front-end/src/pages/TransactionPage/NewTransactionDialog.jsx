@@ -34,6 +34,7 @@ const NewTransactionDialog = ({
   newTransactionDate,
   setNewTransactionDate,
   addTransaction,
+  addLoading,
 }) => {
   const [amount, setAmount] = useState("");
 
@@ -94,7 +95,7 @@ const NewTransactionDialog = ({
       }}
     >
       <DialogTrigger asChild>
-        <Button className="bg-green-700 hover:bg-green-800 border border-green-800">
+        <Button className="bg-green-700 dark:bg-green-600 hover:bg-green-800 dark:hover:bg-green-700 text-white border dark:border-green-700 border-green-800">
           <Plus />
           Add Transaction
         </Button>
@@ -177,7 +178,9 @@ const NewTransactionDialog = ({
           />
 
           <DialogFooter>
-            <Button type="submit">Add</Button>
+            <Button type="submit" disabled={addLoading}>
+              {addLoading ? "...Loading" : "Add"}
+            </Button>
             <Button
               type="button"
               onClick={() => setIsAddTransactionDialogOpen(false)}

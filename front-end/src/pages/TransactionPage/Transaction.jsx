@@ -126,6 +126,7 @@ function Transaction() {
   const { data: chartData, loading } = useWastefulCategoryData();
   const { transactions: wasteChartData, loading: wasteLoading } =
     useWastefulTransactions();
+  const [addTransactionLoading, setAddTransactionLoading] = useState(false);
 
   const {
     data: aiText,
@@ -191,6 +192,7 @@ function Transaction() {
 
   const addTransaction = async (e) => {
     e.preventDefault();
+    setAddTransactionLoading(true);
     const token = sessionStorage.getItem("token");
     if (!token) {
       alert("User not authenticated");
@@ -224,6 +226,8 @@ function Transaction() {
       window.location.reload();
     } catch (err) {
       alert(`Error adding transaction: ${err.message}`);
+    } finally {
+      setAddTransactionLoading(false);
     }
   };
 
@@ -246,13 +250,14 @@ function Transaction() {
         );
       }
       setTransactions((prev) => prev.filter((tx) => tx._id !== transactionId));
+      window.location.reload();
     } catch (err) {
       alert(`Error deleting transaction: ${err.message}`);
     }
   };
 
   return (
-    <div className="p-6 flex gap-6 flex-col">
+    <div className="p-6 flex gap-6 flex-col bg-gray-50 dark:bg-gray-900">
       {/* Header Card */}
 
       {/* Filters */}
@@ -272,6 +277,7 @@ function Transaction() {
             newTransactionDate={newTransactionDate}
             setNewTransactionDate={setNewTransactionDate}
             addTransaction={addTransaction}
+            addLoading={addTransactionLoading}
           ></NewTransactionDialog>
           <Button
             variant="outline"
@@ -306,9 +312,9 @@ function Transaction() {
       </div>
 
       {/* Transaction Table */}
-      <div className="rounded-xl overflow-hidden border border-gray-200">
+      <div className="rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
         <Table>
-          <TableHeader className="bg-[#f4f4f4]">
+          <TableHeader className="bg-[#f4f4f4] dark:bg-gray-700">
             <TableRow>
               <TableHead>Date</TableHead>
               <TableHead>Title</TableHead>
@@ -317,7 +323,7 @@ function Transaction() {
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="dark:bg-gray-800">
             {transactions
               .sort((a, b) => new Date(b.date) - new Date(a.date))
               .slice(0 + transactionListOffset, 5 + transactionListOffset)
@@ -355,8 +361,8 @@ function Transaction() {
               ))}
           </TableBody>
         </Table>
-        <div className="flex justify-between items-center border-t border-gray-300">
-          <div className="p-5 text-gray-600">
+        <div className="flex justify-between items-center border-t border-gray-300 dark:border-gray-700 dark:bg-gray-800">
+          <div className="p-5 text-gray-600 dark:text-gray-400">
             {transactions.length <= 0 ? (
               <>{"No data"}</>
             ) : (
@@ -397,48 +403,54 @@ function Transaction() {
       </div>
       <div className="flex flex-col gap-3">
         <span className="font-medium">Transaction Overview</span>
-        <div className="rounded-xl border border-gray-300 shadow-xs overflow-hidden">
-          <div className="text-gray-500 p-3 flex gap-3 items-center text-sm font-medium border-b border-gray-300">
+        <div className="rounded-xl border border-gray-300 shadow-xs overflow-hidden dark:bg-gray-800 dark:border-gray-700">
+          <div className="text-gray-500 p-3 flex gap-3 items-center text-sm font-medium border-b border-gray-300 dark:border-gray-700">
             <ChartPie size={16} />
             Spending Analysis
           </div>
           <div className="flex sm:flex-row flex-col w-full overflow-hidden">
-            <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
+            <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 dark:border-gray-700 flex flex-col justify-center items-center overflow-hidden">
               <div className="w-[64%] h-72 left-0 top-[100px] absolute bg-[conic-gradient(from_12deg_at_50.00%_50.00%,rgba(72.16,255,84.35,0.25)_0deg,rgba(202.75,255,235.84,0.25)_360deg)] rounded-full blur-2xl" />
               <div className="flex py-1.5 flex-row w-full items-center justify-between">
-                <span className="text-gray-500 text-sm font-medium">
+                <span className="text-gray-500 dark:text-gray-300 text-sm font-medium">
                   Total Spendings
                 </span>
                 <span className="text-red-500 text-sm font-medium"></span>
               </div>
-              <div className="text-black text-3xl font-medium self-start">
-                €{totalSpending}
+              <div className="text-black dark:text-gray-100 text-3xl font-medium self-start">
+                €{totalSpending.toFixed(2) || 0}
               </div>
             </div>
-            <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
+            <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 dark:border-gray-700 flex flex-col justify-center items-center overflow-hidden">
               <div className="w-[64%] h-72 left-0 top-[100px] absolute bg-[conic-gradient(from_12deg_at_50.00%_50.00%,rgba(72.16,215.38,255,0.25)_0deg,rgba(202.75,255,235.84,0.25)_360deg)] rounded-full blur-2xl" />
               <div className="flex py-1.5 flex-row w-full items-center justify-between">
-                <span className="text-gray-500 text-sm font-medium">
+                <span className="text-gray-500 dark:text-gray-300 text-sm font-medium">
                   Duplicates
                 </span>
                 <span className="text-gray-500 text-sm font-medium">
                   {/* {duplicatePercentage}% */}
                 </span>
               </div>
-              <div className="text-black text-3xl font-medium self-start">
-                {duplicatePercentage || 0}%
+              <div className="text-black dark:text-gray-100 text-3xl font-medium self-start">
+                {duplicatePercentage && duplicatePercentage !== 0
+                  ? duplicatePercentage.toFixed(2)
+                  : 0}
+                %
               </div>
             </div>
-            <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
+            <div className="h-40 flex-1 relative border-b p-7 border-gray-100 dark:border-gray-700 flex flex-col justify-center items-center overflow-hidden">
               <div className="w-[64%] h-72 left-0 top-[100px] absolute bg-[conic-gradient(from_12deg_at_50.00%_50.00%,rgba(255,166.63,72.16,0.25)_0deg,rgba(251,181.70,152,0.25)_360deg)] rounded-full blur-2xl" />
               <div className="flex py-1.5 flex-row w-full items-center justify-between">
-                <span className="text-gray-500 text-sm font-medium">
+                <span className="text-gray-500 dark:text-gray-300 text-sm font-medium">
                   Inefficients
                 </span>
                 <span className="text-red-500 text-sm font-medium"></span>
               </div>
-              <div className="text-black text-3xl font-medium self-start">
-                {inefficentPercentage || 0}%
+              <div className="text-black dark:text-gray-100 text-3xl font-medium self-start">
+                {inefficentPercentage && inefficentPercentage !== 0
+                  ? inefficentPercentage.toFixed(2)
+                  : 0}
+                %
               </div>
             </div>
           </div>
@@ -446,13 +458,13 @@ function Transaction() {
       </div>
       <div className="flex flex-col gap-3">
         <span className="font-medium">Suggestions</span>
-        <div className="rounded-xl border border-gray-300 shadow-xs overflow-hidden">
-          <div className="text-gray-500 p-3 flex gap-3 items-center text-sm font-medium border-b border-gray-300">
+        <div className="rounded-xl border border-gray-300 dark:border-gray-700 shadow-xs overflow-hidden dark:bg-gray-800">
+          <div className="text-gray-500 p-3 flex gap-3 items-center text-sm font-medium border-b border-gray-300 dark:border-gray-700">
             <Sparkles size={16} />
             AI Generated
           </div>
           <div className="flex flex-row w-full overflow-hidden">
-            <div className="flex-1 relative border-r p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
+            <div className="flex-1 relative p-7 border-gray-100 flex flex-col justify-center items-center overflow-hidden">
               <div className="w-[127%] h-[400px] left-0 top-[43px] absolute bg-[conic-gradient(from_334deg_at_50.00%_50.00%,rgba(120.92,72.16,255,0.15)_48deg,rgba(243.68,202.75,255,0.15)_360deg)] rounded-full blur-2xl" />
               {aiLoading ? (
                 <div>Loading...</div>
@@ -468,8 +480,8 @@ function Transaction() {
       {/* Spending Analysis Chart & Table */}
       <div className="flex flex-col md:flex-row w-full gap-4">
         <div className="flex flex-col flex-1 gap-3">
-          <div className="rounded-xl border border-gray-300 shadow-xs overflow-hidden">
-            <div className="text-gray-500 p-3 flex gap-3 items-center text-sm font-medium border-b border-gray-300">
+          <div className="rounded-xl border border-gray-300 dark:border-gray-700 shadow-xs overflow-hidden dark:bg-gray-800">
+            <div className="text-gray-500 p-3 flex gap-3 items-center text-sm font-medium border-b border-gray-300 dark:border-gray-700">
               <ChartPie size={16} />
               Spending Analysis
             </div>
@@ -515,8 +527,8 @@ function Transaction() {
         </div>
         <div className="flex flex-row flex-2 gap-4">
           <div className="flex w-full flex-col gap-3">
-            <div className="rounded-xl border w-full border-gray-300 shadow-xs overflow-hidden">
-              <div className="text-gray-500 p-3 flex gap-3 items-center text-sm font-medium border-b border-gray-300">
+            <div className="rounded-xl border w-full border-gray-300 dark:border-gray-700 dark:bg-gray-800 shadow-xs overflow-hidden">
+              <div className="text-gray-500 p-3 flex gap-3 items-center text-sm font-medium border-b border-gray-300 dark:border-gray-700">
                 <List size={16} />
                 Wasteful Spendings
               </div>
@@ -531,7 +543,7 @@ function Transaction() {
                         <TableHead>Amount</TableHead>
                       </TableRow>
                     </TableHeader>
-                    <TableBody>
+                    <TableBody className="dark:bg-gray-800">
                       {wasteChartData &&
                         wasteChartData
                           .slice(
@@ -539,7 +551,10 @@ function Transaction() {
                             5 + wasteSpendingListOffset
                           )
                           .map((tx, index) => (
-                            <TableRow key={index}>
+                            <TableRow
+                              key={index}
+                              className="dark:border-gray-600"
+                            >
                               <TableCell>{tx.date}</TableCell>
                               <TableCell>{tx.merchant}</TableCell>
                               <TableCell>
@@ -550,8 +565,8 @@ function Transaction() {
                           ))}
                     </TableBody>
                   </Table>
-                  <div className="flex justify-between items-center border-t border-gray-300">
-                    <div className="p-5 text-gray-600">
+                  <div className="flex justify-between items-center border-t border-gray-300 dark:border-gray-700">
+                    <div className="p-5 text-gray-600 dark:text-gray-400">
                       Showing{" "}
                       <span className="font-bold">
                         {1 + wasteSpendingListOffset}-

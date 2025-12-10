@@ -16,7 +16,6 @@ function UpcomingBillsPage() {
 
   const [bills, setBills] = useState([])
 
-  //  to calculate days left
   const getDaysLeft = (dueDate) => {
     const today = new Date()
     const due = new Date(dueDate)
@@ -24,7 +23,6 @@ function UpcomingBillsPage() {
     return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
   }
 
-  // Format date
   const formatDate = (isoDate) => {
     return new Date(isoDate).toLocaleDateString('en-GB')
   }
@@ -75,13 +73,17 @@ function UpcomingBillsPage() {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 px-8 py-6'>
-      <h1 className='text-3xl font-bold mb-6'>Upcoming Bills</h1>
+    <div className='min-h-screen bg-gray-100 dark:bg-gray-900 px-8 py-6 transition-colors duration-300'>
+      <h1 className='text-3xl font-bold mb-6 text-gray-900 dark:text-gray-100'>
+        Upcoming Bills
+      </h1>
 
-      <div className='bg-white p-4 shadow-sm border rounded-xl flex justify-between items-center'>
-        <h2 className='text-xl font-semibold'>Your Bills</h2>
+      <div className='bg-white dark:bg-gray-800 p-4 shadow-sm border rounded-xl flex justify-between items-center transition-colors duration-300'>
+        <h2 className='text-xl font-semibold text-gray-800 dark:text-gray-100'>
+          Your Bills
+        </h2>
         <button
-          className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg'
+          className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200'
           onClick={() => {
             setEditingBill(null)
             setShowForm(!showForm)
@@ -90,18 +92,22 @@ function UpcomingBillsPage() {
         </button>
       </div>
 
-      {/* Add Bill Form */}
+      {/* Add Bill form */}
       {showForm && !editingBill && (
-        <div className='bg-white mt-4 p-6 rounded-xl shadow border'>
-          <h3 className='text-xl font-semibold mb-4'>Add New Bill</h3>
+        <div className='bg-white dark:bg-gray-800 mt-4 p-6 rounded-xl shadow border transition-colors duration-300'>
+          <h3 className='text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100'>
+            Add New Bill
+          </h3>
           <form
             className='grid grid-cols-1 sm:grid-cols-2 gap-4'
             onSubmit={handleAddBill}>
             <div>
-              <label className='block font-medium mb-1'>Bill Name</label>
+              <label className='block font-medium mb-1 text-gray-800 dark:text-gray-200'>
+                Bill Name
+              </label>
               <input
                 type='text'
-                className='w-full border rounded-lg px-3 py-2'
+                className='w-full border rounded-lg px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600'
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -109,10 +115,12 @@ function UpcomingBillsPage() {
             </div>
 
             <div>
-              <label className='block font-medium mb-1'>Amount (€)</label>
+              <label className='block font-medium mb-1 text-gray-800 dark:text-gray-200'>
+                Amount (€)
+              </label>
               <input
                 type='number'
-                className='w-full border rounded-lg px-3 py-2'
+                className='w-full border rounded-lg px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600'
                 value={due}
                 onChange={(e) => setDue(e.target.value)}
                 required
@@ -120,10 +128,12 @@ function UpcomingBillsPage() {
             </div>
 
             <div>
-              <label className='block font-medium mb-1'>Due Date</label>
+              <label className='block font-medium mb-1 text-gray-800 dark:text-gray-200'>
+                Due Date
+              </label>
               <input
                 type='date'
-                className='w-full border rounded-lg px-3 py-2'
+                className='w-full border rounded-lg px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600'
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 required
@@ -133,12 +143,12 @@ function UpcomingBillsPage() {
             <div className='col-span-full mt-4 flex gap-4'>
               <button
                 type='submit'
-                className='bg-blue-600 text-white px-4 py-2 rounded-lg'>
+                className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200'>
                 Save Bill
               </button>
               <button
                 type='button'
-                className='px-4 py-2 rounded-lg border'
+                className='px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100'
                 onClick={() => setShowForm(false)}>
                 Cancel
               </button>
@@ -149,16 +159,20 @@ function UpcomingBillsPage() {
 
       {/* Edit Bill Form */}
       {editingBill && (
-        <div className='bg-white mt-4 p-6 rounded-xl shadow border'>
-          <h3 className='text-xl font-semibold mb-4'>Edit Bill</h3>
+        <div className='bg-white dark:bg-gray-800 mt-4 p-6 rounded-xl shadow border transition-colors duration-300'>
+          <h3 className='text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100'>
+            Edit Bill
+          </h3>
           <form
             className='grid grid-cols-1 sm:grid-cols-2 gap-4'
             onSubmit={saveEdit}>
             <div>
-              <label className='block font-medium mb-1'>Bill Name</label>
+              <label className='block font-medium mb-1 text-gray-800 dark:text-gray-200'>
+                Bill Name
+              </label>
               <input
                 type='text'
-                className='w-full border rounded-lg px-3 py-2'
+                className='w-full border rounded-lg px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600'
                 value={editingBill.name}
                 onChange={(e) =>
                   setEditingBill({ ...editingBill, name: e.target.value })
@@ -168,10 +182,12 @@ function UpcomingBillsPage() {
             </div>
 
             <div>
-              <label className='block font-medium mb-1'>Amount (€)</label>
+              <label className='block font-medium mb-1 text-gray-800 dark:text-gray-200'>
+                Amount (€)
+              </label>
               <input
                 type='number'
-                className='w-full border rounded-lg px-3 py-2'
+                className='w-full border rounded-lg px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600'
                 value={editingBill.due}
                 onChange={(e) =>
                   setEditingBill({ ...editingBill, due: e.target.value })
@@ -181,10 +197,12 @@ function UpcomingBillsPage() {
             </div>
 
             <div>
-              <label className='block font-medium mb-1'>Due Date</label>
+              <label className='block font-medium mb-1 text-gray-800 dark:text-gray-200'>
+                Due Date
+              </label>
               <input
                 type='date'
-                className='w-full border rounded-lg px-3 py-2'
+                className='w-full border rounded-lg px-3 py-2 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-600'
                 value={editingBill.date}
                 onChange={(e) =>
                   setEditingBill({ ...editingBill, date: e.target.value })
@@ -196,12 +214,12 @@ function UpcomingBillsPage() {
             <div className='col-span-full mt-4 flex gap-4'>
               <button
                 type='submit'
-                className='bg-blue-600 text-white px-4 py-2 rounded-lg'>
+                className='bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200'>
                 Save Changes
               </button>
               <button
                 type='button'
-                className='px-4 py-2 rounded-lg border'
+                className='px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100'
                 onClick={() => setEditingBill(null)}>
                 Cancel
               </button>
@@ -210,11 +228,11 @@ function UpcomingBillsPage() {
         </div>
       )}
 
-      {/* Bills Table */}
-      <div className='bg-white mt-6 p-6 rounded-xl shadow border'>
-        <table className='w-full text-sm'>
+      {/* Bills table */}
+      <div className='bg-white dark:bg-gray-800 mt-6 p-6 rounded-xl shadow border transition-colors duration-300 overflow-x-auto'>
+        <table className='w-full text-sm text-gray-900 dark:text-gray-100'>
           <thead>
-            <tr className='text-gray-400 text-left'>
+            <tr className='text-gray-400 dark:text-gray-500 text-left'>
               <th>Deadline</th>
               <th>Due Date</th>
               <th>Name</th>
@@ -226,16 +244,16 @@ function UpcomingBillsPage() {
             {bills.map((b, index) => (
               <tr
                 key={b._id || `${b.name}-${b.date}-${index}`}
-                className='border-t'>
+                className='border-t border-gray-200 dark:border-gray-700'>
                 <td className='py-2'>
                   {getDaysLeft(b.date) < 0 ? (
-                    <div className='px-2 py-0.5 bg-red-50 rounded-full outline outline-[0.5px] outline-offset-[-0.5px] outline-red-500 inline-flex justify-center items-center'>
-                      <div className='text-red-700 text-xs font-medium'>
+                    <div className='px-2 py-0.5 bg-red-50 dark:bg-red-900 rounded-full outline outline-[0.5px] outline-offset-[-0.5px] outline-red-500 dark:outline-red-400 inline-flex justify-center items-center'>
+                      <div className='text-red-700 dark:text-red-300 text-xs font-medium'>
                         Late by {Math.abs(getDaysLeft(b.date))} days
                       </div>
                     </div>
                   ) : (
-                    <div className='text-black text-xs font-medium'>
+                    <div className='text-gray-900 dark:text-gray-100 text-xs font-medium'>
                       {getDaysLeft(b.date)} days left
                     </div>
                   )}
@@ -245,7 +263,7 @@ function UpcomingBillsPage() {
                 <td className='text-right font-medium'>€{b.due}</td>
                 <td className='text-right flex gap-2 justify-end items-center'>
                   <button
-                    className='bg-blue-600 hover:bg-blue-700 text-white px-3 py-1  rounded-lg text-sm'
+                    className='bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-lg text-sm'
                     onClick={() => startEditing(b)}>
                     Edit
                   </button>
