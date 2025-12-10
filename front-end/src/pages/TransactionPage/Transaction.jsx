@@ -418,7 +418,7 @@ function Transaction() {
                 <span className="text-red-500 text-sm font-medium"></span>
               </div>
               <div className="text-black dark:text-gray-100 text-3xl font-medium self-start">
-                €{totalSpending.toFixed(2) || 0}
+                €{totalSpending?.toFixed(2) || 0}
               </div>
             </div>
             <div className="h-40 flex-1 relative border-b sm:border-r p-7 border-gray-100 dark:border-gray-700 flex flex-col justify-center items-center overflow-hidden">
@@ -433,7 +433,7 @@ function Transaction() {
               </div>
               <div className="text-black dark:text-gray-100 text-3xl font-medium self-start">
                 {duplicatePercentage && duplicatePercentage !== 0
-                  ? duplicatePercentage.toFixed(2)
+                  ? duplicatePercentage?.toFixed(2)
                   : 0}
                 %
               </div>
@@ -448,7 +448,7 @@ function Transaction() {
               </div>
               <div className="text-black dark:text-gray-100 text-3xl font-medium self-start">
                 {inefficentPercentage && inefficentPercentage !== 0
-                  ? inefficentPercentage.toFixed(2)
+                  ? inefficentPercentage?.toFixed(2)
                   : 0}
                 %
               </div>
@@ -511,7 +511,7 @@ function Transaction() {
                     // FIX 3: Ensure the label function returns clean text
                     // isAnimationActive={false}
                     label={({ name, percent }) =>
-                      `${(percent * 100).toFixed(0)}%`
+                      `${(percent * 100)?.toFixed(0)}%`
                     }
                     nameKey="category"
                   />
