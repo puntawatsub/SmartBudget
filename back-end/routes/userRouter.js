@@ -11,7 +11,6 @@ const {
 } = require("../controllers/userControllers");
 
 router.get("/", getAllUsers);
-// router.use(auth);
 router.post("/", createUser);
 router.get("/:UserId", getUserById);
 router.put("/:UserId", updateUser);

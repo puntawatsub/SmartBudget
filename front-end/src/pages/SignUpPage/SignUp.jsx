@@ -15,22 +15,6 @@ const SignUp = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (formData.password !== formData.confirmPassword) {
-  //     alert("Passwords do not match");
-  //     return;
-  //   }
-  //   console.log("Form submitted:", formData);
-  //   setFormData({
-  //     username: "",
-  //     email: "",
-  //     password: "",
-  //     confirmPassword: "",
-  //   });
-  //   navigate("/login"); // optional redirect
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault()
 
