@@ -1,20 +1,20 @@
-const model = require("../config/gemini");
-const Analytics = require("../models/analyticsModel");
-const Category = require("../models/categoryModel");
-const Transaction = require("../models/transactionModel");
+const model = require('../config/gemini')
+const Analytics = require('../models/analyticsModel')
+const Category = require('../models/categoryModel')
+const Transaction = require('../models/transactionModel')
 
 function getMonthYear(d = new Date()) {
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const year = d.getFullYear();
-  return `${month}_${year}`;
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const year = d.getFullYear()
+  return `${month}_${year}`
 }
 
 const getAnalysisPercentage = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user._id
 
     if (!userId) {
-      return res.status(400).json({ message: "User ID is required" });
+      return res.status(400).json({ message: 'User ID is required' })
     }
 
     // Count all transactions for the user in current month
@@ -24,150 +24,150 @@ const getAnalysisPercentage = async (req, res) => {
         $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
       },
-    });
+    })
 
     if (totalCount === 0) {
       return res.status(200).json({
         duplicatePercentage: 0,
-        message: "No transactions found for this user",
-      });
+        message: 'No transactions found for this user',
+      })
     }
 
     // Count transactions marked as duplicate
     const duplicateCount = await Transaction.countDocuments({
       userId,
-      wastefulAnalysis: "Duplicates",
+      wastefulAnalysis: 'Duplicates',
       date: {
         $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
       },
-    });
+    })
 
-    const duplicatePercentage = (duplicateCount / totalCount) * 100;
+    const duplicatePercentage = (duplicateCount / totalCount) * 100
 
     const totalInefficientsCount = await Transaction.countDocuments({
       userId,
-      wastefulAnalysis: "Inefficients",
+      wastefulAnalysis: 'Inefficients',
       date: {
         $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
       },
-    });
+    })
 
-    const inefficentPercentage = (totalInefficientsCount / totalCount) * 100;
+    const inefficentPercentage = (totalInefficientsCount / totalCount) * 100
 
     const categories = await Category.find({
       userId: req.user._id,
       mm_yyyy: getMonthYear(),
-      name: { $ne: "Income" },
-    });
-    let totalExpenses = 0;
+      name: { $ne: 'Income' },
+    })
+    let totalExpenses = 0
     categories.forEach((cat) => {
-      totalExpenses += cat.amountSpent;
-    });
+      totalExpenses += cat.amountSpent
+    })
 
     return res.status(200).json({
       duplicatePercentage: Number(duplicatePercentage.toFixed(2)),
       inefficentPercentage: Number(inefficentPercentage.toFixed(2)),
       totalSpendings: totalExpenses || 0,
-    });
+    })
   } catch (error) {
-    console.error("Error calculating duplicate percentage:", error);
+    console.error('Error calculating duplicate percentage:', error)
     return res.status(500).json({
-      message: "Server error calculating duplicate percentage",
-    });
+      message: 'Server error calculating duplicate percentage',
+    })
   }
-};
+}
 
 // Get category spending analysis percentages in wastefulCategory field
 const getWastefulCategoryPercentage = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user._id
 
     if (!userId) {
-      return res.status(400).json({ message: "User ID is required" });
+      return res.status(400).json({ message: 'User ID is required' })
     }
 
-    const totalExpenses = 10000; // replace with real total if needed
+    const totalExpenses = 10000 // replace with real total if needed
 
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
+    const startOfMonth = new Date()
+    startOfMonth.setDate(1)
+    startOfMonth.setHours(0, 0, 0, 0)
 
-    const endOfMonth = new Date(startOfMonth);
-    endOfMonth.setMonth(endOfMonth.getMonth() + 1); // next month
+    const endOfMonth = new Date(startOfMonth)
+    endOfMonth.setMonth(endOfMonth.getMonth() + 1) // next month
 
     const result = await Transaction.aggregate([
       {
         $match: {
           userId,
           wastefulCategory: { $exists: true, $ne: null },
-          date: { $gte: startOfMonth, $lt: endOfMonth }, // <-- THIS MONTH ONLY
+          date: { $gte: startOfMonth, $lt: endOfMonth },
         },
       },
       {
         $group: {
-          _id: "$wastefulCategory",
-          totalAmount: { $sum: { $abs: "$amount" } },
+          _id: '$wastefulCategory',
+          totalAmount: { $sum: { $abs: '$amount' } },
         },
       },
       {
         $project: {
           _id: 0,
-          category: "$_id",
+          category: '$_id',
           totalAmount: 1,
           percentage: {
-            $multiply: [{ $divide: ["$totalAmount", totalExpenses] }, 100],
+            $multiply: [{ $divide: ['$totalAmount', totalExpenses] }, 100],
           },
         },
       },
-    ]);
+    ])
 
-    return res.status(200).json(result);
+    return res.status(200).json(result)
   } catch (error) {
-    console.error("Error calculating wasteful category percentages:", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error('Error calculating wasteful category percentages:', error)
+    return res.status(500).json({ message: 'Server error' })
   }
-};
+}
 
 const getWastefulTransactions = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user._id
 
     if (!userId) {
-      return res.status(400).json({ message: "User ID is required" });
+      return res.status(400).json({ message: 'User ID is required' })
     }
 
     const transactions = await Transaction.find(
       {
         userId,
-        wastefulAnalysis: { $in: ["Inefficients", "Duplicates"] }, // filter for the two values
+        wastefulAnalysis: { $in: ['Inefficients', 'Duplicates'] }, // filter for the two values
       },
       {
         date: 1,
         merchant: 1,
         amount: 1,
         wastefulAnalysis: 1,
-        _id: 0, // optional, remove _id if you don't want it
+        _id: 0,
       }
-    ).sort({ date: -1 }); // optional: sort by most recent first
+    ).sort({ date: -1 })
 
-    return res.status(200).json(transactions);
+    return res.status(200).json(transactions)
   } catch (error) {
-    console.error("Error fetching wasteful transactions:", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error('Error fetching wasteful transactions:', error)
+    return res.status(500).json({ message: 'Server error' })
   }
-};
+}
 
 const getAISuggestions = async (req, res) => {
   try {
-    const userId = req.user._id;
+    const userId = req.user._id
 
     if (!userId) {
-      return res.status(400).json({ message: "User ID is required" });
+      return res.status(400).json({ message: 'User ID is required' })
     }
 
-    const analytics = await Analytics.findOne({ userId });
+    const analytics = await Analytics.findOne({ userId })
 
     if (!analytics || !analytics.aIAnalysis) {
       const transactions = await Transaction.find({
@@ -176,26 +176,26 @@ const getAISuggestions = async (req, res) => {
           $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
           $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1),
         },
-      }).lean();
+      }).lean()
       const text = (
         await model(
           `Provide personalized spending analysis and suggestions for the user based on their transaction history. Focus on identifying wasteful spending patterns, duplicate expenses, and inefficiencies. Offer actionable recommendations to help the user optimize their budget and reduce unnecessary expenditures. Format the response in a clear and concise manner, no bold, italic, or any special formatting, just plain text, also no enter/return/new line, not in markdown format, write like a suggestion, not a conversation, and do not refer to yourself in anyway. Based on the following data: ${JSON.stringify(
             transactions
           )}`
         )
-      ).text;
-      analytics.aIAnalysis = `${text}`;
-      await analytics.save();
+      ).text
+      analytics.aIAnalysis = `${text}`
+      await analytics.save()
     }
-    return res.status(200).send(analytics.aIAnalysis);
+    return res.status(200).send(analytics.aIAnalysis)
   } catch (error) {
-    console.error("Error fetching AI suggestions:", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error('Error fetching AI suggestions:', error)
+    return res.status(500).json({ message: 'Server error' })
   }
-};
+}
 module.exports = {
   getAnalysisPercentage,
   getWastefulCategoryPercentage,
   getWastefulTransactions,
   getAISuggestions,
-};
+}

@@ -11,7 +11,10 @@ const {
 } = require('../controllers/userControllers')
 
 router.get('/', getAllUsers)
+<<<<<<< remove-comments
+=======
 // router.use(auth);
+>>>>>>> main
 router.post('/', createUser)
 router.get('/:UserId', getUserById)
 router.put('/:UserId', updateUser)
