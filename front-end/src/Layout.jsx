@@ -1,81 +1,55 @@
-import { Input } from './components/ui/input'
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
-import useRefresh from './hooks/useRefresh'
-import { useEffect } from 'react'
-import Footer from './components/Footer/Footer'
-import Sidebar from './components/Sidebar'
-import logo from './assets/logo.png'
+import { Input } from "./components/ui/input";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
+import useRefresh from "./hooks/useRefresh";
+import { useEffect } from "react";
+import Footer from "./components/Footer/Footer";
+import Sidebar from "./components/Sidebar";
+import logo from "./assets/logo.png";
 
 const Layout = () => {
-  const { pathname } = useLocation()
-  const { error, loading, isAuth } = useRefresh()
+  const { pathname } = useLocation();
+  const { error, loading, isAuth } = useRefresh();
 
   const isAuthPage =
-    pathname === '/login' ||
-    pathname === '/signup' ||
-    pathname === '/forgot-password' ||
-    pathname === '/'
+    pathname === "/login" ||
+    pathname === "/signup" ||
+    pathname === "/forgot-password" ||
+    pathname === "/";
 
   return (
-    <div className='h-screen flex flex-col'>
+    <div className="h-screen flex flex-col">
       {/* Auth pages show the top navbar */}
       {isAuthPage ? (
-<<<<<<< HEAD
-        <nav className="w-full flex items-center justify-between py-4 px-8 shadow-sm bg-white dark:bg-gray-900">
-          <Link to="/" className="text-xl font-bold text-black dark:text-white">
-            logo
-          </Link>
-
-          <div className="flex items-center gap-4">
-            {!isAuth ? (
-              <>
-                <Link
-                  to="/login"
-                  className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
-                >
-                  Login
-=======
-        <nav className='w-full flex items-center justify-between py-4 px-6 shadow-sm bg-white'>
-          <Link to='/' className='text-xl font-bold'>
+        <nav className="w-full flex items-center justify-between py-4 px-6 shadow-sm bg-white">
+          <Link to="/" className="text-xl font-bold">
             <img
               src={logo}
-              alt='SmartBudget Logo'
-              className='h-7 w-51 object-contain'
+              alt="SmartBudget Logo"
+              className="h-7 w-51 object-contain"
             />
           </Link>
 
-          <div className='flex items-center gap-4'>
-            {
-              /* If on auth page, show login/signup links else show dashboard */ !isAuth ? (
-                <>
-                  <Link
-                    to='/login'
-                    className='text-black px-4 py-2 rounded-md hover:bg-gray-100 transition'>
-                    Login
-                  </Link>
-                  <div className='h-6 w-px bg-gray-300'></div>
-                  <Link
-                    to='/signup'
-                    className='text-black px-4 py-2 rounded-md hover:bg-gray-100 transition'>
-                    Sign up
-                  </Link>
-                </>
-              ) : (
+          <div className="flex items-center gap-4">
+            {/* LOGIC FIX START: Standard ternary operator */}
+            {!isAuth ? (
+              // IF NOT AUTH: Show Login & Signup
+              <>
                 <Link
-                  to='/dashboard'
-                  className='text-black px-4 py-2 rounded-md hover:bg-gray-100 transition'>
-                  Dashboard
->>>>>>> origin/main
+                  to="/login"
+                  className="text-black px-4 py-2 rounded-md hover:bg-gray-100 transition"
+                >
+                  Login
                 </Link>
-                <div className="h-6 w-px bg-gray-300 dark:bg-gray-600"></div>
+                <div className="h-6 w-px bg-gray-300"></div>
                 <Link
                   to="/signup"
-                  className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
+                  className="text-black px-4 py-2 rounded-md hover:bg-gray-100 transition"
                 >
                   Sign up
                 </Link>
               </>
             ) : (
+              // ELSE (IS AUTH): Show Dashboard only
               <Link
                 to="/dashboard"
                 className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
@@ -83,27 +57,17 @@ const Layout = () => {
                 Dashboard
               </Link>
             )}
+            {/* LOGIC FIX END */}
           </div>
         </nav>
       ) : (
-        // <header className="bg-white border-b border-gray-200 flex items-center py-3 justify-end px-6">
-        //   <div className="flex items-center gap-4">
-        //     <div className="h-9 bg-white border border-gray-300 rounded-md w-64 shadow-xs"></div>
-        //     <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
-        //       AA
-        //     </div>
-        //   </div>
-        // </header>
         <></>
       )}
-      <div className='flex flex-row'>
+
+      <div className="flex flex-row">
         {isAuth && <Sidebar />}
         {/* Main content */}
-<<<<<<< HEAD
         <main className={`flex-1 overflow-auto ${isAuth && "ml-60"}`}>
-=======
-        <main className='flex-1 overflow-auto'>
->>>>>>> origin/main
           <Outlet />
         </main>
       </div>
@@ -111,7 +75,7 @@ const Layout = () => {
         <Footer />
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
