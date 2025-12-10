@@ -10,8 +10,8 @@ function exportTransactionsToCSV(transactions) {
     }),
     merchant: tx.merchant,
     'category.categoryName': tx.category.categoryName,
+
     // Format amount with EUR
-    //category colour?
     amount: `${tx.amount < 0 ? '-' : ''}${Math.abs(tx.amount).toFixed(2)} EUR`,
   }))
 

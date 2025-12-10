@@ -1,240 +1,116 @@
-// import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
-// import homeIcon from '@/assets/homeIcon.svg'
-// import dashboardIcon from '@/assets/dashboardIcon.svg'
-// import goalsIcon from '@/assets/goalsIcon.svg'
-// import transactionsIcon from '@/assets/transactionsIcon.svg'
-// import settingsIcon from '@/assets/settingsIcon.svg'
-// import logoutIcon from '@/assets/logoutIcon.svg'
-// import billsIcon from '@/assets/bill-Icon.svg'
-
-// export default function Sidebar() {
-//   const navigate = useNavigate()
-
-//   const handleLogout = async () => {
-//     try {
-//       await fetch('/api/signups/logout', {
-//         method: 'POST',
-//         credentials: 'include',
-//       })
-//     } catch (err) {
-//       console.error('Logout error:', err)
-//     } finally {
-//       // clear client auth/cache
-//       sessionStorage.removeItem('token')
-//       sessionStorage.removeItem('user')
-//       localStorage.removeItem('appSettings')
-//       navigate('/')
-//     }
-//   }
-
-//   return (
-//     <div className='w-60 fixed bg-white dark:bg-gray-800 border-r border-t dark:border-gray-700 h-screen p-4 flex flex-col justify-between'>
-//       <div className='space-y-2'>
-//         <Link
-//           to='/'
-//           className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
-//           <img
-//             src={homeIcon}
-//             className='w-6 h-6 dark:invert dark:brightness-150'
-//             alt='Home'
-//           />
-//           <span className='text-sm font-medium dark:text-white'>Home</span>
-//         </Link>
-
-//         <Link
-//           to='/dashboard'
-//           className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
-//           <img
-//             src={dashboardIcon}
-//             className='w-6 h-6 dark:invert dark:brightness-150'
-//             alt='Dashboard'
-//           />
-//           <span className='text-sm font-medium dark:text-white'>Dashboard</span>
-//         </Link>
-
-//         <Link
-//           to='/goals'
-//           className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
-//           <img
-//             src={goalsIcon}
-//             className='w-6 h-6 dark:invert dark:brightness-150'
-//             alt='Goals'
-//           />
-//           <span className='text-sm font-medium dark:text-white'>Goals</span>
-//         </Link>
-//         <Link
-//           to='/upcoming-bills'
-//           className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
-//           <img
-//             src={billsIcon}
-//             className='w-6 h-6 dark:invert dark:brightness-150'
-//             alt='Bills'
-//           />
-//           <span className='text-sm font-medium dark:text-white'>Bills</span>
-//         </Link>
-
-//         <Link
-//           to='/transaction'
-//           className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
-//           <img
-//             src={transactionsIcon}
-//             className='w-6 h-6 dark:invert dark:brightness-150'
-//             alt='Transactions'
-//           />
-//           <span className='text-sm font-medium dark:text-white'>
-//             Transaction
-//           </span>
-//         </Link>
-
-//         <Link
-//           to='/settings'
-//           className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
-//           <img
-//             src={settingsIcon}
-//             className='w-6 h-6 dark:invert dark:brightness-150'
-//             alt='Settings'
-//           />
-//           <span className='text-sm font-medium dark:text-white'>Settings</span>
-//         </Link>
-//       </div>
-
-//       {/* LOGOUT */}
-//       <button
-//         onClick={handleLogout}
-//         className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full text-left'>
-//         <img
-//           src={logoutIcon}
-//           className='w-6 h-6 dark:invert dark:brightness-150'
-//           alt='Logout'
-//         />
-//         <span className='text-sm font-medium dark:text-white'>Logout</span>
-//       </button>
-//     </div>
-//   )
-// }
-import { Link, useNavigate } from "react-router-dom";
-
-import homeIcon from "@/assets/homeIcon.svg";
-import dashboardIcon from "@/assets/dashboardIcon.svg";
-import goalsIcon from "@/assets/goalsIcon.svg";
-import transactionsIcon from "@/assets/transactionsIcon.svg";
-import settingsIcon from "@/assets/settingsIcon.svg";
-import logoutIcon from "@/assets/logoutIcon.svg";
-import billsIcon from "@/assets/bill-Icon.svg";
+import homeIcon from '@/assets/homeIcon.svg'
+import dashboardIcon from '@/assets/dashboardIcon.svg'
+import goalsIcon from '@/assets/goalsIcon.svg'
+import transactionsIcon from '@/assets/transactionsIcon.svg'
+import settingsIcon from '@/assets/settingsIcon.svg'
+import logoutIcon from '@/assets/logoutIcon.svg'
+import billsIcon from '@/assets/bill-Icon.svg'
 
 export default function Sidebar() {
-  // const navigate = useNavigate();
-
   const handleLogout = async () => {
     try {
-      await fetch("/api/signups/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      await fetch('/api/signups/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
     } catch (err) {
-      console.error("Logout error:", err);
+      console.error('Logout error:', err)
     } finally {
       // clear client auth/cache
-      sessionStorage.removeItem("token");
-      sessionStorage.removeItem("user");
-      localStorage.removeItem("appSettings");
-      // navigate("/");
-      window.location.href = "/";
+      sessionStorage.removeItem('token')
+      sessionStorage.removeItem('user')
+      localStorage.removeItem('appSettings')
+
+      window.location.href = '/'
     }
-  };
+  }
 
   return (
-    <div className="w-60 bg-white dark:bg-gray-800 border-r border-t dark:border-gray-700 p-4 flex flex-col justify-between min-h-screen">
+    <div className='w-60 bg-white dark:bg-gray-800 border-r border-t dark:border-gray-700 p-4 flex flex-col justify-between min-h-screen'>
       {/* Links */}
-      <div className="space-y-2">
+      <div className='space-y-2'>
         <Link
-          to="/"
-          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        >
+          to='/'
+          className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
           <img
             src={homeIcon}
-            className="w-6 h-6 dark:invert dark:brightness-150"
-            alt="Home"
+            className='w-6 h-6 dark:invert dark:brightness-150'
+            alt='Home'
           />
-          <span className="text-sm font-medium dark:text-white">Home</span>
+          <span className='text-sm font-medium dark:text-white'>Home</span>
         </Link>
 
         <Link
-          to="/dashboard"
-          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        >
+          to='/dashboard'
+          className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
           <img
             src={dashboardIcon}
-            className="w-6 h-6 dark:invert dark:brightness-150"
-            alt="Dashboard"
+            className='w-6 h-6 dark:invert dark:brightness-150'
+            alt='Dashboard'
           />
-          <span className="text-sm font-medium dark:text-white">Dashboard</span>
+          <span className='text-sm font-medium dark:text-white'>Dashboard</span>
         </Link>
 
         <Link
-          to="/goals"
-          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        >
+          to='/goals'
+          className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
           <img
             src={goalsIcon}
-            className="w-6 h-6 dark:invert dark:brightness-150"
-            alt="Goals"
+            className='w-6 h-6 dark:invert dark:brightness-150'
+            alt='Goals'
           />
-          <span className="text-sm font-medium dark:text-white">Goals</span>
+          <span className='text-sm font-medium dark:text-white'>Goals</span>
         </Link>
 
         <Link
-          to="/upcoming-bills"
-          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        >
+          to='/upcoming-bills'
+          className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
           <img
             src={billsIcon}
-            className="w-6 h-6 dark:invert dark:brightness-150"
-            alt="Bills"
+            className='w-6 h-6 dark:invert dark:brightness-150'
+            alt='Bills'
           />
-          <span className="text-sm font-medium dark:text-white">Bills</span>
+          <span className='text-sm font-medium dark:text-white'>Bills</span>
         </Link>
 
         <Link
-          to="/transaction"
-          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        >
+          to='/transaction'
+          className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
           <img
             src={transactionsIcon}
-            className="w-6 h-6 dark:invert dark:brightness-150"
-            alt="Transactions"
+            className='w-6 h-6 dark:invert dark:brightness-150'
+            alt='Transactions'
           />
-          <span className="text-sm font-medium dark:text-white">
+          <span className='text-sm font-medium dark:text-white'>
             Transaction
           </span>
         </Link>
 
         <Link
-          to="/settings"
-          className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition"
-        >
+          to='/settings'
+          className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition'>
           <img
             src={settingsIcon}
-            className="w-6 h-6 dark:invert dark:brightness-150"
-            alt="Settings"
+            className='w-6 h-6 dark:invert dark:brightness-150'
+            alt='Settings'
           />
-          <span className="text-sm font-medium dark:text-white">Settings</span>
+          <span className='text-sm font-medium dark:text-white'>Settings</span>
         </Link>
       </div>
 
       {/* Logout */}
       <button
         onClick={handleLogout}
-        className="flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full text-left mt-4"
-      >
+        className='flex items-center gap-3 p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition w-full text-left mt-4'>
         <img
           src={logoutIcon}
-          className="w-6 h-6 dark:invert dark:brightness-150"
-          alt="Logout"
+          className='w-6 h-6 dark:invert dark:brightness-150'
+          alt='Logout'
         />
-        <span className="text-sm font-medium dark:text-white">Logout</span>
+        <span className='text-sm font-medium dark:text-white'>Logout</span>
       </button>
     </div>
-  );
+  )
 }
