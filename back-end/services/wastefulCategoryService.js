@@ -1,5 +1,5 @@
-const model = require("../config/gemini");
-const Settings = require("../models/settingModel");
+const model = require('../config/gemini')
+const Settings = require('../models/settingModel')
 
 async function wastefulCategoryQuery(
   transactionTitle,
@@ -9,7 +9,7 @@ async function wastefulCategoryQuery(
   currency,
   allTransactions
 ) {
-  console.log(allTransactions);
+  console.log(allTransactions)
   const prompt = `
     You are a professional financial coach. Based on the user's transaction data, select a **category** for this spending based on the provided data in **JSON format**.
 
@@ -34,22 +34,22 @@ async function wastefulCategoryQuery(
     - Keep each field concise (1-3 sentences max).
     - Do not include extra fields outside of the schema.
     - Return only valid JSON.
-  `;
+  `
 
-  console.log(prompt);
+  console.log(prompt)
 
   try {
-    const result = await model(prompt);
+    const result = await model(prompt)
 
-    if (process.env.DEBUG_GEMINI === "true") {
-      console.log("🔍 Raw Gemini response:", result);
+    if (process.env.DEBUG_GEMINI === 'true') {
+      console.log('🔍 Raw Gemini response:', result)
     }
 
-    return result.text;
+    return result.text
   } catch (err) {
-    console.error("Error in wastefulCategoryService:", err);
-    throw new Error("Failed to generate category");
+    console.error('Error in wastefulCategoryService:', err)
+    throw new Error('Failed to generate category')
   }
 }
 
-module.exports = { wastefulCategoryQuery };
+module.exports = { wastefulCategoryQuery }
