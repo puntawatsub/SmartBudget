@@ -32,9 +32,9 @@ const connectDB = require("./config/db");
 
 connectDB();
 
-app.get("/", (req, res) => {
-  res.send("API is running");
-});
+// app.get("/", (req, res) => {
+//   res.send("API is running");
+// });
 
 app.use(morgan("dev"));
 console.log(`Cors: ${process.env.WEB_URL}`);
@@ -47,6 +47,7 @@ app.use(
 
 // Middleware to parse JSON
 app.use(express.json());
+app.use(express.static("view"));
 
 // cookie parser
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -98,8 +99,12 @@ app.get("/error", (req, res, next) => {
   next(error);
 });
 
-app.use(unknownEndpoint);
+app.use("/api", unknownEndpoint);
 app.use(errorHandler);
+
+app.use((req, res) => {
+  res.sendFile(__dirname + "/view/index.html");
+});
 
 const port = process.env.PORT || 3000;
 // Start the server
