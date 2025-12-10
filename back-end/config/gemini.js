@@ -12,12 +12,6 @@ const model = async (prompt) => {
   const contents = [{ role: "user", parts: [{ text: prompt }] }];
 
   try {
-    // const response = await genAI.models.generateContent({
-    //   model: MODEL_NAME,
-    //   contents,
-    //   config: { temperature: 0.1 },
-    // });
-
     const fetchResponse = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/${MODEL_NAME}:generateContent`,
       {

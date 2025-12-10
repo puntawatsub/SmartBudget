@@ -1,20 +1,20 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const upcomingBillSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
-    due: { type: Number, required: true }, // amount
-    date: { type: Date, required: true }, // store as Date instead of string
+    due: { type: Number, required: true },
+    date: { type: Date, required: true },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: 'User',
       required: true,
     },
-    status: { type: String, default: "ok" }, // ok / late
+    status: { type: String, default: 'ok' }, // ok / late
   },
   { timestamps: true }
-);
+)
 
-const UpcomingBill = mongoose.model("UpcomingBill", upcomingBillSchema);
+const UpcomingBill = mongoose.model('UpcomingBill', upcomingBillSchema)
 
-module.exports = UpcomingBill;
+module.exports = UpcomingBill

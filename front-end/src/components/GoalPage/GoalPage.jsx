@@ -18,11 +18,13 @@ function GoalPage() {
 
   const [goals, setGoals] = useState([]);
 
+  // PROGRESS CALCULATION
   const calculateProgress = (saved, target) => {
     if (!target || target <= 0) return 0;
     return Math.min(100, Math.round((saved / target) * 100));
   };
 
+  // AUTO CALCULATE MONTHLY TARGET
   const calculateMonthlyTarget = (target, saved, deadline) => {
     if (!target || !deadline) return 0;
     const remainingAmount = target - saved;
@@ -42,6 +44,7 @@ function GoalPage() {
     );
   }, [target, saved, deadline]);
 
+  // LOAD GOALS FROM BACKEND
   useEffect(() => {
     async function load() {
       try {
@@ -54,6 +57,7 @@ function GoalPage() {
     load();
   }, []);
 
+  // ADD NEW GOAL
   const handleAddGoal = async (e) => {
     e.preventDefault();
 
@@ -75,11 +79,13 @@ function GoalPage() {
     setShowForm(false);
   };
 
+  // START EDITING
   const startEditing = (goal) => {
     setEditingGoal({ ...goal });
     setShowForm(false);
   };
 
+  // SAVE EDITED GOAL
   const saveEdit = async (e) => {
     e.preventDefault();
 
@@ -95,6 +101,7 @@ function GoalPage() {
     setEditingGoal(null);
   };
 
+  // DELETE GOAL
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this goal?")) return;
 
