@@ -1,81 +1,62 @@
-import { Input } from "./components/ui/input";
-import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
-import useRefresh from "./hooks/useRefresh";
-import { useEffect } from "react";
-import Footer from "./components/Footer/Footer";
-import Sidebar from "./components/Sidebar";
-import logo from "./assets/logo.png";
+import { Outlet, Link, useLocation } from 'react-router-dom'
+import useRefresh from './hooks/useRefresh'
+import Footer from './components/Footer/Footer'
+import Sidebar from './components/Sidebar'
+import logo from './assets/logo.png'
 
 const Layout = () => {
-  const { pathname } = useLocation();
-  const { error, loading, isAuth } = useRefresh();
+  const { pathname } = useLocation()
+  const { isAuth } = useRefresh()
 
-  const isAuthPage =
-    pathname === "/login" ||
-    pathname === "/signup" ||
-    pathname === "/forgot-password" ||
-    pathname === "/";
+  const isAuthPage = ['/login', '/signup', '/forgot-password', '/'].includes(
+    pathname
+  )
 
   return (
-    <div className="h-screen flex flex-col">
-      {/* Auth pages show the top navbar */}
-      {isAuthPage ? (
-        <nav className="w-full flex items-center justify-between py-4 px-6 shadow-sm bg-white">
-          <Link to="/" className="text-xl font-bold">
-            <img
-              src={logo}
-              alt="SmartBudget Logo"
-              className="h-7 w-51 object-contain"
-            />
+    <div className='flex flex-col min-h-screen bg-gray-50 dark:bg-gray-950 text-black dark:text-white'>
+      {/* Top nav for auth pages */}
+      {isAuthPage && (
+        <nav className='w-full flex items-center justify-between py-4 px-6 shadow-sm bg-white dark:bg-gray-800'>
+          <Link to='/'>
+            <img src={logo} alt='SmartBudget Logo' className='h-7' />
           </Link>
 
-          <div className="flex items-center gap-4">
-            {/* LOGIC FIX START: Standard ternary operator */}
+          <div className='flex items-center gap-4'>
             {!isAuth ? (
-              // IF NOT AUTH: Show Login & Signup
               <>
                 <Link
-                  to="/login"
-                  className="text-black px-4 py-2 rounded-md hover:bg-gray-100 transition"
-                >
+                  className='px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  to='/login'>
                   Login
                 </Link>
-                <div className="h-6 w-px bg-gray-300"></div>
                 <Link
-                  to="/signup"
-                  className="text-black px-4 py-2 rounded-md hover:bg-gray-100 transition"
-                >
+                  className='px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  to='/signup'>
                   Sign up
                 </Link>
               </>
             ) : (
-              // ELSE (IS AUTH): Show Dashboard only
               <Link
-                to="/dashboard"
-                className="px-4 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-black dark:text-white transition"
-              >
+                className='px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700'
+                to='/dashboard'>
                 Dashboard
               </Link>
             )}
-            {/* LOGIC FIX END */}
           </div>
         </nav>
-      ) : (
-        <></>
       )}
 
-      <div className="flex flex-row">
+      {/* Sidebar + Main content */}
+      <div className='flex flex-1 min-h-screen'>
         {isAuth && <Sidebar />}
-        {/* Main content */}
-        <main className={`flex-1 overflow-auto ${isAuth && "ml-60"}`}>
+        <main className='flex-1 overflow-auto'>
           <Outlet />
         </main>
       </div>
-      <div className={isAuth && "ml-60"}>
-        <Footer />
-      </div>
-    </div>
-  );
-};
 
-export default Layout;
+      <Footer />
+    </div>
+  )
+}
+
+export default Layout
