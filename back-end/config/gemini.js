@@ -6,7 +6,7 @@ const { GoogleGenAI } = require("@google/genai");
 // "models/gemini-2.5-flash", "models/gemini-2.0-flash","models/gemini-2.5-flash-lite","models/gemini-2.5-flash-image-preview", "models/gemini-1.5-flash"
 
 // GoogleGenerativeAI setup
-const MODEL_NAME = "models/gemini-2.5-flash-lite";
+const MODEL_NAME = "models/gemma-3-12b-it";
 
 const model = async (prompt) => {
   const contents = [{ role: "user", parts: [{ text: prompt }] }];
