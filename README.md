@@ -1,3 +1,7 @@
+# SmartBudget
+The Smart Budget App is a simple and user-friendly web application designed to help individuals effectively manage their personal finances. It allows users to record their income and expenses, categorize transactions, and monitor their spending habits over time.
+
+
 ![diagram](./scrum/resources/fullstack_diagram.svg)
 
 ## 📄 Documents
